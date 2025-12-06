@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Zhujun Pang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* 复用 index.html 的基础变量 */
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #111;
+            --nav-height: 100px;
+            --nav-padding: 60px;
+        }
+        html { scroll-behavior: smooth; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* 光标 */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background-color: #111; border-radius: 50%; pointer-events: none;
+            mix-blend-mode: difference; z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+        .custom-cursor.hovered { width: 60px; height: 60px; background-color: #fff; }
+
+        /* --- 导航栏 (与首页保持完全一致) --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 var(--nav-padding); 
+            height: var(--nav-height);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(244, 244, 244, 0.85); /* 半透明背景 */
+            backdrop-filter: blur(12px); /* 毛玻璃 */
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            color: var(--text-color);
+        }
+        .logo { font-weight: 600; font-size: 1.2rem; letter-spacing: -0.5px; }
+        .nav-right { display: flex; align-items: center; gap: 50px; }
+        .menu { display: flex; gap: 50px; }
+        .menu a { font-size: 1rem; position: relative; opacity: 0.6; font-weight: 500; }
+        .menu a.active { opacity: 1; font-weight: 600; }
+        .menu a:hover { opacity: 1; }
+        .lang-switch {
+            font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .lang-switch:hover { background: rgba(0,0,0,0.05); }
+
+        /* About Hero */
+        .about-hero {
+            height: 100vh; width: 100%; overflow: hidden; position: relative;
+        }
+        /* 图片向上偏移一点，避免被导航栏遮挡重要内容，或者保持原样因为导航栏是透明的 */
+        .about-hero img {
+            width: 100%; height: 100%; object-fit: cover; object-position: center;
+        }
+        .scroll-hint {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            color: white; mix-blend-mode: difference; font-size: 0.9rem;
+            animation: bounce 2s infinite;
+        }
+
+        /* About Content */
+        .about-content {
+            min-height: 90vh;
+            background-color: #111; color: #f4f4f4;
+            padding: 120px var(--nav-padding);
+            display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 100px;
+        }
+
+        .vision-text .label {
+            font-size: 0.9rem; color: #666; text-transform: uppercase;
+            margin-bottom: 40px; display: block;
+        }
+        .bio-paragraph {
+            font-size: 1.1rem; color: #b0b0b0; margin-bottom: 30px; 
+            max-width: 95%; line-height: 1.7; font-weight: 300;
+        }
+        .bio-paragraph:first-of-type { color: #fff; font-size: 1.25rem; }
+
+        /* --- Social List (核心交互) --- */
+        .social-list {
+            display: flex; flex-direction: column; padding-top: 65px;
+        }
+        
+        .social-link {
+            font-size: 1.5rem; padding: 20px 0; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.3s ease; color: #fff; cursor: none;
+        }
+        
+        .social-link:hover { padding-left: 20px; border-color: #fff; }
+        
+        /* 箭头通用样式 */
+        .arrow { font-size: 1.2rem; opacity: 0; transform: translateX(-20px); transition: all 0.3s ease; }
+        .social-link:hover .arrow { opacity: 1; transform: translateX(0); }
+
+        /* 微信专属样式 */
+        .wechat-container { position: relative; }
+        .wechat-reveal {
+            font-size: 1rem; color: #fff; font-weight: 300; 
+            opacity: 0; transform: translateX(-10px); transition: all 0.3s ease;
+        }
+        .social-link:hover .wechat-reveal { opacity: 1; transform: translateX(0); }
+        
+        /* 复制成功提示 */
+        .copy-msg {
+            position: absolute; right: 0; top: -30px; 
+            font-size: 0.8rem; background: #fff; color: #000; padding: 4px 8px; 
+            border-radius: 4px; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+
+        /* Footer */
+        .about-footer {
+            background-color: #111; color: #444; padding: 40px var(--nav-padding);
+            text-align: center; font-size: 0.8rem;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            :root { --nav-padding: 20px; }
+            .about-content { grid-template-columns: 1fr; gap: 60px; padding-top: 80px; }
+            .social-link { font-size: 1.2rem; }
+            .custom-cursor { display: none; } * { cursor: auto; }
+            .nav-right { gap: 20px; }
+            /* 手机上微信号码直接显示，方便拨打 */
+            .wechat-reveal { opacity: 1; transform: translateX(0); font-size: 0.9rem; color: #888; }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+
+    <nav>
+        <a href="index.html" class="logo hover-target">Pang, Zhujun</a>
+        <div class="nav-right">
+            <div class="menu">
+                <a href="index.html" class="hover-target">Work</a>
+                <a href="#" class="hover-target active">About</a>
+            </div>
+            <div class="lang-switch hover-target" id="lang-btn">EN / 中</div>
+        </div>
+    </nav>
+
+    <section class="about-hero">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop" alt="Portrait">
+        <div class="scroll-hint" id="txt-scroll">↓ Scroll for Info</div>
+    </section>
+
+    <section class="about-content">
+        <div class="vision-text">
+            <span class="label" id="txt-title">About Me</span>
+            
+            <p class="bio-paragraph" id="txt-bio-1">
+                I am an Industrial & Experience Designer specializing in consumer electronics, currently working on forward-looking product concepts at Huawei, with a focus on redefining products from their core essence and real user behaviors. I believe meaningful innovation doesn’t come from adding more features, but from understanding the most natural ways people interact with objects—and designing experiences that are rich but simple.
+            </p>
+            
+            <p class="bio-paragraph" id="txt-bio-2">
+                Outside of work, I love traveling, hiking, and documenting life through photography—capturing nature, animals, and the human stories hidden in different cities.
+            </p>
+        </div>
+
+        <div class="social-list">
+            <!-- WeChat: 点击复制 -->
+            <!-- 不需要 href，防止跳转 -->
+            <div class="social-link hover-target wechat-container" id="wechat-btn">
+                <span id="txt-link-wechat">WeChat / Mobile</span>
+                <!-- 悬浮时显示的号码 -->
+                <span class="wechat-reveal">173 6958 770</span>
+                <div class="copy-msg" id="copy-msg">Copied!</div>
+            </div>
+
+            <!-- Email: 动态链接 -->
+            <a href="mailto:poohbearoooh@gmail.com" class="social-link hover-target" id="email-link">
+                <span id="txt-link-email">Email Me</span>
+                <span class="arrow">↗</span>
+            </a>
+            
+            <!-- Links -->
+            <a href="https://www.behance.net/poohbearoo2bc9" target="_blank" class="social-link hover-target">
+                Behance <span class="arrow">↗</span>
+            </a>
+            
+            <a href="https://www.linkedin.com/in/zhujun-pang-834a7a1b8/" target="_blank" class="social-link hover-target">
+                LinkedIn <span class="arrow">↗</span>
+            </a>
+            
+            <a href="https://www.instagram.com/poohbear.pang?igsh=eG4yZnh3eW5jYnZs&utm_source=qr" target="_blank" class="social-link hover-target">
+                Instagram <span class="arrow">↗</span>
+            </a>
+        </div>
+    </section>
+
+    <div class="about-footer">
+        © 2025 Zhujun Pang. All Rights Reserved.
+    </div>
+
+    <script>
+        /* --- 1. 语言切换逻辑 (同步首页) --- */
+        const langBtn = document.getElementById('lang-btn');
+        const emailLink = document.getElementById('email-link');
+        
+        // 翻译数据
+        const translations = {
+            en: {
+                title: "About Me",
+                bio1: "I am an Industrial & Experience Designer specializing in consumer electronics, currently working on forward-looking product concepts at Huawei, with a focus on redefining products from their core essence and real user behaviors. I believe meaningful innovation doesn’t come from adding more features, but from understanding the most natural ways people interact with objects—and designing experiences that are rich but simple.",
+                bio2: "Outside of work, I love traveling, hiking, and documenting life through photography—capturing nature, animals, and the human stories hidden in different cities.",
+                wechat: "WeChat / Mobile",
+                email: "Email Me",
+                scroll: "↓ Scroll for Info",
+                emailHref: "mailto:poohbearoooh@gmail.com"
+            },
+            cn: {
+                title: "关于我",
+                bio1: "我是一名工业与体验设计师，专注于消费电子领域。目前在华为从事前瞻性产品概念设计，致力于从核心本质和真实用户行为出发，重新定义产品。我相信有意义的创新并非源于功能的堆砌，而是基于对人与物最自然交互方式的理解——创造丰富而极简的体验。",
+                bio2: "工作之余，我热爱旅行、徒步，并用摄影记录生活——捕捉自然、动物以及隐藏在不同城市中的人文故事。",
+                wechat: "微信 / 电话",
+                email: "发送邮件",
+                scroll: "↓ 下滑查看简介",
+                emailHref: "mailto:1736958770@qq.com"
+            }
+        };
+
+        // 读取本地存储
+        let currentLang = localStorage.getItem('siteLang') || 'en';
+
+        function applyLanguage() {
+            const content = translations[currentLang];
+            
+            document.getElementById('txt-title').innerText = content.title;
+            document.getElementById('txt-bio-1').innerText = content.bio1;
+            document.getElementById('txt-bio-2').innerText = content.bio2;
+            document.getElementById('txt-link-wechat').innerText = content.wechat;
+            document.getElementById('txt-link-email').innerText = content.email;
+            document.getElementById('txt-scroll').innerText = content.scroll;
+            
+            // 动态切换邮箱链接
+            emailLink.href = content.emailHref;
+        }
+
+        // 初始化
+        applyLanguage();
+
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            localStorage.setItem('siteLang', currentLang); // 保存状态
+            
+            // 淡入淡出效果
+            const elements = document.querySelectorAll('.vision-text p, .vision-text span');
+            elements.forEach(el => el.style.opacity = 0);
+            
+            setTimeout(() => {
+                applyLanguage();
+                elements.forEach(el => el.style.opacity = ''); // 清除内联样式恢复CSS默认
+            }, 200);
+        });
+
+        /* --- 2. 微信复制逻辑 --- */
+        const wechatBtn = document.getElementById('wechat-btn');
+        const copyMsg = document.getElementById('copy-msg');
+
+        wechatBtn.addEventListener('click', () => {
+            const number = "1736958770";
+            
+            // 复制到剪贴板
+            navigator.clipboard.writeText(number).then(() => {
+                // 成功提示
+                copyMsg.style.opacity = 1;
+                copyMsg.innerText = currentLang === 'en' ? "Copied!" : "已复制!";
+                setTimeout(() => { copyMsg.style.opacity = 0; }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        });
+
+        /* --- 3. 光标逻辑 --- */
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15; cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px'; cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        document.querySelectorAll('.hover-target, a').forEach(t => {
+            t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+    </script>
+</body>
+</html>

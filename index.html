@@ -1,0 +1,254 @@
+、<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zhujun Pang | Industrial Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- 基础变量 --- */
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #111;
+            --nav-height: 100px; /* 固定导航高度 */
+            --nav-padding: 60px;
+        }
+        html { scroll-behavior: smooth; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* 光标 */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background-color: #111; border-radius: 50%; pointer-events: none;
+            mix-blend-mode: difference; z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+        .custom-cursor.hovered { width: 60px; height: 60px; background-color: #fff; mix-blend-mode: difference; }
+
+        /* --- 升级版导航栏 (毛玻璃效果) --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 var(--nav-padding); 
+            height: var(--nav-height);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            /* 核心：背景半透明 + 高斯模糊 */
+            background: rgba(244, 244, 244, 0.85); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); /* Safari 支持 */
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            color: var(--text-color); /* 确保文字颜色为深色 */
+        }
+        
+        .logo { font-weight: 600; font-size: 1.2rem; letter-spacing: -0.5px; }
+        .nav-right { display: flex; align-items: center; gap: 50px; }
+        .menu { display: flex; gap: 50px; }
+        .menu a { font-size: 1rem; position: relative; font-weight: 500; }
+        
+        .menu a::after {
+            content: ''; position: absolute; width: 0; height: 1px; bottom: -5px; right: 0;
+            background-color: currentColor; transition: width 0.3s ease;
+        }
+        .menu a:hover::after { width: 100%; left: 0; }
+
+        /* 语言切换按钮 */
+        .lang-switch {
+            font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .lang-switch:hover { background: rgba(0,0,0,0.05); }
+
+        /* --- Hero --- */
+        .hero {
+            height: 100vh; display: flex; align-items: center; padding: 0 var(--nav-padding);
+            /* 增加顶部内边距，防止导航栏遮挡内容（虽然全屏hero一般垂直居中，但为了保险） */
+            padding-top: var(--nav-height); 
+        }
+        .hero h1 {
+            font-size: 5vw; line-height: 1.1; font-weight: 400; max-width: 900px;
+            opacity: 0; transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.5s;
+        }
+
+        /* --- 作品列表 --- */
+        .gallery {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 80px;
+            padding: 100px var(--nav-padding); min-height: 100vh;
+        }
+        .project-card {
+            opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; display: block;
+        }
+        .project-card.visible { opacity: 1; transform: translateY(0); }
+        .project-card:nth-child(even) { margin-top: 120px; }
+        
+        .image-container {
+            width: 100%; aspect-ratio: 4/3; overflow: hidden; background-color: #ddd; margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1); filter: grayscale(100%);
+        }
+        .project-card:hover .image-container img { transform: scale(1.05); filter: grayscale(0%); }
+        .project-info { display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 15px; }
+        .project-title { font-weight: 600; font-size: 1.1rem; }
+        .project-cat { color: #666; font-size: 0.9rem; }
+
+        /* Footer */
+        footer {
+            padding: 100px var(--nav-padding); border-top: 1px solid #e5e5e5;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            color: #999; font-size: 0.9rem;
+        }
+        
+        /* 箭头 */
+        .scroll-arrow {
+            position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%);
+            width: 40px; height: 40px; z-index: 90; animation: bounce 2s infinite;
+        }
+        .scroll-arrow.hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+        .scroll-arrow svg { stroke: var(--text-color); stroke-width: 2; fill: none; }
+
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            :root { --nav-padding: 20px; }
+            .hero h1 { font-size: 2.5rem; }
+            .gallery { grid-template-columns: 1fr; gap: 60px; padding-top: 50px; }
+            .project-card:nth-child(even) { margin-top: 0; }
+            .custom-cursor { display: none; } * { cursor: auto; }
+            .nav-right { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+
+    <!-- 导航栏：全局通用 -->
+    <nav>
+        <a href="index.html" class="logo hover-target">Pang, Zhujun</a>
+        <div class="nav-right">
+            <div class="menu">
+                <a href="#work" class="hover-target" onclick="document.getElementById('work').scrollIntoView({behavior: 'smooth'})">Work</a>
+                <a href="about.html" class="hover-target">About</a>
+            </div>
+            <div class="lang-switch hover-target" id="lang-btn">EN / 中</div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1 id="home-intro">I’m Zhujun Pang, an industrial designer dedicated to seamlessly integrating consumer electronics into everyday life.</h1>
+    </section>
+
+    <div class="scroll-arrow hover-target" id="arrow-btn">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+    </div>
+
+    <section class="gallery" id="work">
+        <!-- 作品列表 (你可以之后在 about.html 里也加上这个结构) -->
+        <a href="project-soundmotion.html" class="project-card hover-target">
+            <div class="image-container"><img src="https://images.unsplash.com/photo-1512418490979-92798ced138a?q=80&w=1000&auto=format&fit=crop" alt="Project 1"></div>
+            <div class="project-info"><span class="project-title">Smart Speaker</span><span class="project-cat">Industrial Design</span></div>
+        </a>
+        <!-- 更多作品... -->
+         <a href="#" class="project-card hover-target">
+            <div class="image-container"><img src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?q=80&w=1000&auto=format&fit=crop" alt="Project 2"></div>
+            <div class="project-info"><span class="project-title">Ergo Chair</span><span class="project-cat">Furniture</span></div>
+        </a>
+    </section>
+
+    <footer>
+        <span>© 2025 Zhujun Pang</span>
+        <span>Designed & Coded by me</span>
+    </footer>
+
+    <script>
+        /* --- 1. 语言切换与记忆系统 --- */
+        const langBtn = document.getElementById('lang-btn');
+        const homeIntro = document.getElementById('home-intro');
+
+        const homeTrans = {
+            en: "I’m Zhujun Pang, an industrial designer dedicated to seamlessly integrating consumer electronics into everyday life.",
+            cn: "我是庞竺君，一名工业设计师，致力于将消费电子产品无缝融入日常生活。"
+        };
+
+        // 检查本地存储的语言偏好
+        let currentLang = localStorage.getItem('siteLang') || 'en';
+
+        function updateLanguage() {
+            // 更新首页文字
+            if(homeIntro) {
+                homeIntro.style.opacity = 0;
+                setTimeout(() => {
+                    homeIntro.innerText = homeTrans[currentLang];
+                    homeIntro.style.opacity = 1;
+                }, 300);
+            }
+            // 保存设置到浏览器
+            localStorage.setItem('siteLang', currentLang);
+        }
+
+        // 初始化
+        if (currentLang === 'cn') {
+            homeIntro.innerText = homeTrans.cn; // 立即设置，避免闪烁
+        }
+
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            updateLanguage();
+        });
+
+        /* --- 光标与动画逻辑 (保持不变) --- */
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15; cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px'; cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // 监听所有 hover
+        function attachHover() {
+            document.querySelectorAll('.hover-target, a').forEach(t => {
+                t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
+        attachHover();
+
+        // 滚动显现
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }});
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.project-card').forEach(card => observer.observe(card));
+        
+        // 箭头逻辑
+        const arrowBtn = document.getElementById('arrow-btn');
+        if(arrowBtn) {
+            arrowBtn.addEventListener('click', () => document.getElementById('work').scrollIntoView({behavior: 'smooth'}));
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) arrowBtn.classList.add('hidden');
+                else arrowBtn.classList.remove('hidden');
+            });
+        }
+    </script>
+</body>
+</html>

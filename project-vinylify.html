@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinylify | Zhujun Pang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 全局变量 --- */
+        :root {
+            --bg-color: #ffffff; --text-color: #111;
+            --nav-height: 120px; --nav-padding: 60px;
+            --block-spacing: 140px;
+        }
+        
+        /* 开启混合滚动 */
+        html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* 导航栏 & 光标 */
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: #111; border-radius: 50%; pointer-events: none; mix-blend-mode: difference; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        .custom-cursor.hovered { width: 60px; height: 60px; background: #fff; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 0 var(--nav-padding); height: 120px; position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        nav.scrolled { height: 70px; background: rgba(255, 255, 255, 0.55); box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
+        .logo { font-weight: 600; font-size: 1.2rem; color: #000; }
+        .nav-right { display: flex; align-items: center; gap: 50px; }
+        .menu { display: flex; gap: 50px; }
+        .menu a { font-size: 1rem; font-weight: 500; opacity: 0.6; color: #000; }
+        .menu a:hover { opacity: 1; }
+        .lang-switch { font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #000; }
+
+        /* --- 排版系统 --- */
+        
+        /* Hero: 完整展示，不裁切 */
+        .hero-fullscreen { 
+            width: 100vw; 
+            min-height: 80vh; /* 稍微改小一点，不必强制100vh，适配长图 */
+            height: auto;
+            background: #f4f4f4; 
+            display: flex; align-items: center; justify-content: center; 
+            margin-bottom: var(--block-spacing); 
+            scroll-snap-align: start; 
+        }
+        .hero-fullscreen img { width: 100%; height: auto; object-fit: contain; display: block; }
+
+        .content-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 40px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* 文字块 */
+        .text-block { width: 100%; max-width: 1000px; margin: 0 auto 160px auto; padding: 0 20px; text-align: left; scroll-snap-align: none; }
+
+        /* 左文右图布局 (Split Layout - 优化版) */
+        .split-layout { 
+            display: grid; 
+            /* 调整比例：文字 1.2 : 图片 1 (给图片更多空间，特别是第一张横图) */
+            grid-template-columns: 1.2fr 1fr; 
+            gap: 80px; /* 增加间距，更通透 */
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto 160px auto; 
+            
+            /* 🔴 关键：垂直居中对齐 */
+            align-items: center; 
+        }
+
+        /* 针对第二部分（Diary Study）的特殊比例调整 */
+        /* 因为第二张图是瘦高的，文字多一点也没事，比例可以给文字多一点 */
+        .split-layout.diary-section {
+            grid-template-columns: 1.5fr 1fr; 
+        }
+
+        .split-text { text-align: left; }
+        .split-img img { width: 100%; height: auto; display: block; border-radius: 4px; }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .split-layout, .split-layout.diary-section { grid-template-columns: 1fr; gap: 40px; } 
+        }
+
+        /* 图片容器：不强制拉伸 */
+        .split-img img { width: 100%; height: auto; display: block; border-radius: 4px; }
+
+        h1.project-title { font-family: 'Inter', sans-serif; font-size: 3.5rem; font-weight: 700; color: #000; margin-bottom: 30px; line-height: 1.1; }
+        p.body-text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.2rem; line-height: 1.6; color: #333; margin-bottom: 40px; text-align: justify; }
+        .project-meta { display: flex; flex-direction: column; gap: 5px; font-size: 0.95rem; color: #888; margin-bottom: 0; }
+
+        .img-box { width: 100%; display: block; line-height: 0; }
+        .img-box img { width: 100%; height: auto; display: block; }
+
+        .next-project { padding: 150px 0; text-align: center; border-top: 1px solid #eee; background: #fafafa; width: 100%; scroll-snap-align: start; }
+        .next-title { font-size: 3rem; font-weight: 300; cursor: pointer; }
+        footer { padding: 50px var(--nav-padding); background: #fafafa; border-top: 1px solid #eee; display: flex; justify-content: space-between; color: #999; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            :root { --nav-padding: 20px; }
+            .text-block { padding: 0 20px; }
+            .split-layout { grid-template-columns: 1fr; gap: 40px; } /* 手机上变单列 */
+            html { scroll-snap-type: none; } 
+            .custom-cursor { display: none; } * { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+
+    <nav>
+        <a href="index.html" class="logo hover-target">Pang, Zhujun</a>
+        <div class="nav-right">
+            <div class="menu">
+                <a href="index.html" class="hover-target">Work</a>
+                <a href="about.html" class="hover-target">About</a>
+            </div>
+            <div class="lang-switch hover-target" id="lang-btn">EN / 中</div>
+        </div>
+    </nav>
+
+    <!-- 1. 首屏 Hero -->
+    <div class="hero-fullscreen">
+        <img src="images/vinylify/0.webp" alt="Hero">
+    </div>
+
+    <div class="content-wrapper">
+        
+        <!-- 2. 标题与简介 -->
+        <div class="text-block">
+            <h1 class="project-title" id="txt-title">Vinylify: Smart technology is increasingly taking over our lives.</h1>
+            
+            <p class="body-text" id="txt-intro-1">
+                More household tasks become automated via the Internet of Things (IoT). However, these smart technologies become less personal and even present a psychological risk for homeowners. When the world of IoT expands rapidly, some retro-tech artifacts, like vinyl, are still being used and appreciated today.
+            </p>
+            <p class="body-text" id="txt-intro-2" style="font-weight: 600;">
+                This study aims to reintroduce beloved features from retro-tech into more advanced technology to review if personality, sense of ownership, and experience of using this advanced tech can be improved.
+            </p>
+            <p class="body-text" id="txt-intro-3">
+                A diary study was conducted with a prototype that includes features of record players into an online music platform on mobile phones. Preliminary results reveal that the features do improve people’s ownership and experience, even displaying some slow-tech qualities. This study is the first step towards an age of post-digitalism, where we explore the limits of smart-tech and the inclusion of slow-tech to create a more balanced and healthy relationship with our devices.
+            </p>
+
+            <div class="project-meta">
+                <div id="txt-meta1">Fall 2021, Group work</div>
+                <div id="txt-meta2">Team: Kuangyi Xing, Brent Temmink, Daan Sonnemans, Ryan Xiao, Zhujun Pang, Wouter Stevens</div>
+                <div id="txt-meta3">Contribution: raise the proposal, user study, parts of reporting, rendering for future work</div>
+            </div>
+        </div>
+
+        <!-- 3. Interview (左文右图 - 垂直居中) -->
+        <div class="split-layout">
+            <div class="split-text">
+                <p class="body-text" id="txt-p-1">
+                    To understand the appeal of retro-tech, we interviewed 6 users who embrace both old and new technologies. Half were avid readers, while the other half were regular record player users.
+                </p>
+                <p class="body-text" id="txt-p-2">
+                    Key findings highlighted the value of <strong>embodied interaction</strong> and <strong>personality</strong>. We integrated these aspects into a prototype to test if they could restore a sense of ownership and improve the modern device experience.
+                </p>
+                <p class="body-text" id="txt-p-3">
+                    Based on this, we designed a model combining the aesthetics and operation of a vinyl player with Spotify/Apple Music. Placing the phone in the box triggers the NFC in the Mini Album, automatically playing the selected album.
+                </p>
+            </div>
+            <div class="split-img img-box hover-target">
+                <!-- 第一张图：横向比例 -->
+                <img src="images/vinylify/1.webp" alt="Interview">
+            </div>
+        </div>
+
+        <!-- 4. Diary Study (左文右图 - 瘦高长图适配) -->
+        <!-- 加了 diary-section 类来微调比例 -->
+        <div class="split-layout diary-section">
+            <div class="split-text">
+                <h2 class="section-title" id="txt-h-diary" style="font-size: 1.5rem; margin-bottom: 30px; font-weight: 600;">Diary Study</h2>
+                
+                <!-- 精简后的文字，高度应该能跟右边的长图差不多 -->
+                <p class="body-text" id="txt-p-diary-1">
+                    To test if retro habits positively influence modern usage, we conducted a five-day diary study with two participants. They received functionally identical Vinylify prototypes, each with four favorite albums on NFC-embedded mini records.
+                </p>
+                <p class="body-text" id="txt-p-diary-2">
+                    Participants were free to use the device as they wished. Daily diary entries collected via Microsoft Teams prompted them to reflect on their usage and experience through evolving questions. This method allowed us to capture in-depth, longitudinal data on how the physical interaction influenced their daily listening habits.
+                </p>
+                <p class="body-text" id="txt-p-diary-3">
+                    The study concluded with personalized semi-structured interviews, comparing the prototype experience directly with modern music players. This mixed-method approach provided deep insights into how embodied interaction shifts the user's relationship with digital music.
+                </p>
+            </div>
+            
+            <div class="split-img img-box hover-target">
+                <!-- 第二张图：瘦高长图 (已垂直居中) -->
+                <!-- 这样它会显示在文字块的中间位置，视觉重心更稳 -->
+                <img src="images/vinylify/2.webp" alt="Diary Study">
+            </div>
+        </div>
+
+
+        <!-- 5. Conclusion (文字块) -->
+        <div class="text-block">
+            <h2 class="section-title" id="txt-h-conc" style="font-size: 1.5rem; margin-bottom: 20px; font-weight: 600;">Conclusion</h2>
+            <p class="body-text" id="txt-p-conc-1">
+                In this qualitative study, we reintroduced embodied interaction and personality from retro tech into smart technology. Two participants experienced a prototype in the form of a portable mobile vinyl player.
+            </p>
+            <p class="body-text" id="txt-p-conc-2" style="font-weight: 600;">
+                Our main contribution from the findings of our diary study is how smart tech can be improved by looking at features that keep retro tech alive. Aside from the benefits of improved personality and experience, we unintentionally found that our prototype also has slow-tech advantages. Therefore, we concluded that smart tech can also learn from having a balance of slow-tech attributes.
+            </p>
+        </div>
+
+        <!-- 6. 结尾大图 (正文宽度) -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <!-- 记得放图片: images/vinylify/04_conclusion.webp -->
+                <img src="images/vinylify/3.webp" alt="Conclusion Visual" loading="lazy">
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- 底部跳转 -->
+    <div class="next-project">
+        <span class="next-label" id="lbl-next">Next Project</span>
+        <a href="index.html" class="next-title hover-target">Back to Home ↗</a>
+    </div>
+
+    <footer>
+        <span>© 2025 Zhujun Pang</span>
+        <span>Designed & Coded by me</span>
+    </footer>
+
+    <script>
+        const langBtn = document.getElementById('lang-btn');
+        let currentLang = localStorage.getItem('siteLang') || 'en';
+
+        const translations = {
+            en: {
+                title: "Vinylify: Smart technology is increasingly taking over our lives.",
+                intro1: "More household tasks become automated via the Internet of Things (IoT). However, these smart technologies become less personal and even present a psychological risk for homeowners. When the world of IoT expands rapidly, some retro-tech artifacts, like vinyl, are still being used and appreciated today.",
+                intro2: "This study aims to reintroduce beloved features from retro-tech into more advanced technology to review if personality, sense of ownership, and experience of using this advanced tech can be improved.",
+                intro3: "A diary study was conducted with a prototype that includes features of record players into an online music platform on mobile phones. Preliminary results reveal that the features do improve people’s ownership and experience, even displaying some slow-tech qualities. This study is the first step towards an age of post-digitalism, where we explore the limits of smart-tech and the inclusion of slow-tech to create a more balanced and healthy relationship with our devices.",
+                meta1: "Fall 2021, Group work",
+                meta3: "Contribution: raise the proposal, user study, parts of reporting, rendering for future work",
+                
+                p1: "To understand the appealing factors behind the retro-tech, users (n=6) of those technologies, who are enthusiastic about retro technology but also embrace new technology, were interviewed. Half of the participants frequently read books, and the other half had a record player at home that they use regularly.",
+                p2: "These key aspects we got from the findings of these interviews were taken account into a prototype to test if reintroduction of them into modern technology would bring back a sense of personality and an improved experience with devices. The two main integrated aspects are embodied interaction and personality.",
+                p3: "From this, we have designed a model that abstracts the features of how a vinyl record player looks and operates and combines them with Spotify/Apple Music. When the user puts the phone in the box, the NFC in the Mini Album is triggered and the album starts to play automatically.",
+                
+                h_diary: "Diary Study",
+                p_diary_1: "We want to see whether the habitual and personal factors that influence the frequent use of the old(er) devices can have a positive effect when re-introduced in their modern digital counterpart. Therefore, we did a five-day diary study with our Vinylify prototype. Two functionally identical prototypes were provided to the participants (n=2) including each participant’s four favourite albums on a collectible mini record with an embedded NFC. The device and its functions were explained at the start of the study.",
+                p_diary_2: "Daily diary entries were collected through Microsoft Teams. The participants were free to choose if and how they wanted to use the prototypes, and even encouraged to challenge the standard use. Each day, a different set of questions have prompted the participants to write about their use of and experience with the device. These forms were sent daily and got adapted if necessary to get the most in-depth results. Each form consists of one fixed question about the overall experience and two new questions each day. The final form included reflective questions to prompt the participant to reflect on their use and user experience during the previous days.",
+                p_diary_3: "After reading the diary entries, a preliminary analysis of the users’ experience of using the prototype was performed to prepare for the final interview. To conclude the diary study and get more in-depth insights into the entries, the participants were interviewed. The semi-structured interviews were personalized based on the diary entries results of the participants. In the final interview, the user experience of the prototype was compared with that of a modern music player, through which deeper insight into the research question could be reached. In addition to two unbiased participants, one of the researchers did some hands-on testing of the prototype as well.",
+                
+                h_conc: "Conclusion",
+                p_conc_1: "In this qualitative study, we reintroduced embodied interaction and personality from retro tech into smart technology. Two participants experienced a prototype in the form of a portable mobile vinyl player.",
+                p_conc_2: "Our main contribution from the findings of our diary study is how smart tech can be improved by looking at features that keep retro tech alive. Aside from the benefits of improved personality and experience, we unintentionally found that our prototype also has slow-tech advantages. Therefore, we concluded that smart tech can also learn from having a balance of slow-tech attributes.",
+
+                nextLabel: "Next Project"
+            },
+            cn: {
+                title: "Vinylify: 智能科技正在接管我们的生活",
+                intro1: "越来越多的家务通过物联网（IoT）实现自动化。然而，这些智能技术变得越来越缺乏个性，甚至给房主带来心理风险。当物联网世界迅速扩张时，一些复古科技产品（如黑胶唱片）至今仍被使用和推崇。",
+                intro2: "本研究旨在将复古科技中受人喜爱的特征重新引入更先进的技术中，以检验是否能提升个性、拥有感以及使用这些先进科技的体验。",
+                intro3: "我们使用一个原型进行了一项日记研究，该原型将唱片机的功能融入手机上的在线音乐平台。初步结果表明，这些特征确实提升了人们的拥有感和体验，甚至展现出一些慢科技的特质。这项研究是迈向后数字时代的第一步，我们探索智能科技的局限性以及慢科技的融入，以创造我们与设备之间更平衡、健康的关系。",
+                meta1: "2021秋，小组作业",
+                meta3: "贡献：提出方案、用户研究、撰写部分报告、未来工作的渲染图",
+                
+                
+                p1: "为了解复古科技的吸引力，我们采访了6位既热衷复古又拥抱新技术的用户。一半经常读书，另一半常使用唱片机。",
+                p2: "主要发现强调了具身交互和个性的价值。我们将这些融入原型，测试其能否恢复拥有感并改善现代设备体验。",
+                p3: "基于此，我们将黑胶唱片机的外观与操作同 Spotify/Apple Music 结合。将手机放入盒子即触发迷你专辑的 NFC，自动播放。",
+                
+                h_diary: "日记研究",
+                p_diary_1: "为测试复古习惯对现代使用的影响，我们对两名参与者进行了为期五天的日记研究。他们获得了带有 NFC 迷你唱片的 Vinylify 原型。",
+                p_diary_2: "参与者可自由使用设备。通过 Microsoft Teams 收集的每日日记引导他们反思使用体验。这种方法让我们能够捕捉到物理交互如何影响日常听歌习惯的纵向数据。",
+                p_diary_3: "研究以个性化访谈结束，直接对比原型与现代播放器的体验。这种混合方法深入揭示了具身交互如何改变用户与数字音乐的关系。",
+
+                
+                h_conc: "结论",
+                p_conc_1: "在这项定性研究中，我们将复古科技中的具身交互和个性重新引入智能科技。两名参与者体验了便携式移动黑胶唱片机形式的原型。",
+                p_conc_2: "我们日记研究的主要贡献在于，通过审视让复古科技保持活力的特征，可以如何改进智能科技。除了提升个性和体验的好处外，我们意外发现我们的原型还具有慢科技的优势。因此，我们得出结论，智能科技也可以通过平衡慢科技属性来学习进步。",
+
+                nextLabel: "下一个项目"
+            }
+        };
+
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-intro-1').innerText = t.intro1;
+            document.getElementById('txt-intro-2').innerText = t.intro2;
+            document.getElementById('txt-intro-3').innerText = t.intro3;
+            document.getElementById('txt-meta1').innerText = t.meta1;
+            document.getElementById('txt-meta3').innerText = t.meta3;
+            
+            document.getElementById('txt-p-1').innerText = t.p1;
+            document.getElementById('txt-p-2').innerText = t.p2;
+            document.getElementById('txt-p-3').innerText = t.p3;
+            
+            document.getElementById('txt-h-diary').innerText = t.h_diary;
+            document.getElementById('txt-p-diary-1').innerText = t.p_diary_1;
+            document.getElementById('txt-p-diary-2').innerText = t.p_diary_2;
+            document.getElementById('txt-p-diary-3').innerText = t.p_diary_3;
+            
+            document.getElementById('txt-h-conc').innerText = t.h_conc;
+            document.getElementById('txt-p-conc-1').innerText = t.p_conc_1;
+            document.getElementById('txt-p-conc-2').innerText = t.p_conc_2;
+
+            document.getElementById('lbl-next').innerText = t.nextLabel;
+        }
+
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            localStorage.setItem('siteLang', currentLang);
+            applyLanguage();
+        });
+        applyLanguage();
+
+        const navBar = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navBar.classList.add('scrolled');
+            else navBar.classList.remove('scrolled');
+        });
+
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15; cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px'; cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        document.querySelectorAll('.hover-target, a').forEach(t => {
+            t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+    </script>
+</body>
+</html>

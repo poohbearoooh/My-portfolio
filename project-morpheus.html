@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morpheus | Zhujun Pang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. 全局变量 (保持一致) --- */
+        :root {
+            --bg-color: #ffffff; --text-color: #111;
+            --nav-height: 120px; --nav-padding: 60px;
+            --block-spacing: 160px; --grid-gap: 10px;
+        }
+        
+        /* 开启滚动捕捉 */
+        html { scroll-behavior: smooth; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- 2. 导航栏 & 光标 --- */
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: #111; border-radius: 50%; pointer-events: none; mix-blend-mode: difference; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        .custom-cursor.hovered { width: 60px; height: 60px; background: #fff; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 0 var(--nav-padding); height: 120px; position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.35, 1); }
+        nav.scrolled { height: 70px; background: rgba(255, 255, 255, 0.55); box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
+        
+        .logo { font-weight: 600; font-size: 1.2rem; color: #000; }
+        .nav-right { display: flex; align-items: center; gap: 50px; }
+        .menu { display: flex; gap: 50px; }
+        .menu a { font-size: 1rem; font-weight: 500; opacity: 0.6; color: #000; }
+        .menu a:hover { opacity: 1; }
+        .lang-switch { font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #000; }
+
+        /* --- 3. 排版系统 --- */
+        
+        /* --- Hero 区域修正：完整展示，不裁切 --- */
+
+        .hero-fullscreen {
+            width: 100%; /* 宽度撑满屏幕 */
+            
+            /* 🔴 关键修改 1：删掉固定高度 height: 100vh */
+            height: auto;  /* 改为自动，由图片撑开 */
+            min-height: 60vh; /* 可选：设个最小高度，防止图片没加载时太扁 */
+            
+            background: #f4f4f4;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            margin-bottom: var(--block-spacing);
+            scroll-snap-align: start;
+            
+        }
+
+        .hero-fullscreen img {
+            width: 100%;
+            height: auto; /* 高度自适应 */
+            
+            /* 🔴 关键修改 3：改为 contain 或直接去掉 object-fit */
+            /* 建议直接让它撑满宽度，高度随比例变化 */
+            display: block;
+            object-fit: contain; 
+        }
+
+        /* 内容容器 (控制左右边距) */
+        .content-wrapper { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 0 40px; /* 左右留白 */
+            display: flex; flex-direction: column; align-items: center; 
+        }
+        
+        /* 🔴 修复：文字块样式 */
+        .text-block { 
+            width: 100%; max-width: 1000px; 
+            margin: 0 auto 140px auto; /* 下间距 140px */
+            padding: 0 20px; text-align: left; 
+        }
+
+        /* 🔴 修复：通用图片/内容块样式 (你之前缺了这个类) */
+        .section-block {
+            width: 100%;
+            margin-bottom: 140px; /* 下间距 140px */
+            display: flex; flex-direction: column; align-items: center;
+        }
+        
+        /* 自由滚动区 */
+        .text-block { width: 100%; max-width: 1000px; margin: 0 auto 160px auto; padding: 0 20px; text-align: left; scroll-snap-align: none; }
+
+        /* 强制吸附区 */
+        .seamless-block { width: 100%; margin-bottom: 0; display: block; line-height: 0; animation: fadeIn 0.8s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 间距控制容器 (用于图文混排) */
+        .spaced-block { width: 100%; margin-bottom: 160px; display: flex; flex-direction: column; align-items: center; scroll-snap-align: start; }
+        .spaced-block.gap-small { margin-bottom: 80px; }
+
+        /* 左图右文布局 */
+        .split-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px; width: 100%; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .split-text { text-align: left; }
+
+        /* 横向滚动容器 (Horizontal Scroll) */
+        .scroll-container {
+            width: 100%;
+            overflow-x: auto; /* 允许横向滚动 */
+            display: flex;
+            gap: 10px;
+            padding-bottom: 20px; /* 留出滚动条空间 */
+            cursor: grab; /* 提示可拖动 */
+            
+            /* 隐藏滚动条但保留功能 */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE 10+ */
+        }
+        .scroll-container::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+        
+        /* 横向滚动内的图片 */
+        .scroll-item {
+            height: 400px; /* 固定高度 */
+            flex: 0 0 auto; /* 宽度自适应，不压缩 */
+        }
+        .scroll-item img { height: 100%; width: auto; object-fit: cover; display: block; }
+
+        /* 字体 */
+        h1.project-title { font-family: 'Inter', sans-serif; font-size: 3.5rem; font-weight: 700; color: #000; margin-bottom: 20px; line-height: 1.1; }
+        .project-meta { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.95rem; color: #888; line-height: 1.6; margin-bottom: 40px; }
+        
+        h2.section-title { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 500; text-align: left; margin-bottom: 20px; color: #111; }
+        p.body-text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.8; color: #333; font-weight: 400; text-align: justify; text-justify: inter-word; margin-bottom: 30px; }
+        
+        .img-box { width: 100%; display: block; line-height: 0; }
+        .img-box img { width: 100%; height: auto; display: block; object-fit: cover; }
+
+        .next-project { padding: 150px 0; text-align: center; border-top: 1px solid #eee; background: #fafafa; width: 100%; scroll-snap-align: start; }
+        .next-title { font-size: 3rem; font-weight: 300; cursor: pointer; }
+        footer { padding: 50px var(--nav-padding); background: #fafafa; border-top: 1px solid #eee; display: flex; justify-content: space-between; color: #999; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            :root { --nav-padding: 20px; }
+            .text-block, .split-layout { padding: 0 20px; display: block; }
+            .split-layout { display: flex; flex-direction: column; gap: 30px; }
+            .scroll-item { height: 250px; }
+            html { scroll-snap-type: none; } 
+            .custom-cursor { display: none; } * { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+
+    <nav>
+        <a href="index.html" class="logo hover-target">Pang, Zhujun</a>
+        <div class="nav-right">
+            <div class="menu">
+                <a href="index.html" class="hover-target">Work</a>
+                <a href="about.html" class="hover-target">About</a>
+            </div>
+            <div class="lang-switch hover-target" id="lang-btn">EN / 中</div>
+        </div>
+    </nav>
+
+    <!-- 1. 首屏 Hero -->
+    <div class="hero-fullscreen">
+        <img src="images/morpheus/Morpheus_hero.webp" alt="Hero">
+    </div>
+
+    <div class="content-wrapper">
+        
+        <!-- 2. 标题与项目简介 (自由滚动) -->
+        <div class="text-block">
+            <h1 class="project-title" id="txt-title">Morpheus</h1>
+            
+            <div class="project-meta">
+                <div id="txt-meta1">Group work, 4 months, Fall 2021</div>
+                <div id="txt-meta2">Eindhoven University of Technology</div>
+                <div id="txt-meta3">Client: Philips Healthcare</div>
+            </div>
+
+            <h2 class="section-title" id="txt-h-mission">Mission:</h2>
+            <p class="body-text" id="txt-p-mission">
+                Sleep is a crucial and underestimated need for the human body. Insufficient and inconsistent sleep influences the quality of sleep, which can affect one’s overall well-being. <strong>The goal is to help people recover from insufficient sleep and building a consistent sleep schedule takes time.</strong>
+            </p>
+
+            <h2 class="section-title" id="txt-h-contribution">Contribution:</h2>
+            <p class="body-text" id="txt-p-contribution">
+                This was a collaborative project between a team of three people, during which I was responsible for Benchmarketing, <strong>Interaction ideation with sketching, Prototyping, Photographing, Business evaluation.</strong>
+            </p>
+
+            <h2 class="section-title" id="txt-h-outcome">Outcome & Impact:</h2>
+            <p class="body-text" id="txt-p-outcome">
+                An intelligent night lamp that replaces your regular bed lamp and reflects your past bedtime routines, adjusting its brightness, color and sound accordingly. It helps people to reflect on their bedtime behaviour by observing their sleep habits over time and providing personalised feedback to help them adjust their routine implicitly.
+            </p>
+        </div>
+
+        <!-- 3. 背景介绍 (大图 - 修正版) -->
+        <!-- 改回 section-block，它会自动拥有左右边距和下间距 -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <img src="images/morpheus/1.webp" alt="Intro" loading="lazy">
+            </div>
+        </div>
+
+
+        <!-- 4. Context (文字) -->
+        <div class="spaced-block gap-small">
+            <div class="text-container" style="width:100%; max-width:1000px; text-align:left;">
+                <h2 class="section-title" id="txt-h-1">Background</h2>
+                <p class="body-text" id="txt-p-1">
+                    Nowadays, our average day is packed with activities. Often up to the very last minute before you go to sleep. This can make it difficult for a person to fall asleep, resulting in insufficient sleep and inconsistent bedtime routines. However, sleep is very important for both your physical and mental health, yet many people still underestimate the importance of having a good night’s rest. Current sleep trackers are unable to help, as they are too quick to reward or punish the user, while a slower and broader look at one’s schedule is needed.
+                </p>
+            </div>
+        </div>
+
+        <!-- 5. Context (大图) -->
+        <div class="seamless-block">
+            <div class="img-box hover-target">
+                <img src="images/morpheus/03_context.webp" alt="Context" loading="lazy">
+            </div>
+        </div>
+
+        <!-- 6. Benchmarking (精简版文字) -->
+        <div class="spaced-block gap-small">
+            <div class="text-container" style="width:100%; max-width:1000px; text-align:left;">
+                <h2 class="section-title" id="txt-h-2">Benchmarking & The missing gap</h2>
+                <p class="body-text" id="txt-p-2-1">
+                    Most current sleep trackers focus on data collection—presenting complex graphs and numbers that offer little guidance on improvement. What users truly need is simple, actionable feedback rather than just raw data. This project shifts focus to long-term monitoring, analyzing sleep cycles over extended periods to help users correct patterns implicitly, filling a gap in a market obsessed with short-term rewards and punishments.
+                </p>
+                <p class="body-text" id="txt-p-2-2">
+                    Improving sleep consistency takes time, making "Slow Technology" an ideal approach. Instead of intrusive, fast-paced feedback, a slow product observes long-term processes and acts only when meaningful. Designed to blend into the bedroom environment as an aesthetic artifact, it fosters ritualistic interaction and personal attachment, potentially supporting users through different life stages or even connecting multiple people’s sleep patterns.
+                </p>
+            </div>
+        </div>
+
+        <!-- 7. Benchmarking (纵向两张大图) -->
+        <div class="seamless-block"><div class="img-box hover-target"><img src="images/morpheus/04_bench_1.webp" alt="Bench 1" loading="lazy"></div></div>
+        <div class="seamless-block"><div class="img-box hover-target"><img src="images/morpheus/04_bench_2.webp" alt="Bench 2" loading="lazy"></div></div>
+
+        <!-- 8. Experiment (文字) -->
+        <div class="spaced-block gap-small">
+            <div class="text-container" style="width:100%; max-width:1000px; text-align:left;">
+                <h2 class="section-title" id="txt-h-3">Experiment</h2>
+                <p class="body-text" id="txt-p-3">
+                    With limited time and material, low-fi prototypes were made for all three concept with functional interaction. These prototypes were made by paper cutting, ready-made stuffs, origami, and remote light inside to simulate the light changing during users interacting with the prototype. Then, these low-fidelity prototypes were briefly evaluated with participants about what did they feel about the three prototypes and the three corresponding interactions.
+                </p>
+            </div>
+        </div>
+
+        <!-- 9. Experiment (大图) -->
+        <div class="seamless-block">
+            <div class="img-box hover-target">
+                <img src="images/morpheus/05_exp.webp" alt="Experiment" loading="lazy">
+            </div>
+        </div>
+
+        <!-- 10. User Study (文字) -->
+        <div class="spaced-block gap-small">
+            <div class="text-container" style="width:100%; max-width:1000px; text-align:left;">
+                <h2 class="section-title" id="txt-h-4">User study</h2>
+                <p class="body-text" id="txt-p-4">
+                    Questionnaire gathered insights from 31 young adults (20-30) to understand sleep patterns and pain points. Key findings: Over 80% dislike punishment for bad sleep. Users prefer gradual light, sound, and auto-off features. The ideal experience is described as "calm," "interesting," and "novel."
+                </p>
+            </div>
+        </div>
+
+        <!-- 11. User Study (横向滚动 Grid) -->
+        <!-- 这里的图片高度一致，宽度自适应，且可以横向拖动 -->
+        <div class="spaced-block">
+            <div class="scroll-container hover-target">
+                <div class="scroll-item"><img src="images/morpheus/06_user_1.webp" alt="User 1" loading="lazy"></div>
+                <div class="scroll-item"><img src="images/morpheus/06_user_2.webp" alt="User 2" loading="lazy"></div>
+                <div class="scroll-item"><img src="images/morpheus/06_user_3.webp" alt="User 3" loading="lazy"></div>
+                <div class="scroll-item"><img src="images/morpheus/06_user_4.webp" alt="User 4" loading="lazy"></div>
+                <div class="scroll-item"><img src="images/morpheus/06_user_5.webp" alt="User 5" loading="lazy"></div>
+            </div>
+        </div>
+
+        <!-- 12. Design Process (文字) -->
+        <div class="spaced-block gap-small">
+            <div class="text-container" style="width:100%; max-width:1000px; text-align:left;">
+                <h2 class="section-title" id="txt-h-5">Design process</h2>
+                <p class="body-text" id="txt-p-5">
+                    A form resembling a mix of a campfire and a seashell was selected for its calming aesthetic and bedroom fit. The concept involves users adding 'sticks' (from the outer shell) into the inner layer as fuel to generate light, mimicking feeding a campfire or using incense sticks. The light duration reflects the user's past sleep behavior, applying light in both evening and morning routines.
+                </p>
+            </div>
+        </div>
+
+        <!-- 13. Design Process (三张纵向大图) -->
+        <div class="seamless-block"><div class="img-box hover-target"><img src="images/morpheus/07_process_1.webp" alt="Process 1" loading="lazy"></div></div>
+        <div class="seamless-block"><div class="img-box hover-target"><img src="images/morpheus/07_process_2.webp" alt="Process 2" loading="lazy"></div></div>
+        <div class="seamless-block"><div class="img-box hover-target"><img src="images/morpheus/07_process_3.webp" alt="Process 3" loading="lazy"></div></div>
+
+        <!-- 14. Final Design (文字) -->
+        <div class="spaced-block gap-small">
+            <div class="text-container" style="width:100%; max-width:1000px; text-align:left;">
+                <h2 class="section-title" id="txt-h-6">Final design</h2>
+                <p class="body-text" id="txt-p-6">
+                    Morpheus acts as a replacement for your average night lamp, as it is able to adjust its light levels based on long-term personal sleeping performance.
+                </p>
+            </div>
+        </div>
+
+        <!-- 15. Feature A (左图右文) -->
+        <div class="spaced-block">
+            <div class="split-layout">
+                <div class="img-box hover-target">
+                    <img src="images/morpheus/08_feature_a.webp" alt="Feature A" loading="lazy">
+                </div>
+                <div class="split-text">
+                    <p class="body-text" id="txt-p-fea-a">
+                        At night, the user adds ‘incense sticks’ to get light for a certain duration, with each stick adding a set amount of time. This slow, ritualistic interaction helps users ‘feel’ the time, calm down from busy days, and reflect on previous nights.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 16. Feature B (左图右文) -->
+        <div class="spaced-block">
+            <div class="split-layout">
+                <div class="img-box hover-target">
+                    <img src="images/morpheus/09_feature_b.webp" alt="Feature B" loading="lazy">
+                </div>
+                <div class="split-text">
+                    <p class="body-text" id="txt-p-fea-b">
+                        After being turned off for 7 hours, Morpheus activates automatically in the morning with refreshing blue light and tender sound. It nudges users to keep a healthy schedule by changing stick values and light if the schedule is ignored too often.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 17. Video -->
+        <div class="seamless-block">
+            <div class="img-box hover-target">
+                <video src="images/morpheus/10_video.mp4" controls preload="metadata" poster="images/morpheus/10_cover.webp" style="width: 100%; height: auto; display: block;"></video>
+            </div>
+        </div>
+
+        <!-- 18. Principle (大图) -->
+        <div class="seamless-block">
+            <div class="img-box hover-target">
+                <img src="images/morpheus/11_principle.webp" alt="Principle" loading="lazy">
+            </div>
+        </div>
+
+        <!-- 19. Value (文字) -->
+        <div class="spaced-block gap-small">
+            <div class="text-container" style="width:100%; max-width:1000px; text-align:left;">
+                <h2 class="section-title" id="txt-h-7">Value proposition</h2>
+                <p class="body-text" id="txt-p-7">
+                    Example: blue sticks and mountain spring sounds for a cool summer feeling, or orange sticks and campfire sounds for winter warmth. These seasonal modes can be optionally unlocked by purchasing corresponding sticks, offering users customization beyond the basic mode.
+                </p>
+            </div>
+        </div>
+
+        <!-- 20. End (大图) -->
+        <div class="seamless-block">
+            <div class="img-box hover-target">
+                <img src="images/morpheus/12_end.webp" alt="Value" loading="lazy">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="next-project">
+        <span class="next-label" id="lbl-next">Next Project</span>
+        <a href="project-musiclinker.html" class="next-title hover-target">Music Linker ↗</a>
+    </div>
+
+    <footer>
+        <span>© 2025 Zhujun Pang</span>
+        <span>Designed & Coded by me</span>
+    </footer>
+
+    <script>
+        /* 语言切换 */
+        const langBtn = document.getElementById('lang-btn');
+        let currentLang = localStorage.getItem('siteLang') || 'en';
+
+        const translations = {
+            en: {
+                title: "Morpheus",
+                meta1: "Group work, 4 months, Fall 2021",
+                meta2: "Eindhoven University of Technology",
+                meta3: "Client: Philips Healthcare",
+                
+                h_mission: "Mission:",
+                p_mission: "Sleep is a crucial and underestimated need for the human body. Insufficient and inconsistent sleep influences the quality of sleep, which can affect one’s overall well-being. The goal is to help people recover from insufficient sleep and building a consistent sleep schedule takes time.",
+                
+                h_contribution: "Contribution:",
+                p_contribution: "This was a collaborative project between a team of three people, during which I was responsible for Benchmarketing, Interaction ideation with sketching, Prototyping, Photographing, Business evaluation.",
+                
+                h_outcome: "Outcome & Impact:",
+                p_outcome: "An intelligent night lamp that replaces your regular bed lamp and reflects your past bedtime routines, adjusting its brightness, color and sound accordingly. It helps people to reflect on their bedtime behaviour by observing their sleep habits over time and providing personalised feedback to help them adjust their routine implicitly.",
+                
+                h1: "Background",
+                p1: "Nowadays, our average day is packed with activities. Often up to the very last minute before you go to sleep. This can make it difficult for a person to fall asleep, resulting in insufficient sleep and inconsistent bedtime routines. However, sleep is very important for both your physical and mental health, yet many people still underestimate the importance of having a good night’s rest. Current sleep trackers are unable to help, as they are too quick to reward or punish the user, while a slower and broader look at one’s schedule is needed.",
+                
+                h2: "Benchmarking & The missing gap",
+                p2_1: "Most current sleep trackers focus on data collection—presenting complex graphs and numbers that offer little guidance on improvement. What users truly need is simple, actionable feedback rather than just raw data. This project shifts focus to long-term monitoring, analyzing sleep cycles over extended periods to help users correct patterns implicitly, filling a gap in a market obsessed with short-term rewards and punishments.",
+                p2_2: "Improving sleep consistency takes time, making \"Slow Technology\" an ideal approach. Instead of intrusive, fast-paced feedback, a slow product observes long-term processes and acts only when meaningful. Designed to blend into the bedroom environment as an aesthetic artifact, it fosters ritualistic interaction and personal attachment, potentially supporting users through different life stages or even connecting multiple people’s sleep patterns.",
+                
+                h3: "Experiment",
+                p3: "With limited time and material, low-fi prototypes were made for all three concept with functional interaction. These prototypes were made by paper cutting, ready-made stuffs, origami, and remote light inside to simulate the light changing during users interacting with the prototype. Then, these low-fidelity prototypes were briefly evaluated with participants about what did they feel about the three prototypes and the three corresponding interactions.",
+                
+                h4: "User study",
+                p4: "Questionnaire gathered insights from 31 young adults (20-30) to understand sleep patterns and pain points. Key findings: Over 80% dislike punishment for bad sleep. Users prefer gradual light, sound, and auto-off features. The ideal experience is described as \"calm,\" \"interesting,\" and \"novel.\"",
+                
+                h5: "Design process",
+                p5: "A form resembling a mix of a campfire and a seashell was selected for its calming aesthetic and bedroom fit. The concept involves users adding 'sticks' (from the outer shell) into the inner layer as fuel to generate light, mimicking feeding a campfire or using incense sticks. The light duration reflects the user's past sleep behavior, applying light in both evening and morning routines.",
+                
+                h6: "Final design",
+                p6: "Morpheus acts as a replacement for your average night lamp, as it is able to adjust its light levels based on long-term personal sleeping performance.",
+                
+                p_fea_a: "At night, the user adds ‘incense sticks’ to get light for a certain duration, with each stick adding a set amount of time. This slow, ritualistic interaction helps users ‘feel’ the time, calm down from busy days, and reflect on previous nights.",
+                p_fea_b: "After being turned off for 7 hours, Morpheus activates automatically in the morning with refreshing blue light and tender sound. It nudges users to keep a healthy schedule by changing stick values and light if the schedule is ignored too often.",
+                
+                h7: "Value proposition",
+                p7: "Example: blue sticks and mountain spring sounds for a cool summer feeling, or orange sticks and campfire sounds for winter warmth. These seasonal modes can be optionally unlocked by purchasing corresponding sticks, offering users customization beyond the basic mode.",
+
+                nextLabel: "Next Project"
+            },
+            cn: {
+                title: "Morpheus",
+                meta1: "小组项目，4个月，2021秋",
+                meta2: "埃因霍温理工大学",
+                meta3: "客户：飞利浦医疗",
+                
+                h_mission: "使命：",
+                p_mission: "睡眠是人体至关重要却常被低估的需求。不足和不规律的睡眠会影响睡眠质量，进而影响整体健康。目标是帮助人们从睡眠不足中恢复，而建立规律的睡眠时间表需要时间。",
+                
+                h_contribution: "个人贡献：",
+                p_contribution: "这是一个三人合作项目，我主要负责：竞品分析、交互构思与草图绘制、原型制作、摄影、商业价值评估。",
+                
+                h_outcome: "成果与影响：",
+                p_outcome: "一款智能夜灯，替代普通床头灯，反映你过去的就寝习惯，并相应调整亮度、颜色和声音。它通过长期观察睡眠习惯并提供个性化反馈，帮助人们反思就寝行为，隐性地调整作息。",
+                
+                h1: "背景",
+                p1: "如今，我们的日常生活被活动填满，往往持续到睡前最后一刻。这让人难以入睡，导致睡眠不足和作息不规律。尽管睡眠对身心健康至关重要，许多人仍低估了良好休息的重要性。目前的睡眠追踪器无法提供有效帮助，因为它们太急于奖励或惩罚用户，而我们需要的是对作息进行更缓慢、更宏观的观察。",
+                
+                h2: "竞品分析与缺失的缺口",
+                p2_1: "目前的睡眠追踪器大多侧重于数据收集——展示复杂的图表和数字，却很少提供改进指导。用户真正需要的是简单、可操作的反馈，而非原始数据。本项目转向长期监测，分析长时间段内的睡眠周期，以帮助用户隐性地纠正模式，填补了市场上沉迷于短期奖惩的空白。",
+                p2_2: "改善睡眠一致性需要时间，这使得“慢技术”成为理想的方法。慢速产品不提供侵入性的快速反馈，而是观察长期过程并在有意义时采取行动。它旨在作为审美物品融入卧室环境，培养仪式化的互动和个人依恋，甚至可能支持用户度过不同的人生阶段或连接多人的睡眠模式。",
+                
+                h3: "实验",
+                p3: "在时间和材料有限的情况下，我们为三个概念制作了具有功能交互的低保真原型。这些原型通过剪纸、现成品、折纸制作，并在内部使用遥控灯光来模拟用户交互时的光效变化。然后，我们与参与者简要评估了这些低保真原型，了解他们对这三个原型及其相应交互的感受。",
+                
+                h4: "用户研究",
+                p4: "通过问卷收集了31名年轻人（20-30岁）的见解，以了解睡眠模式和痛点。关键发现：超过80%的人不喜欢对糟糕睡眠的惩罚。用户更喜欢渐进式的灯光、声音和自动关闭功能。理想的体验被描述为“平静”、“有趣”和“新颖”。",
+                
+                h5: "设计过程",
+                p5: "最终选择了一种融合篝火和贝壳形态的造型，因其平静的美感和适合卧室环境。概念涉及用户将“木棍”（取自外壳）作为燃料添加到内层以产生光亮，模仿添柴生火或使用香薰。光照持续时间反映了用户过去的睡眠行为，应用于晚间和早晨的日常流程。",
+                
+                h6: "最终设计",
+                p6: "Morpheus 可替代普通夜灯，能够根据长期的个人睡眠表现调整光照水平。",
+                
+                p_fea_a: "晚上，用户添加“香薰棒”以获得一定时长的光照，每根棒代表固定的时间量。这种缓慢的仪式化互动帮助用户“感知”时间，从忙碌的一天中平静下来，并反思前几晚的情况。",
+                p_fea_b: "在关闭7小时后，Morpheus 会在早晨自动激活，发出清新的蓝光和温柔的声音。如果用户频繁忽视推荐的作息，它会通过改变木棒的时间值和唤醒光来温和地督促用户保持健康的睡眠时间表。",
+                
+                h7: "价值主张",
+                p7: "例如：蓝色的木棒和山泉声营造夏日的清凉感，或橙色的木棒和篝火声提供冬日的温暖。这些季节性模式可以通过购买相应的木棒来选择性解锁，为用户提供基础模式之外的个性化定制。",
+
+                nextLabel: "下一个项目"
+            }
+        };
+
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-meta1').innerText = t.meta1;
+            document.getElementById('txt-meta2').innerText = t.meta2;
+            document.getElementById('txt-meta3').innerText = t.meta3;
+            
+            document.getElementById('txt-h-mission').innerText = t.h_mission;
+            document.getElementById('txt-p-mission').innerHTML = t.p_mission;
+            document.getElementById('txt-h-contribution').innerText = t.h_contribution;
+            document.getElementById('txt-p-contribution').innerHTML = t.p_contribution;
+            document.getElementById('txt-h-outcome').innerText = t.h_outcome;
+            document.getElementById('txt-p-outcome').innerText = t.p_outcome;
+            
+            document.getElementById('txt-h-1').innerText = t.h1;
+            document.getElementById('txt-p-1').innerText = t.p1;
+            
+            document.getElementById('txt-h-2').innerText = t.h2;
+            document.getElementById('txt-p-2-1').innerText = t.p2_1;
+            document.getElementById('txt-p-2-2').innerText = t.p2_2;
+            
+            document.getElementById('txt-h-3').innerText = t.h3;
+            document.getElementById('txt-p-3').innerText = t.p3;
+            
+            document.getElementById('txt-h-4').innerText = t.h4;
+            document.getElementById('txt-p-4').innerText = t.p4;
+            
+            document.getElementById('txt-h-5').innerText = t.h5;
+            document.getElementById('txt-p-5').innerText = t.p5;
+            
+            document.getElementById('txt-h-6').innerText = t.h6;
+            document.getElementById('txt-p-6').innerText = t.p6;
+            document.getElementById('txt-p-fea-a').innerText = t.p_fea_a;
+            document.getElementById('txt-p-fea-b').innerText = t.p_fea_b;
+            
+            document.getElementById('txt-h-7').innerText = t.h7;
+            document.getElementById('txt-p-7').innerText = t.p7;
+
+            document.getElementById('lbl-next').innerText = t.nextLabel;
+        }
+
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            localStorage.setItem('siteLang', currentLang);
+            applyLanguage();
+        });
+        applyLanguage();
+
+        const navBar = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navBar.classList.add('scrolled');
+            else navBar.classList.remove('scrolled');
+        });
+
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15; cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px'; cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        document.querySelectorAll('.hover-target, a').forEach(t => {
+            t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+        
+        /* 横向滚动优化 (支持鼠标拖拽) */
+        const slider = document.querySelector('.scroll-container');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        if(slider) {
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                slider.style.cursor = 'grabbing';
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.style.cursor = 'grab';
+            });
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                slider.style.cursor = 'grab';
+            });
+            slider.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2; // 滚动速度
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        }
+    </script>
+</body>
+</html>

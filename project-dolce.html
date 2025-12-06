@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dolce | Zhujun Pang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. 全局变量 (保持一致) --- */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #111;
+            --nav-height: 100px;
+            --nav-padding: 60px;
+            --block-spacing: 160px;
+            --grid-gap: 10px;
+        }
+        html { scroll-behavior: smooth; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- 2. 样式复用 (SoundMotion 同款) --- */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background-color: #111; border-radius: 50%; pointer-events: none;
+            mix-blend-mode: difference; z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+        .custom-cursor.hovered { width: 60px; height: 60px; background-color: #fff; }
+
+        /* --- 导航栏 (高级毛玻璃 + 动态高度) --- */
+        nav {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 0 var(--nav-padding); 
+            
+            /* 初始状态：高度较大 */
+            height: 120px; 
+            
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            
+            /* 透明度调整：0.25 (更透) */
+            background: rgba(255, 255, 255, 0.25); 
+            
+            /* 模糊度增加：让背后的内容看起来更有质感 */
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            
+            /* 去除灰色边框 */
+            border-bottom: none;
+            
+            /* 关键：添加过渡动画，让变化很丝滑 */
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.35, 1);
+        }
+
+        /* --- 滚动后的状态 (通过 JS 添加这个类) --- */
+        nav.scrolled {
+            /* 变窄 */
+            height: 70px; 
+            
+            /* 滚动后背景稍微实一点，保证文字可读性 */
+            background: rgba(255, 255, 255, 0.35); 
+            
+            /* 可选：添加一个极其微弱的阴影代替边框，增加层次感 */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+
+        .logo { font-weight: 600; font-size: 1.2rem; color: #000; }
+        .nav-right { display: flex; align-items: center; gap: 50px; }
+        .menu { display: flex; gap: 50px; }
+        .menu a { font-size: 1rem; font-weight: 500; opacity: 0.6; color: #000; }
+        .menu a:hover { opacity: 1; }
+        .lang-switch { font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #000; }
+
+        /* --- 排版系统 --- */
+        .hero-fullscreen {
+            width: 100vw; height: 100vh; background-color: #f4f4f4;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: var(--block-spacing);
+        }
+        .hero-fullscreen img { width: 100%; height: 100%; object-fit: cover; }
+
+        .content-wrapper {
+            max-width: 1400px; margin: 0 auto; padding: 0 40px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .section-block {
+            width: 100%; margin-bottom: 140px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .section-block.gap-small { margin-bottom: 60px; }
+
+        .text-container {
+            width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 20px; text-align: left;
+        }
+        h1.project-title {
+            font-family: 'Inter', sans-serif; font-size: 3.5rem; font-weight: 700;
+            color: #000; margin-bottom: 20px; line-height: 1.1; text-align: left;
+        }
+        .project-meta { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.95rem; color: #888; line-height: 1.6; margin-bottom: 40px; text-align: left;}
+        h2.section-title {
+            font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 500;
+            text-align: left; margin-bottom: 20px; color: #111;
+        }
+        p.body-text {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px;
+            line-height: 1.8; color: #333; font-weight: 400;
+            text-align: justify; text-justify: inter-word; margin-bottom: 30px;
+        }
+        #txt-disclaimer { font-size: 0.8rem; color: #999; margin-top: -20px; font-style: italic; }
+
+        .img-box { width: 100%; display: block; line-height: 0; }
+        .img-box img, .img-box video { width: 100%; height: auto; display: block; object-fit: contain; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; }
+
+        /* 窄缝隙图片组 (用于 Part 2) */
+        .image-group-tight { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
+        .next-project { padding: 150px 0; text-align: center; border-top: 1px solid #eee; background-color: #fafafa; width: 100%; }
+        .next-title { font-size: 3rem; font-weight: 300; cursor: pointer; }
+        footer { padding: 50px var(--nav-padding); background-color: #fafafa; border-top: 1px solid #eee; display: flex; justify-content: space-between; color: #999; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            :root { --nav-padding: 20px; --block-spacing: 80px; }
+            .text-container { padding: 0 20px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 10px; }
+            .custom-cursor { display: none; } * { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+
+    <nav>
+        <a href="index.html" class="logo hover-target">Pang, Zhujun</a>
+        <div class="nav-right">
+            <div class="menu">
+                <a href="index.html" class="hover-target">Work</a>
+                <a href="about.html" class="hover-target">About</a>
+            </div>
+            <div class="lang-switch hover-target" id="lang-btn">EN / 中</div>
+        </div>
+    </nav>
+
+    <!-- 1. 首图大图 -->
+    <div class="hero-fullscreen">
+        <img src="images/dolce/1.webp" alt="Dolce Hero">
+    </div>
+
+    <div class="content-wrapper">
+        
+        <!-- 2. 标题与核心简介 -->
+        <div class="section-block">
+            <div class="text-container" style="text-align: left;">
+                
+                <!-- 1. 主标题 -->
+                <!-- margin-bottom: 60px 增加与下方内容的距离 -->
+                <h1 class="project-title" id="txt-title" style="margin-bottom: 60px;">
+                    Dolce: Reframing the way food information is translated
+                </h1>
+                
+                <!-- 2. 引言与正文 (统一字号，缩小间距) -->
+                <!-- 统一 font-size: 1.2rem -->
+                
+                <!-- 第一段 (加粗) -->
+                <p class="body-text" id="txt-q1" style="font-weight: 600; font-size: 1.2rem; margin-bottom: 15px;">
+                    Have you ever wondered why so much of today’s information still depends on screens, numbers, and alerts—formats that require users to actively interpret and respond?
+                </p>
+                
+                <!-- 第二段 (常规，但那句重点加粗) -->
+                <!-- margin-bottom: 60px 拉开与底部元数据的距离 -->
+                <p class="body-text" id="txt-intro" style="font-size: 1.2rem; margin-bottom: 60px;">
+                    Dolce is a small research project where I explore a simple question: How could interactions in the smart home feel more intuitive and human? Rather than relying on screens, apps, or voice commands, I wanted to test <strong>whether information could be delivered in a quieter, more natural way—one that fits directly into everyday actions</strong>.
+                </p>
+
+                <!-- 3. 项目元数据 -->
+                <div class="project-meta">
+                    <div id="txt-meta">Research project, individual, 2022, 4 months</div>
+                    <div id="txt-credits">Designed by Zhujun Pang, supervised by Joep Frens</div>
+                    <div id="txt-school">Eindhoven University of Technology</div>
+                </div>
+                
+            </div>
+        </div>
+
+
+        <!-- Grid-2 (总宽度与大图一致) -->
+        <div class="section-block">
+            <div class="grid-2">
+                <div class="img-box hover-target"><img src="images/dolce/1b.gif" alt="Img A"></div>
+                <div class="img-box hover-target"><img src="images/dolce/1a.gif" alt="Img B"></div>
+            </div>
+        </div>
+
+        <!-- 1. Background -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-1">Background</h2>
+                <p class="body-text" id="txt-p-1">
+                    Most people don't realize how much food they throw away every day—from leftovers to spoiled produce. It is estimated that 1/3 of all food produced for human consumption is discarded or wasted globally. When it comes to the consumer level, <strong>around 2/3 of spoiled food generated in the home environment is due to food not being used before it goes bad.</strong> Why is reducing food waste so strongly emphasized worldwide, yet so hard to practice in people's daily lives?
+                </p>
+                <div id="txt-disclaimer">*The Problem of Food Waste. FoodPrint. Retrieved June 1, 2022 from https://foodprint.org/issues/the-problem-of-food-waste/</div>
+            </div>
+        </div>
+
+        <!-- 大图 -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <img src="images/dolce/1c.webp" alt="Background">
+            </div>
+        </div>
+
+        <!-- 2. Analysis -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-2">Analysis</h2>
+                <p class="body-text" id="txt-p-2">
+                    The <strong>Thematic analysis</strong> method was used to manually collate and analyze the data. Firstly, the photos of the fridge sent by the participants, the food discarded, and their self-responses were centrally counted and linked. Subsequently, I identified related notes, grouped them under initial subheadings, and then looked for overarching themes to create higher-level categories. These data collectively illuminated the frequency, categories, and decision-making processes participants employed when discarding food due to spoilage.
+                </p>
+            </div>
+        </div>
+
+        <!-- 两张纵向大图 (距离窄一点) -->
+        <div class="section-block">
+            <div class="image-group-tight">
+                <div class="img-box hover-target"><img src="images/dolce/2.webp" alt="Analysis 1"></div>
+                <div class="img-box hover-target"><img src="images/dolce/2a.webp" alt="Analysis 2"></div>
+            </div>
+        </div>
+
+        <!-- 3. Key Insights -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-3">Unveiling Key Insights: Guiding the design</h2>
+                <p class="body-text" id="txt-p-3-1">
+                    These data also revealed two critical insights for the later prototype development: 1. Challenges in food information perception: Users struggled to identify subtle spoilage or overcooked forgotten items, leading to waste. 2. Resistance to proactive management: While mindful users organized and planned, others found such efforts cumbersome, highlighting an "effort barrier."
+                </p>
+                <p class="body-text" id="txt-p-3-2">
+                    These insights directly informed my design goal: 1. To create a product offering <strong>intuitive state representation—perceptible, external, and instantly understandable information</strong>; 2. And <strong>effortless & unobtrusive engagement, requiring no additional user effort or focus</strong>.
+                </p>
+            </div>
+        </div>
+
+        <!-- 大图 -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <img src="images/dolce/3.webp" alt="Insights">
+            </div>
+        </div>
+
+        <!-- 4. The Black Box Challenge -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-4">The Black Box Challenge: Initial Spark for Sensory Exploration</h2>
+                <p class="body-text" id="txt-p-4">
+                    To address the inherent information blockage of a refrigerator, I posed a fundamental question: <strong>How can we convey changes within a completely sealed 'black box' (representing the fridge) to someone outside, without direct visual access?</strong> This led me to explore various sensory cues, mimicking natural indicators of spoilage like mold, smell, or changes in texture. From these insights, I composed three concepts. Following an evaluation across four key dimensions—User Cognitive Load & Behavioral Effort, Sensory Intrusiveness, Research Feasibility, and Action Prominence/Immediacy—I selected Dolce, a tactile interaction approach, as the design direction for this project.
+                </p>
+            </div>
+        </div>
+
+        <!-- 两张纵向大图 (不裁切) -->
+        <div class="section-block">
+            <div class="image-group-tight">
+                <div class="img-box hover-target"><img src="images/dolce/4a.gif" alt="Challenge 1"></div>
+                <div class="img-box hover-target"><img src="images/dolce/4b.webp" alt="Challenge 2"></div>
+            </div>
+        </div>
+
+        <!-- 5. Prototyping process -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-5">Prototyping process</h2>
+                <p class="body-text" id="txt-p-5">
+                    To realize a prototype capable of dynamic firmness changes, I explored various methods, including phase-change materials and soft robotics. Given the constraints of time and fabrication complexity, soft robotics was chosen for its material accessibility and maintainability, leveraging air pressure changes to alter the handle's softness and rigidity. Thus, the concept of Dolce was created.
+                </p>
+            </div>
+        </div>
+
+        <!-- 2张纵向排列的大图 -->
+        <div class="section-block">
+            <div class="image-group-tight">
+                <div class="img-box hover-target"><img src="images/dolce/5.webp" alt="Proto 1"></div>
+                <div class="img-box hover-target"><img src="images/dolce/5a.webp" alt="Proto 2"></div>
+            </div>
+        </div>
+
+        <!-- 6. Initiating the Food Practice -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-6">Initiating the Food Practice: Effortless & Seamless Data Input</h2>
+                <p class="body-text" id="txt-p-6">
+                    At the commencement of each food storage cycle, users load newly purchased fresh ingredients into the refrigerator. Built-in visual and olfactory sensors automatically capture food data, prompting Dolce inflation. The refrigerator handle exhibits a firm, full tactile sensation, metaphorically representing the fresh condition of all stored food items.
+                </p>
+            </div>
+        </div>
+
+        <!-- Grid-2 -->
+        <div class="section-block">
+            <div class="grid-2">
+                <div class="img-box hover-target"><img src="images/dolce/6a.gif" alt="Init 1"></div>
+                <div class="img-box hover-target"><img src="images/dolce/6b.gif" alt="Init 2"></div>
+            </div>
+        </div>
+
+        <!-- 7. Food Status Awareness -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-7">Food Status Awareness: Embedding Tactile Signals Into Everyday Behavior</h2>
+                <p class="body-text" id="txt-p-7">
+                    When Dolce detects spoiled food or items that have been stored for too long, the inflatable silicone chamber on the handle deflates and collapses. As the user opens the refrigerator, they immediately perceive the tactile change. In this way, the warning information about food spoilage passively flows into the user’s mind. The user can then conveniently check which items are about to go bad and consume them in time. This approach eliminates the need for users to frequently and proactively check the refrigerator or a mobile app on a fixed schedule.
+                </p>
+            </div>
+        </div>
+
+        <!-- Grid-2 -->
+        <div class="section-block">
+            <div class="grid-2">
+                <div class="img-box hover-target"><img src="images/dolce/7a.gif" alt="Status 1"></div>
+                <div class="img-box hover-target"><img src="images/dolce/7b.gif" alt="Status 2"></div>
+            </div>
+        </div>
+
+        <!-- 8. Traditional Notification Flow vs. DOLCE -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-8">Traditional Notification Flow vs. DOLCE’s Embedded Interaction</h2>
+                <p class="body-text" id="txt-p-8-1">
+                    In conventional smart refrigerators, food-status alerts are pushed to users’ smartphones via apps. These notifications often appear at <strong>inconvenient moments</strong>—during work hours, commuting, or outdoor activities—making them easy to ignore or forget by the time users return home. As a result, spoilage warnings lose their effectiveness, and users are unlikely to check the fridge proactively.
+                </p>
+                <p class="body-text" id="txt-p-8-2">
+                    DOLCE embeds the notification directly into the user’s action of opening the refrigerator. This passive form of information intake requires zero additional time or effort from users. <strong>More importantly, its immediacy enhances actionability: users receive the spoilage cue precisely when they are already in front of the fridge and can address the issue instantly.</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- 9. Concept Video (修正：增加外层容器以控制间距) -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <video 
+                    src="images/dolce/9.mp4" 
+                    controls 
+                    preload="metadata" 
+                    poster="images/dolce/9_cover.webp" 
+                    style="width: 100%; height: auto; display: block;">
+                </video>
+            </div>
+        </div>
+
+
+        <!-- 10. User Validation -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-10">User Validation: The "Wizard of Oz" Experiment</h2>
+                <p class="body-text" id="txt-p-10">
+                    Given the time and resource constraints, the 'Wizard of Oz' method was employed to simulate Dolce's intelligent functionality for user validation. Our setup involved a <strong>Fridge camera</strong> to remotely monitor food status. A <strong>Researcher</strong> then manually simulated AI detection of food spoilage, consequently remotely controlling <strong>Dolce</strong>'s air pressure to trigger its tactile feedback, thus conveying the food's status interactively to the user. The experiment unfolded over two weeks, engaging three households (five participants in total) in staggered probe studies and post-experiment interviews, allowing for a longitudinal assessment of Dolce's impact on food waste behavior.
+                </p>
+            </div>
+        </div>
+
+        <!-- 大图 -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <img src="images/dolce/10.webp" alt="Validation">
+            </div>
+        </div>
+
+        <!-- 11. Design Visual -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-11">Design Visual</h2>
+            </div>
+        </div>
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <img src="images/dolce/11.webp" alt="Visual">
+            </div>
+        </div>
+
+        <!-- 12. A Further Exploration -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-12">A Further Exploration: Tangible Interaction in the Smart Home System</h2>
+                <p class="body-text" id="txt-p-12">
+                    Building directly upon the tactile explorations in my Dolce project, I began to ask: <strong>If haptic interaction were integrated into other aspects of the smart home, could it make information feedback more intuitive and 'warmer' for humans, seamlessly blending into daily life rather than just displaying or vocalizing data and text?</strong>
+                </p>
+                <p class="body-text" id="txt-p-12-2">
+                    For instance...
+                </p>
+            </div>
+        </div>
+
+        <!-- Grid-2 -->
+        <div class="section-block">
+            <div class="grid-2">
+                <div class="img-box hover-target"><img src="images/dolce/12a.webp" alt="Explore 1"></div>
+                <div class="img-box hover-target"><img src="images/dolce/12b.webp" alt="Explore 2"></div>
+            </div>
+        </div>
+
+        <!-- 最后一段文字 -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <p class="body-text" id="txt-p-12-3">
+                    Numbers rarely speak to me. When my smart home panel tells me “the room is 13°C,” I still have no idea what that actually feels like. I have to search online for outfit suggestions, or crack open a window to sense the air myself—an unnecessary hassle when the weather is extreme.
+                </p>
+                <p class="body-text" id="txt-p-12-4">
+                    So I began to imagine: <strong>what if the smart home itself could let me feel the temperature</strong>? <strong>A central interface that doesn’t just display information but conveys it through touch—immediate, human, and instinctive.</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- 最后一张大图 -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <img src="images/dolce/13.webp" alt="End">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 底部跳转 -->
+    <div class="next-project">
+        <span class="next-label" id="lbl-next">Next Project</span>
+        <a href="index.html" class="next-title hover-target">Back to Home ↗</a>
+    </div>
+
+    <footer>
+        <span>© 2025 Zhujun Pang</span>
+        <span>Designed & Coded by me</span>
+    </footer>
+
+    <script>
+        /* --- 翻译逻辑 --- */
+        const langBtn = document.getElementById('lang-btn');
+        let currentLang = localStorage.getItem('siteLang') || 'en';
+
+        const translations = {
+            en: {
+                title: "Dolce: Reframing the way food information is translated",
+                q1: "Have you ever wondered why so much of today’s information still depends on screens, numbers, and alerts—formats that require users to actively interpret and respond?",
+                intro: "Dolce is a small research project where I explore a simple question: How could interactions in the smart home feel more intuitive and human? Rather than relying on screens, apps, or voice commands, I wanted to test whether information could be delivered in a quieter, more natural way—one that fits directly into everyday actions.",
+                meta: "Research project, individual, 2022, 4 months",
+                credits: "Designed by Zhujun Pang, supervised by Joep Frens",
+                school: "Eindhoven University of Technology",
+                
+                h1: "Background",
+                p1: "Most people don't realize how much food they throw away every day—from leftovers to spoiled produce. It is estimated that 1/3 of all food produced for human consumption is discarded or wasted globally. When it comes to the consumer level, around 2/3 of spoiled food generated in the home environment is due to food not being used before it goes bad. Why is reducing food waste so strongly emphasized worldwide, yet so hard to practice in people's daily lives?",
+                disclaimer: "*The Problem of Food Waste. FoodPrint. Retrieved June 1, 2022 from https://foodprint.org/issues/the-problem-of-food-waste/",
+                
+                h2: "Analysis",
+                p2: "The Thematic analysis method was used to manually collate and analyze the data. Firstly, the photos of the fridge sent by the participants, the food discarded, and their self-responses were centrally counted and linked. Subsequently, I identified related notes, grouped them under initial subheadings, and then looked for overarching themes to create higher-level categories. These data collectively illuminated the frequency, categories, and decision-making processes participants employed when discarding food due to spoilage.",
+                
+                h3: "Unveiling Key Insights: Guiding the design",
+                p3_1: "These data also revealed two critical insights for the later prototype development: 1. Challenges in food information perception: Users struggled to identify subtle spoilage or overcooked forgotten items, leading to waste. 2. Resistance to proactive management: While mindful users organized and planned, others found such efforts cumbersome, highlighting an \"effort barrier.\"",
+                p3_2: "These insights directly informed my design goal: 1. To create a product offering intuitive state representation—perceptible, external, and instantly understandable information; 2. And effortless & unobtrusive engagement, requiring no additional user effort or focus.",
+                
+                h4: "The Black Box Challenge: Initial Spark for Sensory Exploration",
+                p4: "To address the inherent information blockage of a refrigerator, I posed a fundamental question: How can we convey changes within a completely sealed 'black box' (representing the fridge) to someone outside, without direct visual access? This led me to explore various sensory cues, mimicking natural indicators of spoilage like mold, smell, or changes in texture. From these insights, I composed three concepts. Following an evaluation across four key dimensions—User Cognitive Load & Behavioral Effort, Sensory Intrusiveness, Research Feasibility, and Action Prominence/Immediacy—I selected Dolce, a tactile interaction approach, as the design direction for this project.",
+                
+                h5: "Prototyping process",
+                p5: "To realize a prototype capable of dynamic firmness changes, I explored various methods, including phase-change materials and soft robotics. Given the constraints of time and fabrication complexity, soft robotics was chosen for its material accessibility and maintainability, leveraging air pressure changes to alter the handle's softness and rigidity. Thus, the concept of Dolce was created.",
+                
+                h6: "Initiating the Food Practice: Effortless & Seamless Data Input",
+                p6: "At the commencement of each food storage cycle, users load newly purchased fresh ingredients into the refrigerator. Built-in visual and olfactory sensors automatically capture food data, prompting Dolce inflation. The refrigerator handle exhibits a firm, full tactile sensation, metaphorically representing the fresh condition of all stored food items.",
+                
+                h7: "Food Status Awareness: Embedding Tactile Signals Into Everyday Behavior",
+                p7: "When Dolce detects spoiled food or items that have been stored for too long, the inflatable silicone chamber on the handle deflates and collapses. As the user opens the refrigerator, they immediately perceive the tactile change. In this way, the warning information about food spoilage passively flows into the user’s mind. The user can then conveniently check which items are about to go bad and consume them in time. This approach eliminates the need for users to frequently and proactively check the refrigerator or a mobile app on a fixed schedule.",
+                
+                h8: "Traditional Notification Flow vs. DOLCE’s Embedded Interaction",
+                p8_1: "In conventional smart refrigerators, food-status alerts are pushed to users’ smartphones via apps. These notifications often appear at inconvenient moments—during work hours, commuting, or outdoor activities—making them easy to ignore or forget by the time users return home. As a result, spoilage warnings lose their effectiveness, and users are unlikely to check the fridge proactively.",
+                p8_2: "DOLCE embeds the notification directly into the user’s action of opening the refrigerator. This passive form of information intake requires zero additional time or effort from users. More importantly, its immediacy enhances actionability: users receive the spoilage cue precisely when they are already in front of the fridge and can address the issue instantly.",
+                
+                h10: "User Validation: The \"Wizard of Oz\" Experiment",
+                p10: "Given the time and resource constraints, the 'Wizard of Oz' method was employed to simulate Dolce's intelligent functionality for user validation. Our setup involved a Fridge camera to remotely monitor food status. A Researcher then manually simulated AI detection of food spoilage, consequently remotely controlling Dolce's air pressure to trigger its tactile feedback, thus conveying the food's status interactively to the user. The experiment unfolded over two weeks, engaging three households (five participants in total) in staggered probe studies and post-experiment interviews, allowing for a longitudinal assessment of Dolce's impact on food waste behavior.",
+                
+                h11: "Design Visual",
+                
+                h12: "A Further Exploration: Tangible Interaction in the Smart Home System",
+                p12: "Building directly upon the tactile explorations in my Dolce project, I began to ask: If haptic interaction were integrated into other aspects of the smart home, could it make information feedback more intuitive and 'warmer' for humans, seamlessly blending into daily life rather than just displaying or vocalizing data and text?",
+                p12_2: "For instance...",
+                p12_3: "Numbers rarely speak to me. When my smart home panel tells me “the room is 13°C,” I still have no idea what that actually feels like. I have to search online for outfit suggestions, or crack open a window to sense the air myself—an unnecessary hassle when the weather is extreme.",
+                p12_4: "So I began to imagine: what if the smart home itself could let me feel the temperature? A central interface that doesn’t just display information but conveys it through touch—immediate, human, and instinctive.",
+
+                nextLabel: "Next Project"
+            },
+            cn: {
+                title: "Dolce: 重构食物信息的翻译方式",
+                q1: "你有没有想过，为什么今天这么多的信息仍然依赖于屏幕、数字和警报——这些需要用户主动解读和回应的形式？",
+                intro: "Dolce 是我进行的一个小型研究项目，旨在探索一个简单的问题：如何让智能家居中的交互感觉更直观、更人性化？我不想依赖屏幕、App 或语音指令，而是想测试信息是否可以通过一种更安静、更自然的方式传递——一种直接融入日常行为的方式。",
+                meta: "研究项目，个人，2022，4个月",
+                credits: "设计：庞竺君，导师：Joep Frens",
+                school: "埃因霍温理工大学",
+                
+                h1: "背景",
+                p1: "大多数人并没有意识到他们每天扔掉多少食物——从剩菜到变质的农产品。据估计，全球生产的所有供人类食用的食物中有 1/3 被丢弃或浪费。在消费者层面，大约 2/3 的家庭食物浪费是因为食物在变质前没有被使用。为什么减少食物浪费在全球范围内被如此强调，却在人们的日常生活中难以实践？",
+                disclaimer: "*数据来源：The Problem of Food Waste. FoodPrint. 2022年6月1日检索自 https://foodprint.org/issues/the-problem-of-food-waste/",
+                
+                h2: "分析",
+                p2: "采用主题分析法对数据进行手动整理和分析。首先，集中统计并关联参与者发送的冰箱照片、丢弃的食物及其自我反馈。随后，我识别相关笔记，将其归类在初步子标题下，然后寻找总体主题以创建更高级别的分类。这些数据共同揭示了参与者因变质而丢弃食物时的频率、类别和决策过程。",
+                
+                h3: "关键洞察：指导设计",
+                p3_1: "这些数据还揭示了后期原型开发的两个关键洞察：1. 食物信息感知挑战：用户难以识别微妙的变质或被遗忘的过度烹饪物品，导致浪费。2. 对主动管理的抵触：虽然有心的用户会进行组织和计划，但其他人觉得这种努力很麻烦，凸显了“努力障碍”。",
+                p3_2: "这些见解直接指导了我的设计目标：1. 创建一个能够提供直观状态展示的产品——可感知的、外化的、即时可理解的信息；2. 以及轻松且不显眼的参与方式，无需用户付出额外努力或注意力。",
+                
+                h4: "黑盒挑战：感官探索的初始火花",
+                p4: "为了解决冰箱固有的信息阻隔问题，我提出了一个基本问题：我们如何在没有直接视觉接触的情况下，将一个完全密封的“黑盒”（代表冰箱）内的变化传达给外面的人？这引导我探索各种感官线索，模仿自然的变质指标，如霉菌、气味或质地变化。基于这些见解，我构思了三个概念。经过在四个关键维度（用户认知负荷与行为努力、感官侵入性、研究可行性、行动显著性/即时性）上的评估，我选择了 Dolce，一种触觉交互方法，作为本项目的设计方向。",
+                
+                h5: "原型制作过程",
+                p5: "为了实现能够动态改变硬度的原型，我探索了各种方法，包括相变材料和软体机器人。考虑到时间和制造复杂性的限制，我选择了软体机器人，因其材料易得且易于维护，利用气压变化来改变手柄的柔软度和硬度。Dolce 的概念由此诞生。",
+                
+                h6: "启动食物实践：轻松无缝的数据输入",
+                p6: "在每个食物存储周期开始时，用户将新购买的新鲜食材放入冰箱。内置的视觉和嗅觉传感器自动捕捉食物数据，触发 Dolce 充气。冰箱手柄呈现出坚实、饱满的触感，隐喻所有储存食物的新鲜状态。",
+                
+                h7: "食物状态感知：将触觉信号嵌入日常行为",
+                p7: "当 Dolce 检测到变质食物或存储时间过长的物品时，手柄上的充气硅胶腔体就会放气塌陷。当用户打开冰箱时，他们会立即感知到触觉变化。这样，关于食物变质的警告信息被动地流入用户的脑海。用户随后可以方便地检查哪些物品即将变质并及时食用。这种方法消除了用户频繁主动检查冰箱或按固定时间表检查移动应用的需要。",
+                
+                h8: "传统通知流程 vs. DOLCE 的嵌入式交互",
+                p8_1: "在传统的智能冰箱中，食物状态警报通过 App 推送到用户的智能手机上。这些通知通常出现在不便的时刻——工作时间、通勤途中或户外活动时——导致用户回到家时很容易忽略或忘记。结果，变质警告失去了效力，用户也不太可能主动检查冰箱。",
+                p8_2: "DOLCE 将通知直接嵌入到用户打开冰箱的动作中。这种被动的信息接收形式不需要用户付出额外的时间或精力。更重要的是，它的即时性增强了可行动性：用户恰好在冰箱前收到变质提示，并可以立即解决问题。",
+                
+                h10: "用户验证：“绿野仙踪”实验",
+                p10: "鉴于时间和资源限制，采用了“绿野仙踪”法模拟 Dolce 的智能功能进行用户验证。我们的设置包括一个冰箱摄像头来远程监控食物状态。一名研究人员随后手动模拟 AI 对食物变质的检测，从而远程控制 Dolce 的气压触发触觉反馈，以此交互式地将食物状态传达给用户。实验持续了两周，涉及三个家庭（共五名参与者），进行了交错的探针研究和实验后访谈，以便纵向评估 Dolce 对食物浪费行为的影响。",
+                
+                h11: "设计视觉",
+                
+                h12: "进一步探索：智能家居系统中的实体交互",
+                p12: "直接建立在 Dolce 项目的触觉探索之上，我开始思考：如果触觉交互被整合到智能家居的其他方面，它能否让信息反馈对人类来说更直观、更“温暖”，无缝融入日常生活，而不仅仅是显示或语音播报数据和文本？",
+                p12_2: "例如...",
+                p12_3: "数字很少能打动我。当我的智能家居面板告诉我“房间是 13°C”时，我仍然不知道那实际上是什么感觉。我必须上网搜索穿衣建议，或者打开窗户亲自感受空气——这在极端天气下是不必要的麻烦。",
+                p12_4: "所以我开始想象：如果智能家居本身能让我感觉到温度会怎样？一个不仅仅显示信息，而是通过触觉传达信息的中央界面——即时、人性化且本能。",
+
+                nextLabel: "下一个项目"
+            }
+        };
+
+        function applyLanguage() {
+            const t = translations[currentLang];
+            
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-q1').innerText = t.q1;
+            document.getElementById('txt-intro').innerHTML = t.intro; // 使用 innerHTML 以支持 strong 标签
+            document.getElementById('txt-meta').innerText = t.meta;
+            document.getElementById('txt-credits').innerText = t.credits;
+            document.getElementById('txt-school').innerText = t.school;
+            
+            document.getElementById('txt-h-1').innerText = t.h1;
+            document.getElementById('txt-p-1').innerHTML = t.p1;
+            document.getElementById('txt-disclaimer').innerText = t.disclaimer;
+            
+            document.getElementById('txt-h-2').innerText = t.h2;
+            document.getElementById('txt-p-2').innerHTML = t.p2;
+            
+            document.getElementById('txt-h-3').innerText = t.h3;
+            document.getElementById('txt-p-3-1').innerHTML = t.p3_1;
+            document.getElementById('txt-p-3-2').innerHTML = t.p3_2;
+            
+            document.getElementById('txt-h-4').innerText = t.h4;
+            document.getElementById('txt-p-4').innerHTML = t.p4;
+            
+            document.getElementById('txt-h-5').innerText = t.h5;
+            document.getElementById('txt-p-5').innerHTML = t.p5;
+            
+            document.getElementById('txt-h-6').innerText = t.h6;
+            document.getElementById('txt-p-6').innerHTML = t.p6;
+            
+            document.getElementById('txt-h-7').innerText = t.h7;
+            document.getElementById('txt-p-7').innerHTML = t.p7;
+            
+            document.getElementById('txt-h-8').innerText = t.h8_1 ? "Title" : "Traditional Notification Flow vs. DOLCE’s Embedded Interaction"; // 修正标题逻辑
+            document.getElementById('txt-p-8-1').innerHTML = t.p8_1;
+            document.getElementById('txt-p-8-2').innerHTML = t.p8_2;
+            
+            document.getElementById('txt-h-10').innerText = t.h10;
+            document.getElementById('txt-p-10').innerHTML = t.p10;
+            
+            document.getElementById('txt-h-11').innerText = t.h11;
+            
+            document.getElementById('txt-h-12').innerText = t.h12;
+            document.getElementById('txt-p-12').innerHTML = t.p12;
+            document.getElementById('txt-p-12-2').innerHTML = t.p12_2;
+            document.getElementById('txt-p-12-3').innerHTML = t.p12_3;
+            document.getElementById('txt-p-12-4').innerHTML = t.p12_4;
+
+            document.getElementById('lbl-next').innerText = t.nextLabel;
+        }
+
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            localStorage.setItem('siteLang', currentLang);
+            applyLanguage();
+        });
+        applyLanguage();
+
+        /* 光标逻辑 */
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15; cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px'; cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        document.querySelectorAll('.hover-target, a').forEach(t => {
+            t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        /* --- 导航栏滚动收缩逻辑 --- */
+        const navBar = document.querySelector('nav');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                // 如果向下滑动超过 50px，添加 .scrolled 类 (变窄)
+                navBar.classList.add('scrolled');
+            } else {
+                // 如果回到顶部，移除 .scrolled 类 (变回原样)
+                navBar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

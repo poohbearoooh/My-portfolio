@@ -12,7 +12,7 @@
         :root {
             --bg-color: #f4f4f4;
             --text-color: #111;
-            --nav-height: 100px; /* 固定导航高度 */
+            --nav-height: 120px; /* 固定导航高度 */
             --nav-padding: 60px;
         }
         html { scroll-behavior: smooth; }
@@ -36,24 +36,50 @@
         }
         .custom-cursor.hovered { width: 60px; height: 60px; background-color: #fff; mix-blend-mode: difference; }
 
-        /* --- 升级版导航栏 (毛玻璃效果) --- */
+        /* --- 导航栏 (高级毛玻璃 + 动态高度) --- */
         nav {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
             padding: 0 var(--nav-padding); 
-            height: var(--nav-height);
+            
+            /* 初始状态：高度较大 */
+            height: 120px; 
+            
             position: fixed; top: 0; width: 100%; z-index: 1000;
-            /* 核心：背景半透明 + 高斯模糊 */
-            background: rgba(244, 244, 244, 0.85); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); /* Safari 支持 */
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            color: var(--text-color); /* 确保文字颜色为深色 */
+            
+            /* 透明度调整：0.5 (更透) */
+            background: rgba(255, 255, 255, 0.5); 
+            
+            /* 模糊度增加：让背后的内容看起来更有质感 */
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            
+            /* 去除灰色边框 */
+            border-bottom: none;
+            
+            /* 关键：添加过渡动画，让变化很丝滑 */
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        
-        .logo { font-weight: 600; font-size: 1.2rem; letter-spacing: -0.5px; }
+
+        /* --- 滚动后的状态 (通过 JS 添加这个类) --- */
+        nav.scrolled {
+            /* 变窄 */
+            height: 70px; 
+            
+            /* 滚动后背景稍微实一点，保证文字可读性 */
+            background: rgba(255, 255, 255, 0.55); 
+            
+            /* 可选：添加一个极其微弱的阴影代替边框，增加层次感 */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+
+        .logo { font-weight: 600; font-size: 1.2rem; color: #000; }
         .nav-right { display: flex; align-items: center; gap: 50px; }
         .menu { display: flex; gap: 50px; }
-        .menu a { font-size: 1rem; position: relative; font-weight: 500; }
+        .menu a { font-size: 1rem; font-weight: 500; opacity: 0.6; color: #000; }
+        .menu a:hover { opacity: 1; }
+        .lang-switch { font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #000; }
         
         .menu a::after {
             content: ''; position: absolute; width: 0; height: 1px; bottom: -5px; right: 0;
@@ -76,21 +102,31 @@
             padding-top: var(--nav-height); 
         }
         .hero h1 {
-            font-size: 5vw; line-height: 1.1; font-weight: 400; max-width: 900px;
+            font-size: 4.5vw; line-height: 1.2; font-weight: 400; max-width: 900px;
             opacity: 0; transform: translateY(30px);
             animation: fadeUp 1s ease forwards 0.5s;
+            /* 额外保险：防止单词断开 */
+            word-wrap: break-word;
         }
 
-        /* --- 作品列表 --- */
+        /* --- 作品列表 (平齐 + 动效) --- */
         .gallery {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 80px;
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 80px;
             padding: 100px var(--nav-padding); min-height: 100vh;
         }
+        
         .project-card {
-            opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; display: block;
+            display: block; opacity: 0; transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1); /* 顺滑的缓动 */
         }
+        
+        /* 只有添加了 visible 类才显示 */
         .project-card.visible { opacity: 1; transform: translateY(0); }
-        .project-card:nth-child(even) { margin-top: 120px; }
+
+        /* ❌ 删除了之前 nth-child(even) 的 margin-top，现在是对齐的 */
+
         
         .image-container {
             width: 100%; aspect-ratio: 4/3; overflow: hidden; background-color: #ddd; margin-bottom: 20px;
@@ -161,17 +197,49 @@
     </div>
 
     <section class="gallery" id="work">
-        <!-- 作品列表 (你可以之后在 about.html 里也加上这个结构) -->
+        <!-- 1. SoundMotion -->
         <a href="project-soundmotion.html" class="project-card hover-target">
-            <div class="image-container"><img src="https://images.unsplash.com/photo-1512418490979-92798ced138a?q=80&w=1000&auto=format&fit=crop" alt="Project 1"></div>
-            <div class="project-info"><span class="project-title">Smart Speaker</span><span class="project-cat">Industrial Design</span></div>
+            <div class="image-container"><img src="images/soundmotion/1.webp" alt="SoundMotion"></div>
+            <div class="project-info"><span class="project-title">SoundMotion</span><span class="project-cat">Industrial Design | Tangible Interaction </span></div>
         </a>
-        <!-- 更多作品... -->
-         <a href="#" class="project-card hover-target">
-            <div class="image-container"><img src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?q=80&w=1000&auto=format&fit=crop" alt="Project 2"></div>
-            <div class="project-info"><span class="project-title">Ergo Chair</span><span class="project-cat">Furniture</span></div>
+        <!-- 2. Dolce -->
+        <a href="project-dolce.html" class="project-card hover-target" style="transition-delay: 0.1s;">
+            <div class="image-container"><img src="images/dolce/5a.webp" alt="Dolce"></div>
+            <div class="project-info"><span class="project-title">Dolce</span><span class="project-cat">Research Project | Tactile Interaction</span></div>
         </a>
+        <!-- 3. Morpheus -->
+        <a href="project-morpheus.html" class="project-card hover-target" style="transition-delay: 0s;">
+            <div class="image-container"><img src="images/morpheus/Morpheus_hero.webp" alt="Morpheus"></div>
+            <div class="project-info"><span class="project-title">Morpheus</span><span class="project-cat">Industrial Design | Healthcare</span></div>
+        </a>
+        <!-- 4. Music Linker -->
+        <a href="project-musiclinker.html" class="project-card hover-target" style="transition-delay: 0.1s;">
+            <div class="image-container"><img src="images/musiclinker/musiclinker_hero.webp" alt="Music Linker"></div>
+            <div class="project-info"><span class="project-title">Music Linker</span><span class="project-cat">Industrial Design | Tangible Interaction</span></div>
+        </a>
+        <!-- 5. Body Fat Scale -->
+        <a href="project-scale.html" class="project-card hover-target" style="transition-delay: 0s;">
+            <div class="image-container"><img src="images/scale/0.webp" alt="Scale"></div>
+            <div class="project-info"><span class="project-title">Body Fat Scale</span><span class="project-cat">Product Design</span></div>
+        </a>
+
+        <!-- 6. Vinylify -->
+        <a href="project-vinylify.html" class="project-card hover-target">
+            <div class="image-container">
+                <!-- 记得放一张封面图 images/vinylify/0.webp -->
+                <img src="images/vinylify/0.webp" alt="Vinylify">
+            </div>
+            <div class="project-info">
+                <span class="project-title">Vinylify</span>
+                <span class="project-cat">UX Research</span>
+            </div>
+        </a>
+
     </section>
+
+
+    </section>
+
 
     <footer>
         <span>© 2025 Zhujun Pang</span>
@@ -249,6 +317,20 @@
                 else arrowBtn.classList.remove('hidden');
             });
         }
+
+        /* --- 导航栏滚动收缩逻辑 --- */
+        const navBar = document.querySelector('nav');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                // 如果向下滑动超过 50px，添加 .scrolled 类 (变窄)
+                navBar.classList.add('scrolled');
+            } else {
+                // 如果回到顶部，移除 .scrolled 类 (变回原样)
+                navBar.classList.remove('scrolled');
+            }
+        });
+
     </script>
 </body>
 </html>

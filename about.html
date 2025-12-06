@@ -36,29 +36,50 @@
         .custom-cursor.hovered { width: 60px; height: 60px; background-color: #fff; }
 
         /* --- 导航栏 (与首页保持完全一致) --- */
+        /* --- 导航栏 (高级毛玻璃 + 动态高度) --- */
         nav {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
             padding: 0 var(--nav-padding); 
-            height: var(--nav-height);
+            
+            /* 初始状态：高度较大 */
+            height: 120px; 
+            
             position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: rgba(244, 244, 244, 0.85); /* 半透明背景 */
-            backdrop-filter: blur(12px); /* 毛玻璃 */
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            color: var(--text-color);
+            
+            /* 透明度调整：0.5 (更透) */
+            background: rgba(255, 255, 255, 0.5); 
+            
+            /* 模糊度增加：让背后的内容看起来更有质感 */
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            
+            /* 去除灰色边框 */
+            border-bottom: none;
+            
+            /* 关键：添加过渡动画，让变化很丝滑 */
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .logo { font-weight: 600; font-size: 1.2rem; letter-spacing: -0.5px; }
+
+        /* --- 滚动后的状态 (通过 JS 添加这个类) --- */
+        nav.scrolled {
+            /* 变窄 */
+            height: 70px; 
+            
+            /* 滚动后背景稍微实一点，保证文字可读性 */
+            background: rgba(255, 255, 255, 0.55); 
+            
+            /* 可选：添加一个极其微弱的阴影代替边框，增加层次感 */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+
+        .logo { font-weight: 600; font-size: 1.2rem; color: #000; }
         .nav-right { display: flex; align-items: center; gap: 50px; }
         .menu { display: flex; gap: 50px; }
-        .menu a { font-size: 1rem; position: relative; opacity: 0.6; font-weight: 500; }
-        .menu a.active { opacity: 1; font-weight: 600; }
+        .menu a { font-size: 1rem; font-weight: 500; opacity: 0.6; color: #000; }
         .menu a:hover { opacity: 1; }
-        .lang-switch {
-            font-size: 0.9rem; font-weight: 600; cursor: pointer;
-            padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-        .lang-switch:hover { background: rgba(0,0,0,0.05); }
+        .lang-switch { font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #000; }
 
         /* About Hero */
         .about-hero {
@@ -308,6 +329,20 @@
             t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
+
+        /* --- 导航栏滚动收缩逻辑 --- */
+        const navBar = document.querySelector('nav');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                // 如果向下滑动超过 50px，添加 .scrolled 类 (变窄)
+                navBar.classList.add('scrolled');
+            } else {
+                // 如果回到顶部，移除 .scrolled 类 (变回原样)
+                navBar.classList.remove('scrolled');
+            }
+        });
+
     </script>
 </body>
 </html>

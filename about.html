@@ -7,12 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* 复用 index.html 的基础变量 */
+        /* --- 1. 基础变量 --- */
         :root {
             --bg-color: #f4f4f4;
             --text-color: #111;
-            --nav-height: 100px;
+            --nav-height: 120px;
             --nav-padding: 60px;
         }
         html { scroll-behavior: smooth; }
@@ -22,58 +23,16 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            overflow-x: hidden; /* 防止横向溢出 */
         }
         a { text-decoration: none; color: inherit; }
 
-        /* 光标 */
-        .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
-            background-color: #111; border-radius: 50%; pointer-events: none;
-            mix-blend-mode: difference; z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s;
-        }
-        .custom-cursor.hovered { width: 60px; height: 60px; background-color: #fff; }
+        /* --- 2. 导航栏 & 光标 (保持不变) --- */
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: #111; border-radius: 50%; pointer-events: none; mix-blend-mode: difference; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        .custom-cursor.hovered { width: 60px; height: 60px; background: #fff; }
 
-        /* --- 导航栏 (与首页保持完全一致) --- */
-        /* --- 导航栏 (高级毛玻璃 + 动态高度) --- */
-        nav {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 0 var(--nav-padding); 
-            
-            /* 初始状态：高度较大 */
-            height: 120px; 
-            
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            
-            /* 透明度调整：0.5 (更透) */
-            background: rgba(255, 255, 255, 0.5); 
-            
-            /* 模糊度增加：让背后的内容看起来更有质感 */
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            
-            /* 去除灰色边框 */
-            border-bottom: none;
-            
-            /* 关键：添加过渡动画，让变化很丝滑 */
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* --- 滚动后的状态 (通过 JS 添加这个类) --- */
-        nav.scrolled {
-            /* 变窄 */
-            height: 70px; 
-            
-            /* 滚动后背景稍微实一点，保证文字可读性 */
-            background: rgba(255, 255, 255, 0.55); 
-            
-            /* 可选：添加一个极其微弱的阴影代替边框，增加层次感 */
-            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
-        }
-
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 0 var(--nav-padding); height: 120px; position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        nav.scrolled { height: 70px; background: rgba(255, 255, 255, 0.55); box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
         .logo { font-weight: 600; font-size: 1.2rem; color: #000; }
         .nav-right { display: flex; align-items: center; gap: 50px; }
         .menu { display: flex; gap: 50px; }
@@ -81,90 +40,112 @@
         .menu a:hover { opacity: 1; }
         .lang-switch { font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #000; }
 
-        /* About Hero */
-        .about-hero {
-            height: 100vh; width: 100%; overflow: hidden; position: relative;
-        }
-        /* 图片向上偏移一点，避免被导航栏遮挡重要内容，或者保持原样因为导航栏是透明的 */
-        .about-hero img {
-            width: 100%; height: 100%; object-fit: cover; object-position: center;
-        }
-        .scroll-hint {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            color: white; mix-blend-mode: difference; font-size: 0.9rem;
-            animation: bounce 2s infinite;
+        /* --- 3. 交互式 Hero 区域 (修正：增加下间距，防截断) --- */
+        .interactive-hero {
+            height: 100vh; 
+            width: 100%; 
+            position: relative; 
+            overflow: visible; /* 关键：允许图片稍微溢出一点点，不被切掉 */
+            cursor: none; 
+            
+            /* 🔴 新增：给下面留出巨大的呼吸空间 */
+            margin-bottom: 240px; 
         }
 
-        /* About Content */
+        /* 散落的图片容器 */
+        .scatter-img {
+            position: absolute;
+            object-fit: cover;
+            opacity: 0; /* 默认隐藏 */
+            transform: scale(0.9); /* 默认稍微缩小 */
+            transition: opacity 0.6s ease-out, transform 0.8s ease-out; /* 丝滑过渡 */
+            pointer-events: none; /* 让鼠标穿透，不干扰逻辑 */
+            border-radius: 4px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); /* 增加一点悬浮感 */
+            will-change: opacity, transform;
+        }
+
+        /* 图片位置与大小定义 (你可以根据实际图片调整) */
+        /* 中心大图 */
+        .img-1 { top: 50%; left: 50%; width: 400px; transform: translate(-50%, -50%); z-index: 5; }
+        
+        /* 周围图片 (无序分布) */
+        .img-2 { top: 15%; left: 20%; width: 250px; z-index: 4; }
+        .img-3 { top: 20%; right: 15%; width: 280px; z-index: 3; }
+        .img-4 { bottom: 20%; left: 15%; width: 300px; z-index: 4; }
+        .img-5 { bottom: 15%; right: 25%; width: 260px; z-index: 3; }
+        .img-6 { top: 45%; left: 10%; width: 200px; z-index: 2; }
+        .img-7 { top: 55%; right: 10%; width: 220px; z-index: 2; }
+        .img-8 { top: 10%; left: 50%; width: 200px; transform: translateX(-50%); z-index: 1; }
+
+        /* 找到这个类，替换或修改 */
+        .scroll-hint {
+            position: absolute; 
+            bottom: 40px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            color: #111; 
+            font-size: 2rem; 
+            font-weight: 300;
+            
+            /* 初始状态 */
+            opacity: 0.6; 
+            
+            animation: bounce 2s infinite; 
+            pointer-events: none;
+            
+            /* 🔴 新增：让消失过程有 0.5秒 的淡出动画 */
+            transition: opacity 0.5s ease;
+        }
+
+        /* 🔴 新增：完全隐藏的状态 */
+        .scroll-hint.hidden {
+            opacity: 0;
+        }
+
+
+
+        /* --- 4. About Content (修正：增加顶部间距) --- */
         .about-content {
             min-height: 90vh;
-            background-color: #111; color: #f4f4f4;
-            padding: 120px var(--nav-padding);
-            display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 100px;
+            background-color: #111; 
+            color: #f4f4f4;
+            
+            /* 🔴 修正：padding-bottom 250px (保持底部呼吸感) */
+            /* 🔴 修正：padding-top 120px (保持内容内部间距) */
+            /* 如果觉得和上面分开得还不够，可以把 margin-top 再加大 */
+            padding: 120px var(--nav-padding) 250px var(--nav-padding);
+            
+            display: grid; 
+            grid-template-columns: 1.3fr 0.7fr; 
+            gap: 100px;
         }
-
-        .vision-text .label {
-            font-size: 0.9rem; color: #666; text-transform: uppercase;
-            margin-bottom: 40px; display: block;
-        }
-        .bio-paragraph {
-            font-size: 1.1rem; color: #b0b0b0; margin-bottom: 30px; 
-            max-width: 95%; line-height: 1.7; font-weight: 300;
-        }
+        .vision-text .label { font-size: 0.9rem; color: #666; text-transform: uppercase; margin-bottom: 40px; display: block; }
+        .bio-paragraph { font-size: 1.1rem; color: #b0b0b0; margin-bottom: 30px; max-width: 95%; line-height: 1.7; font-weight: 300; }
         .bio-paragraph:first-of-type { color: #fff; font-size: 1.25rem; }
 
-        /* --- Social List (核心交互) --- */
-        .social-list {
-            display: flex; flex-direction: column; padding-top: 65px;
-        }
-        
-        .social-link {
-            font-size: 1.5rem; padding: 20px 0; border-bottom: 1px solid #333;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.3s ease; color: #fff; cursor: none;
-        }
-        
+        .social-list { display: flex; flex-direction: column; padding-top: 65px; }
+        .social-link { font-size: 1.5rem; padding: 20px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; color: #fff; cursor: none; }
         .social-link:hover { padding-left: 20px; border-color: #fff; }
-        
-        /* 箭头通用样式 */
         .arrow { font-size: 1.2rem; opacity: 0; transform: translateX(-20px); transition: all 0.3s ease; }
         .social-link:hover .arrow { opacity: 1; transform: translateX(0); }
 
-        /* 微信专属样式 */
         .wechat-container { position: relative; }
-        .wechat-reveal {
-            font-size: 1rem; color: #fff; font-weight: 300; 
-            opacity: 0; transform: translateX(-10px); transition: all 0.3s ease;
-        }
+        .wechat-reveal { font-size: 1rem; color: #fff; font-weight: 300; opacity: 0; transform: translateX(-10px); transition: all 0.3s ease; }
         .social-link:hover .wechat-reveal { opacity: 1; transform: translateX(0); }
-        
-        /* 复制成功提示 */
-        .copy-msg {
-            position: absolute; right: 0; top: -30px; 
-            font-size: 0.8rem; background: #fff; color: #000; padding: 4px 8px; 
-            border-radius: 4px; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-        }
+        .copy-msg { position: absolute; right: 0; top: -30px; font-size: 0.8rem; background: #fff; color: #000; padding: 4px 8px; border-radius: 4px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
 
-        /* Footer */
-        .about-footer {
-            background-color: #111; color: #444; padding: 40px var(--nav-padding);
-            text-align: center; font-size: 0.8rem;
-        }
+        .about-footer { background-color: #111; color: #444; padding: 40px var(--nav-padding); text-align: center; font-size: 0.8rem; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-10px);} 60% {transform: translateX(-50%) translateY(-5px);} }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(-10px);}
-            60% {transform: translateX(-50%) translateY(-5px);}
-        }
-
-        /* Mobile */
         @media (max-width: 768px) {
             :root { --nav-padding: 20px; }
             .about-content { grid-template-columns: 1fr; gap: 60px; padding-top: 80px; }
+            /* 手机端 Hero 图片全部显示或做特殊处理 */
+            .interactive-hero { display: none; } /* 简单起见，手机端可以隐藏交互区，或者改成静态 */
             .social-link { font-size: 1.2rem; }
             .custom-cursor { display: none; } * { cursor: auto; }
             .nav-right { gap: 20px; }
-            /* 手机上微信号码直接显示，方便拨打 */
             .wechat-reveal { opacity: 1; transform: translateX(0); font-size: 0.9rem; color: #888; }
         }
     </style>
@@ -183,49 +164,54 @@
         </div>
     </nav>
 
-    <section class="about-hero">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop" alt="Portrait">
-        <div class="scroll-hint" id="txt-scroll">↓ Scroll for Info</div>
+    <!-- 1. 交互式图片画廊 Hero -->
+    <section class="interactive-hero" id="hero-gallery">
+        <!-- 
+             🔴 请替换下面的图片路径 (images/about/01.webp 等)
+             建议准备 8 张能够展示你生活/工作状态的照片
+        -->
+        <img src="images/about/1.webp" class="scatter-img img-1" alt="Photo 1">
+        <img src="images/about/2.webp" class="scatter-img img-2" alt="Photo 2">
+        <img src="images/about/3.webp" class="scatter-img img-3" alt="Photo 3">
+        <img src="images/about/4.webp" class="scatter-img img-4" alt="Photo 4">
+        <img src="images/about/5.webp" class="scatter-img img-5" alt="Photo 5">
+        <img src="images/about/6.webp" class="scatter-img img-6" alt="Photo 6">
+        <img src="images/about/7.webp" class="scatter-img img-7" alt="Photo 7">
+        <img src="images/about/8.webp" class="scatter-img img-8" alt="Photo 8">
+
+        <!-- 替换后的跳动箭头 -->
+        <div class="scroll-hint arrow-hint">↓</div>
+
     </section>
 
+    <!-- 2. 内容区域 (保持不变) -->
     <section class="about-content">
         <div class="vision-text">
             <span class="label" id="txt-title">About Me</span>
-            
             <p class="bio-paragraph" id="txt-bio-1">
                 I am an Industrial & Experience Designer specializing in consumer electronics, currently working on forward-looking product concepts at Huawei, with a focus on redefining products from their core essence and real user behaviors. I believe meaningful innovation doesn’t come from adding more features, but from understanding the most natural ways people interact with objects—and designing experiences that are rich but simple.
             </p>
-            
             <p class="bio-paragraph" id="txt-bio-2">
                 Outside of work, I love traveling, hiking, and documenting life through photography—capturing nature, animals, and the human stories hidden in different cities.
             </p>
         </div>
 
         <div class="social-list">
-            <!-- WeChat: 点击复制 -->
-            <!-- 不需要 href，防止跳转 -->
             <div class="social-link hover-target wechat-container" id="wechat-btn">
                 <span id="txt-link-wechat">WeChat / Mobile</span>
-                <!-- 悬浮时显示的号码 -->
                 <span class="wechat-reveal">173 6958 770</span>
                 <div class="copy-msg" id="copy-msg">Copied!</div>
             </div>
-
-            <!-- Email: 动态链接 -->
             <a href="mailto:poohbearoooh@gmail.com" class="social-link hover-target" id="email-link">
                 <span id="txt-link-email">Email Me</span>
                 <span class="arrow">↗</span>
             </a>
-            
-            <!-- Links -->
             <a href="https://www.behance.net/poohbearoo2bc9" target="_blank" class="social-link hover-target">
                 Behance <span class="arrow">↗</span>
             </a>
-            
             <a href="https://www.linkedin.com/in/zhujun-pang-834a7a1b8/" target="_blank" class="social-link hover-target">
                 LinkedIn <span class="arrow">↗</span>
             </a>
-            
             <a href="https://www.instagram.com/poohbear.pang?igsh=eG4yZnh3eW5jYnZs&utm_source=qr" target="_blank" class="social-link hover-target">
                 Instagram <span class="arrow">↗</span>
             </a>
@@ -237,11 +223,50 @@
     </div>
 
     <script>
-        /* --- 1. 语言切换逻辑 (同步首页) --- */
+        /* --- 1. 交互画廊逻辑 (核心算法) --- */
+        const gallerySection = document.getElementById('hero-gallery');
+        const images = document.querySelectorAll('.scatter-img');
+        
+        // 配置参数
+        const ACTIVE_RADIUS = 350; // 鼠标感应半径 (像素)
+        
+        document.addEventListener('mousemove', (e) => {
+            // 只在 Hero 区域内计算，提升性能
+            if (window.scrollY > window.innerHeight) return;
+
+            images.forEach(img => {
+                // 获取图片中心点坐标
+                const rect = img.getBoundingClientRect();
+                const imgCenterX = rect.left + rect.width / 2;
+                const imgCenterY = rect.top + rect.height / 2;
+
+                // 计算鼠标与图片中心的距离
+                const dist = Math.hypot(e.clientX - imgCenterX, e.clientY - imgCenterY);
+
+                // 核心算法：距离越近，透明度越高 (0 -> 1)
+                // 这里的 Math.max(0, ...) 确保不出现负数
+                let opacity = 1 - (dist / ACTIVE_RADIUS);
+                opacity = Math.max(0, Math.min(1, opacity)); 
+                
+                // 增加一点视差移动 (Parallax): 鼠标越近，图片稍微偏移一点点，感觉像浮起来
+                // (dist / 20) 决定移动幅度
+                const moveX = (e.clientX - imgCenterX) / 20;
+                const moveY = (e.clientY - imgCenterY) / 20;
+
+                // 应用样式
+                img.style.opacity = opacity;
+                // 只有当有不透明度时才应用 transform，减少重绘
+                if (opacity > 0) {
+                    img.style.transform = `translate(${moveX}px, ${moveY}px) scale(${0.9 + opacity * 0.1})`; 
+                    // scale 从 0.9 变到 1，增加呼吸感
+                }
+            });
+        });
+
+
+        /* --- 2. 语言切换 (保持不变) --- */
         const langBtn = document.getElementById('lang-btn');
         const emailLink = document.getElementById('email-link');
-        
-        // 翻译数据
         const translations = {
             en: {
                 title: "About Me",
@@ -249,7 +274,6 @@
                 bio2: "Outside of work, I love traveling, hiking, and documenting life through photography—capturing nature, animals, and the human stories hidden in different cities.",
                 wechat: "WeChat / Mobile",
                 email: "Email Me",
-                scroll: "↓ Scroll for Info",
                 emailHref: "mailto:poohbearoooh@gmail.com"
             },
             cn: {
@@ -258,64 +282,45 @@
                 bio2: "工作之余，我热爱旅行、徒步，并用摄影记录生活——捕捉自然、动物以及隐藏在不同城市中的人文故事。",
                 wechat: "微信 / 电话",
                 email: "发送邮件",
-                scroll: "↓ 下滑查看简介",
                 emailHref: "mailto:1736958770@qq.com"
             }
         };
-
-        // 读取本地存储
         let currentLang = localStorage.getItem('siteLang') || 'en';
-
         function applyLanguage() {
             const content = translations[currentLang];
-            
             document.getElementById('txt-title').innerText = content.title;
             document.getElementById('txt-bio-1').innerText = content.bio1;
             document.getElementById('txt-bio-2').innerText = content.bio2;
             document.getElementById('txt-link-wechat').innerText = content.wechat;
             document.getElementById('txt-link-email').innerText = content.email;
-            document.getElementById('txt-scroll').innerText = content.scroll;
-            
-            // 动态切换邮箱链接
             emailLink.href = content.emailHref;
         }
-
-        // 初始化
-        applyLanguage();
-
         langBtn.addEventListener('click', () => {
             currentLang = currentLang === 'en' ? 'cn' : 'en';
-            localStorage.setItem('siteLang', currentLang); // 保存状态
-            
-            // 淡入淡出效果
+            localStorage.setItem('siteLang', currentLang);
             const elements = document.querySelectorAll('.vision-text p, .vision-text span');
             elements.forEach(el => el.style.opacity = 0);
-            
-            setTimeout(() => {
-                applyLanguage();
-                elements.forEach(el => el.style.opacity = ''); // 清除内联样式恢复CSS默认
-            }, 200);
+            setTimeout(() => { applyLanguage(); elements.forEach(el => el.style.opacity = ''); }, 200);
         });
+        applyLanguage();
 
-        /* --- 2. 微信复制逻辑 --- */
+        /* 微信复制 */
         const wechatBtn = document.getElementById('wechat-btn');
         const copyMsg = document.getElementById('copy-msg');
-
         wechatBtn.addEventListener('click', () => {
-            const number = "1736958770";
-            
-            // 复制到剪贴板
-            navigator.clipboard.writeText(number).then(() => {
-                // 成功提示
+            navigator.clipboard.writeText("1736958770").then(() => {
                 copyMsg.style.opacity = 1;
                 copyMsg.innerText = currentLang === 'en' ? "Copied!" : "已复制!";
                 setTimeout(() => { copyMsg.style.opacity = 0; }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
             });
         });
 
-        /* --- 3. 光标逻辑 --- */
+        /* 导航 & 光标 */
+        const navBar = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navBar.classList.add('scrolled');
+            else navBar.classList.remove('scrolled');
+        });
         const cursor = document.querySelector('.custom-cursor');
         let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
         document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
@@ -329,20 +334,6 @@
             t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
-
-        /* --- 导航栏滚动收缩逻辑 --- */
-        const navBar = document.querySelector('nav');
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                // 如果向下滑动超过 50px，添加 .scrolled 类 (变窄)
-                navBar.classList.add('scrolled');
-            } else {
-                // 如果回到顶部，移除 .scrolled 类 (变回原样)
-                navBar.classList.remove('scrolled');
-            }
-        });
-
     </script>
 </body>
 </html>

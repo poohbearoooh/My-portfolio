@@ -6,81 +6,26 @@
     <title>SoundMotion | Zhujun Pang</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Inter用于标题，Helvetica用于正文 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- 1. 全局变量 --- */
+        /* 1. 全局变量 */
         :root {
-            --bg-color: #ffffff;
-            --text-color: #111;
-            --nav-height: 100px;
-            --nav-padding: 60px;
-            --placeholder-color: #f4f4f4;
-            /* 核心间距控制 */
-            --block-spacing: 160px; /* 文字与图片、图片与图片之间的统一大间距 */
-            --grid-gap: 10px;       /* 并排图片的微小缝隙 */
+            --bg-color: #ffffff; --text-color: #111;
+            --nav-height: 120px; --nav-padding: 60px;
+            --block-spacing: 160px; --grid-gap: 10px;
         }
-        
         html { scroll-behavior: smooth; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
-        
-        body {
-            /* 标题保留 Inter，显得现代 */
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-        }
-        a { text-decoration: none; color: inherit; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
 
-        /* --- 2. 光标 & 导航栏 (保持不变) --- */
-        .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
-            background-color: #111; border-radius: 50%; pointer-events: none;
-            mix-blend-mode: difference; z-index: 99999;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s;
-        }
-        .custom-cursor.hovered { width: 60px; height: 60px; background-color: #fff; }
+        /* 2. 导航栏 & 光标 */
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: #111; border-radius: 50%; pointer-events: none; mix-blend-mode: difference; z-index: 999999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        .custom-cursor.hovered { width: 60px; height: 60px; background: #fff; }
 
-       /* --- 导航栏 (高级毛玻璃 + 动态高度) --- */
-        nav {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 0 var(--nav-padding); 
-            
-            /* 初始状态：高度较大 */
-            height: 120px; 
-            
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            
-            /* 透明度调整：0.3 (更透) */
-            background: rgba(255, 255, 255, 0.25); 
-            
-            /* 模糊度增加：让背后的内容看起来更有质感 */
-            backdrop-filter: blur(10px); 
-            -webkit-backdrop-filter: blur(20px);
-            
-            /* 去除灰色边框 */
-            border-bottom: none;
-            
-            /* 关键：添加过渡动画，让变化很丝滑 */
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.35, 1);
-        }
-
-        /* --- 滚动后的状态 (通过 JS 添加这个类) --- */
-        nav.scrolled {
-            /* 变窄 */
-            height: 70px; 
-            
-            /* 滚动后背景稍微实一点，保证文字可读性 */
-            background: rgba(255, 255, 255, 0.55); 
-            
-            /* 可选：添加一个极其微弱的阴影代替边框，增加层次感 */
-            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
-        }
-
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 0 var(--nav-padding); height: 120px; position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.35, 1); }
+        nav.scrolled { height: 70px; background: rgba(255, 255, 255, 0.55); box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
         .logo { font-weight: 600; font-size: 1.2rem; color: #000; }
         .nav-right { display: flex; align-items: center; gap: 50px; }
         .menu { display: flex; gap: 50px; }
@@ -88,198 +33,87 @@
         .menu a:hover { opacity: 1; }
         .lang-switch { font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #000; }
 
-        /* --- 3. 排版系统 --- */
-
-        /* --- Hero 区域修正：完整展示，不裁切 --- */
-
-        .hero-fullscreen {
-            width: 100%; /* 宽度撑满屏幕 */
-            
-            /* 🔴 关键修改 1：删掉固定高度 height: 100vh */
-            height: auto;  /* 改为自动，由图片撑开 */
-            min-height: 60vh; /* 可选：设个最小高度，防止图片没加载时太扁 */
-            
-            background: #f4f4f4;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            margin-bottom: var(--block-spacing);
-            scroll-snap-align: start;
-            
+        /* 3. 排版系统 */
+        /* Hero 区域：全屏宽，高度自适应 */
+        .hero-fullscreen { 
+            width: 100%; height: auto; min-height: 60vh; background: #f4f4f4; 
+            display: flex; align-items: center; justify-content: center; 
+            margin-bottom: var(--block-spacing); 
         }
+        .hero-fullscreen img { width: 100%; height: auto; display: block; object-fit: contain; }
 
-        .hero-fullscreen img {
-            width: 100%;
-            height: auto; /* 高度自适应 */
-            
-            /* 🔴 关键修改 3：改为 contain 或直接去掉 object-fit */
-            /* 建议直接让它撑满宽度，高度随比例变化 */
-            display: block;
-            object-fit: contain; 
-        }
-
-
-        /* 内容容器 */
+        /* 🔴 核心修复：内容容器 */
         .content-wrapper {
-            max-width: 1400px; /* 图片最大宽度 */
-            margin: 0 auto;
-            padding: 0 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            width: 100%;
+            /* 限制最大宽度，防止在大屏上无限拉伸 */
+            max-width: 1400px; 
+            margin: 0 auto;    /* 居中 */
+            
+            /* 🔴 关键：强制左右留白 */
+            padding-left: 40px !important; 
+            padding-right: 40px !important;
+            
+            display: flex; flex-direction: column; align-items: center;
+            box-sizing: border-box; /* 确保 padding 算在宽度内 */
         }
 
-        /* 原有的通用模块设置 */
+        /* 🔴 标题区域修正 */
+        .header-wrapper-relative {
+            position: relative; width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 20px; text-align: left;
+        }
+        .header-text-content {
+            width: 100%; padding-right: 300px; box-sizing: border-box;
+        }
+        #txt-subtitle { white-space: nowrap; overflow: visible; }
+
+        /* 🔴 Logo 区域修正 */
+        .header-logos-absolute {
+            position: absolute; right: 20px; bottom: 0; 
+            display: flex; gap: 20px; align-items: flex-end; 
+            z-index: 10; pointer-events: auto;
+        }
+        .award-logo {
+            height: 40px; width: auto; display: block; opacity: 0.8; object-fit: contain; transition: opacity 0.3s, transform 0.3s;
+        }
+        .award-logo:hover { opacity: 1; transform: translateY(-2px); }
+
+        /* 🔴 通用模块修正 */
         .section-block {
-            width: 100%;
-            margin-bottom: 140px; /* 默认的大间距 (var(--block-spacing)) */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            /* 确保宽度不超出父容器 */
+            width: 100%; 
+            margin-bottom: 140px; 
+            display: flex; flex-direction: column; align-items: center;
         }
+        .section-block.gap-small { margin-bottom: 60px; }
 
-        /* --- 新增：亲密间距类 --- */
-        /* 当文字和下面的图片是一组时，给文字块加上这个类 */
-        .section-block.gap-small {
-            margin-bottom: 60px; /* 间距减半 */
-        }
+        /* 文字排版 */
+        .text-container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 20px; text-align: left; }
+        h1.project-title { font-family: 'Inter', sans-serif; font-size: 3.5rem; font-weight: 700; color: #000; margin-bottom: 20px; line-height: 1.1; text-align: left; }
+        .project-meta { text-align: left; font-size: 0.9rem; color: #888; margin-bottom: 60px; }
+        h2.section-title { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 500; text-align: left; margin-bottom: 20px; color: #111; }
+        p.body-text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.8; color: #333; font-weight: 400; text-align: justify; text-justify: inter-word; margin-bottom: 30px; }
 
-        /* --- 文字排版核心 (Helvetica, 14px, Justify) --- */
-        .text-container {
-            width: 100%;
-            max-width: 1000px; /* 限制文字块宽度，模仿参考图的中间区域 */
-            margin: 0 auto;    /* 保持整体居中 */
-            padding: 0 20px;   /* 防止在手机上贴边 */
-            text-align: left;  /* 容器内的标题等默认左对齐 */
-        }
+        /* 图片排版 */
+        .img-box { width: 100%; display: block; line-height: 0; }
+        .img-box img, .img-box video { width: 100%; height: auto; display: block; object-fit: contain; }
 
-        h1.project-title {
-            font-family: 'Inter', sans-serif; /* 标题用 Inter 更粗壮好看 */
-            font-size: 2.5rem;
-            font-weight: 600;
-            text-align: center; /* 标题居中 */
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; margin-top: 10px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; margin-top: 0; }
 
-        .project-meta {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 60px;
-        }
-
-        h2.section-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 500;
-            text-align: left; /* 小标题左对齐，配合正文 */
-            margin-bottom: 20px;
-            color: #111;
-        }
-
-        /* 正文样式：严格按照要求 */
-        p.body-text {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* 指定字体 */
-            font-size: 14px;       /* 指定字号 */
-            line-height: 1.8;      /* 保持良好的行距 */
-            color: #333;
-            font-weight: 400;
-            
-            /* 对齐方式：两端对齐 (Justify) */
-            text-align: justify;
-            text-justify: inter-word; /* 优化英文单词间距 */
-            
-            margin-bottom: 30px;
-        }
-
-        /* --- 图片排版 --- */
-        
-        /* --- 图片排版系统 (修正版：自适应高度，不裁切) --- */
-
-        /* 1. 图片容器通用设置 */
-        .img-box {
-            width: 100%;
-            /* 删掉了 background-color, 避免加载时闪灰块 */
-            display: block; /* 改为块级，不再 flex 居中 */
-            line-height: 0; /* 消除图片底部的微小空隙 */
-        }
-
-        /* 2. 图片核心样式 */
-        .img-box img, 
-        .img-box video {
-            width: 100%;      /* 宽度撑满容器 */
-            height: auto;     /* 高度自动，根据原图比例自适应 */
-            display: block;
-            object-fit: contain; /* 关键：确保图片完整显示，绝不裁切 */
-        }
-
-        /* 3. 布局类型 */
-
-        /* 单张大图 (不需要强制 aspect-ratio 了，原图多高就多高) */
-        .layout-single {
-            width: 100%;
-        }
-
-        /* 双图并列 */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 两列等宽 */
-            gap: 10px; /* 缝隙 */
-            width: 100%;
-        }
-
-        /* 三图并列 (新需求) */
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr; /* 三列等宽 */
-            gap: 10px; /* 缝隙 */
-            width: 100%;
-            margin-top: 10px; /* 如果这一组跟上面的大图是一套的，加点小间距 */
-        }
-
-        /* 移动端适配 (手机上把三列变一列，不然太小看不清) */
-        @media (max-width: 768px) {
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr; /* 手机上变单列堆叠 */
-                gap: 20px;
-            }
-        }
-
-        /* --- 四图并列 Grid 样式 --- */
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 关键：强制分为 4 列 */
-            gap: 10px; /* 图片之间的缝隙 */
-            width: 100%;
-            margin-top: 0; /* 紧贴上面的大图，间距由外层 image-group 控制 */
-        }
-
-        /* 手机端适配：在手机上把 4 列变 2 列，否则图太小看不清 */
-        @media (max-width: 768px) {
-            .grid-4 {
-                grid-template-columns: 1fr 1fr; 
-            }
-        }
-
-        /* Footer */
-        .next-project {
-            padding: 150px 0; text-align: center; border-top: 1px solid #eee;
-            background-color: #fafafa; width: 100%;
-        }
+        .next-project { padding: 150px 0; text-align: center; border-top: 1px solid #eee; background-color: #fafafa; width: 100%; }
         .next-title { font-size: 3rem; font-weight: 300; cursor: pointer; }
-        
-        footer {
-            padding: 50px var(--nav-padding); background-color: #fafafa;
-            border-top: 1px solid #eee; display: flex; justify-content: space-between; color: #999; font-size: 0.9rem;
-        }
+        footer { padding: 50px var(--nav-padding); background-color: #fafafa; border-top: 1px solid #eee; display: flex; justify-content: space-between; color: #999; font-size: 0.9rem; }
 
+        @media (max-width: 1200px) { #txt-subtitle { white-space: normal; } }
         @media (max-width: 768px) {
-            :root { --nav-padding: 20px; --block-spacing: 80px; }
-            .text-container { padding: 0 20px; }
-            .grid-2 { grid-template-columns: 1fr; gap: 10px; }
+            :root { --nav-padding: 20px; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 20px; }
+            .content-wrapper { padding: 0 20px !important; }
+            .header-wrapper-relative { padding-bottom: 80px; }
+            .header-text-content { padding-right: 0; }
+            .header-logos-absolute { left: 20px; right: auto; bottom: 0; }
             .custom-cursor { display: none; } * { cursor: auto; }
         }
     </style>
@@ -298,80 +132,49 @@
         </div>
     </nav>
 
-    <!-- 1. 首屏全屏大图 -->
+    <!-- 1. Hero -->
     <div class="hero-fullscreen">
         <img src="images/soundmotion/1.webp" alt="Hero Fullscreen">
     </div>
 
+    <!-- 2. Main Content Wrapper -->
     <div class="content-wrapper">
         
-        <!-- 2. 标题与核心简介区域 -->
-<div class="section-block">
-    <!-- 关键：使用 .text-container 类，确保宽度和位置与正文完全一致 -->
-    <!-- 关键：style="text-align: left" 确保文字靠左排布 -->
-    <div class="text-container" style="text-align: left;">
-        
-        <!-- 1. 主标题 -->
-        <h1 class="project-title" id="txt-title" style="
-            font-family: 'Inter', sans-serif;
-            font-size: 3.5rem; 
-            font-weight: 700; 
-            color: #000; 
-            margin-bottom: 20px; 
-            line-height: 1.1;
-            text-align: left; /* 强制左对齐 */
-        ">
-            SoundMotion.
-        </h1>
-        
-        <!-- 2. 副标题 -->
-        <p id="txt-subtitle" style="
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 1.5rem; 
-            font-weight: 400; 
-            color: #333; 
-            margin-bottom: 40px;
-            line-height: 1.4;
-        ">
-            A streamlined way of companionship designed for long-distance couples.
-        </p>
+        <!-- 2.1 Title & Intro & Logos -->
+        <div class="section-block">
+            <div class="header-wrapper-relative">
+                <div class="header-text-content">
+                    <h1 class="project-title" id="txt-title">SoundMotion.</h1>
+                    <p id="txt-subtitle" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.5rem; font-weight: 400; color: #333; margin-bottom: 40px; line-height: 1.4;">
+                        A streamlined way of companionship designed for long-distance couples.
+                    </p>
+                    <div class="info-group" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.95rem; color: #888; line-height: 1.6; margin-bottom: 40px;">
+                        <div id="txt-meta">Final master project, individual, 2023</div>
+                        <div id="txt-credits">Designed by Zhujun Pang, supervised by Joep Frens</div>
+                        <div id="txt-school">Eindhoven University of Technology</div>
+                    </div>
+                    <div id="txt-disclaimer" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.75rem; color: #aaa; font-style: italic;">
+                        *This is a speculative project and I am not affiliated with Spotify.
+                    </div>
+                </div>
 
-        <!-- 3. 项目信息组 -->
-        <div class="info-group" style="
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 0.95rem; 
-            color: #888; 
-            line-height: 1.6;
-            margin-bottom: 40px;
-        ">
-            <div id="txt-meta">Final master project, individual, 2023</div>
-            <div id="txt-credits">Designed by Zhujun Pang, supervised by Joep Frens</div>
-            <div id="txt-school">Eindhoven University of Technology</div>
+                <!-- Logos -->
+                <div class="header-logos-absolute">
+                    <a href="https://www.behance.net/gallery/179177771/SoundMotion" target="_blank"><img src="images/soundmotion/logo1.webp" class="award-logo" alt="Award 1"></a>
+                    <a href="https://www.yankodesign.com/2024/01/17/this-spotify-speaker-helps-long-distance-relationship-couples-bond-over-music/" target="_blank"><img src="images/soundmotion/logo2.webp" class="award-logo" alt="Award 2"></a>
+                    <a href="https://competition.adesignaward.com/ada-winner-design.php?ID=157471" target="_blank"><img src="images/soundmotion/logo3.webp" class="award-logo" alt="Award 3"></a>
+                    <a href="https://www.di-award.org/collections/detail/1735.html?page_size=1000&page=1&year=&award_type=&award_group=&category_id=" target="_blank"><img src="images/soundmotion/logo4.webp" class="award-logo" alt="Award 4"></a>
+                    <a href="https://www.instagram.com/p/C0j4G8SIzfy/?img_index=4&igsh=MXh5anlhMWFsaThiZQ==" target="_blank"><img src="images/soundmotion/logo5.webp" class="award-logo" alt="Award 5"></a>
+                </div>
+            </div>
         </div>
 
-        <!-- 4. 免责声明 -->
-        <div id="txt-disclaimer" style="
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 0.75rem; 
-            color: #aaa; 
-            font-style: italic;
-        ">
-            *This is a speculative project and I am not affiliated with Spotify.
-        </div>
-
-    </div>
-</div>
-
-
-
-        <!-- 3. 大图展示 (宽图) -->
+        <!-- 3. 大图展示 (现在应该有边距了) -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/2.webp" alt="Context">
             </div>
         </div>
-
-        <!-- ==================== 修正后的中间部分 (唯一ID版) ==================== -->
 
         <!-- 4. Brief (文字) -->
         <div class="section-block gap-small">
@@ -386,14 +189,14 @@
             </div>
         </div>
 
-        <!-- 5. brief (图片) -->
+        <!-- 5. Brief (图片) -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/3.webp" alt="Context">
             </div>
         </div>
 
-        <!-- 6. User study (文字) -->
+        <!-- 6. User Study (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h2-user">User study: Workshop & Role-playing game</h2>
@@ -401,25 +204,22 @@
                     Exploring the use of music to facilitate implicit emotional communication between long-distance couples has emerged as a new design exploration space. Data collected through interviews and workshops conducted during the early stages of this design project indicate that music sharing can create daily topics for couples, provide a sense of presence through synchronized listening, and convey emotions and care through shared music. Therefore, this project aims to address the limitations in current research on long-distance intimate relationship technologies in the field of human-computer interaction, and explore how the combination of music sharing and explicit and implicit interactions can better help long-distance couples enhance their sense of intimacy.
                 </p>
                 <p class="body-text" id="txt-p4-user">
-                    The detailed research process is available here.
+                    <a href="https://issuu.com/poohbearoooh/docs/m22_final_report_pang_zp_zhujun_project" target="_blank" style="text-decoration: underline; color: #000;">
+                        The detailed research process is available here.
+                    </a>
                 </p>
             </div>
         </div>
 
-        <!-- 7. workshop (图片) -->
+        <!-- 7. Workshop (图片) -->
         <div class="section-block">
             <div class="grid-2">
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/4.webp" alt="Detail 1">
-                </div>
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/5.webp" alt="Detail 2">
-                </div>
+                <div class="img-box hover-target"><img src="images/soundmotion/4.webp" alt="Detail 1"></div>
+                <div class="img-box hover-target"><img src="images/soundmotion/5.webp" alt="Detail 2"></div>
             </div>
         </div>
 
-        <!-- 7. Brainstorm (文字) -->
-        <!-- 注意：这里的 ID 加了 -brain 后缀 -->
+        <!-- 8. Brainstorm (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h3-brain">Brainstorm</h2>
@@ -429,14 +229,14 @@
             </div>
         </div>
 
-        <!-- 7. brainstorm (图片) -->
+        <!-- 9. Brainstorm (图片) -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/6.webp" alt="Context">
             </div>
         </div>
 
-        <!-- 8. Initial concept (文字) -->
+        <!-- 10. Initial Concept (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h3-init">Initial Concept</h2>
@@ -449,19 +249,15 @@
             </div>
         </div>
 
-        <!-- 8. Initial concept (图片：左大右GIF) -->
+        <!-- 11. Initial Concept (图片) -->
         <div class="section-block">
-            <div class="flex-row-adjust" style="display: flex; gap: 10px; width: 100%; height: 550px; justify-content: space-between;">
-                <div style="height: 100%; flex: 0 0 auto;">
-                    <img src="images/soundmotion/8.webp" alt="Context Left" style="height: 100%; width: auto; display: block;">
-                </div>
-                <div style="height: 100%; flex: 0 0 auto;">
-                    <img src="images/soundmotion/8.gif" alt="Animation Right" style="height: 100%; width: auto; display: block;">
-                </div>
+            <div style="display: flex; gap: 10px; width: 100%; height: 550px; justify-content: space-between;">
+                <div style="height: 100%; flex: 0 0 auto;"><img src="images/soundmotion/8.webp" alt="Context Left" style="height: 100%; width: auto; display: block; object-fit: contain;"></div>
+                <div style="height: 100%; flex: 0 0 auto;"><img src="images/soundmotion/8.gif" alt="Animation Right" style="height: 100%; width: auto; display: block; object-fit: contain;"></div>
             </div>
         </div>
 
-        <!-- 9. Interaction iteration (文字) -->
+        <!-- 12. Interaction Iteration (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h3-iter">Interaction Iteration</h2>
@@ -471,14 +267,14 @@
             </div>
         </div>
 
-        <!-- 9. Interaction iteration (图片) -->
+        <!-- 13. Interaction Iteration (图片) -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/9.webp" alt="Context">
             </div>
         </div>
 
-        <!-- 10. Final Design (文字) -->
+        <!-- 14. Final Design (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h3-final">Final Design</h2>
@@ -488,15 +284,11 @@
             </div>
         </div>
 
-        <!-- 10. Final Design (图片) -->
+        <!-- 15. Final Design (图片) -->
         <div class="section-block">
-            <div class="image-group" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/10.webp" alt="Big 1">
-                </div>
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/10a.webp" alt="Big 2">
-                </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <div class="img-box hover-target"><img src="images/soundmotion/10.webp" alt="Big 1"></div>
+                <div class="img-box hover-target"><img src="images/soundmotion/10a.webp" alt="Big 2"></div>
                 <div class="grid-3">
                     <div class="img-box hover-target"><img src="images/soundmotion/10b.webp" alt="Small 1"></div>
                     <div class="img-box hover-target"><img src="images/soundmotion/10c.webp" alt="Small 2"></div>
@@ -505,7 +297,7 @@
             </div>
         </div>
 
-        <!-- 11. Tangible interaction design (文字) -->
+        <!-- 16. Tangible Interaction (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h3-tang">Tangible interaction design</h2>
@@ -515,24 +307,20 @@
             </div>
         </div>
 
-        <!-- 11. Tangible interaction design (图片) -->
+        <!-- 17. Tangible Interaction (图片) -->
         <div class="section-block">
-            <div class="image-group" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
                 <div class="grid-4">
                     <div class="img-box hover-target"><img src="images/soundmotion/001.gif" alt="Small 1"></div>
                     <div class="img-box hover-target"><img src="images/soundmotion/002.gif" alt="Small 2"></div>
                     <div class="img-box hover-target"><img src="images/soundmotion/003.gif" alt="Small 3"></div>
                     <div class="img-box hover-target"><img src="images/soundmotion/004.gif" alt="Small 4"></div>
                 </div>
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/005.GIF" alt="Big 1">
-                </div>
+                <div class="img-box hover-target"><img src="images/soundmotion/005.GIF" alt="Big 1"></div>
             </div>
         </div>
 
-
-        <!-- ==================== PART 12 ==================== -->
-        <!-- 文字部分 (修正：去掉 text-center，使用 text-container) -->
+        <!-- 18. Switch (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h-12">The hat acts as a switch</h2>
@@ -542,22 +330,15 @@
             </div>
         </div>
 
-        <!-- 图片部分：双图高度一致拼接 -->
+        <!-- 19. Switch (图片) -->
         <div class="section-block">
-            <!-- 使用 Flex 让两张不同比例的图保持高度一致 -->
             <div style="display: flex; gap: 10px; width: 100%; height: 500px; justify-content: center;">
-                <div class="img-box hover-target" style="flex: 1; height: 100%;">
-                    <img src="images/soundmotion/12a.webp" alt="Switch Left" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div class="img-box hover-target" style="flex: 1; height: 100%;">
-                    <img src="images/soundmotion/12b.webp" alt="Switch Right" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
+                <div class="img-box hover-target" style="flex: 1; height: 100%;"><img src="images/soundmotion/12a.webp" alt="Switch Left" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <div class="img-box hover-target" style="flex: 1; height: 100%;"><img src="images/soundmotion/12b.webp" alt="Switch Right" style="width: 100%; height: 100%; object-fit: cover;"></div>
             </div>
         </div>
 
-
-        <!-- ==================== PART 13 ==================== -->
-        <!-- 文字部分 -->
+        <!-- 20. Notification (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h-13">Physical movement as notification</h2>
@@ -567,58 +348,16 @@
             </div>
         </div>
 
-        
-
-        <!-- ==================== PART 13 (模仿 Part 12 逻辑：强制撑满，高度整齐) ==================== -->
-        <!-- 图片部分：三张图平分宽度，撑满整行 -->
+        <!-- 21. Notification (图片) -->
         <div class="section-block">
-            
-            <!-- 
-            height: 300px; -> 你可以调整这个高度数字。
-            数字越大，图片显示的内容越多；数字越小，图片越扁。
-            -->
             <div style="display: flex; gap: 10px; width: 100%; height: 450px; justify-content: center;">
-                
-                <!-- 图 1 (flex: 1 让它占 1/3) -->
-                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;">
-                    <img src="images/soundmotion/13a.webp" alt="Motion 1" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                
-                <!-- 图 2 (flex: 1 让它占 1/3) -->
-                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;">
-                    <img src="images/soundmotion/13b.webp" alt="Motion 2" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                
-                <!-- 图 3 (flex: 1 让它占 1/3) -->
-                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;">
-                    <img src="images/soundmotion/13c.webp" alt="Motion 3" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-
+                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;"><img src="images/soundmotion/13a.webp" alt="Motion 1" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;"><img src="images/soundmotion/13b.webp" alt="Motion 2" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;"><img src="images/soundmotion/13c.webp" alt="Motion 3" style="width: 100%; height: 100%; object-fit: cover;"></div>
             </div>
         </div>
 
-        <!-- 手机适配 -->
-        <style>
-            @media (max-width: 768px) {
-                .section-block > div[style*="display: flex"] {
-                    flex-direction: column !important;
-                    height: auto !important;
-                }
-                .section-block > div[style*="display: flex"] > div {
-                    width: 100% !important;
-                    height: auto !important;
-                    margin-bottom: 10px;
-                }
-                .section-block > div[style*="display: flex"] img {
-                    height: auto !important;
-                }
-            }
-        </style>
-
-
-
-        <!-- ==================== PART 14 ==================== -->
-        <!-- 文字部分 -->
+        <!-- 22. Prototyping (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h-14">Prototyping iteration for user test</h2>
@@ -631,36 +370,18 @@
             </div>
         </div>
 
-        <!-- 图片部分：Grid-2 + 下接一张同宽大图 -->
+        <!-- 23. Prototyping (图片) -->
         <div class="section-block">
-            
-            <!-- 1. 上半部分：双图 Grid -->
-            <!-- 宽度默认为 100% -->
             <div class="grid-2">
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/14a.webp" alt="Proto 1">
-                </div>
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/14b.webp" alt="Proto 2">
-                </div>
+                <div class="img-box hover-target"><img src="images/soundmotion/14a.webp" alt="Proto 1"></div>
+                <div class="img-box hover-target"><img src="images/soundmotion/14b.webp" alt="Proto 2"></div>
             </div>
-
-            <!-- 2. 下半部分：单张大图 -->
-            <!-- 
-                class="img-box" 宽度默认也是 100%，所以它会自动和上面的 Grid 对齐 
-                style="margin-top: 10px" 保证了上下间距和 Grid 的左右间距一致
-            -->
             <div class="img-box hover-target" style="margin-top: 10px;">
                 <img src="images/soundmotion/14c.webp" alt="Proto Large">
             </div>
-
         </div>
 
-
-
-
-        <!-- ==================== PART 15 ==================== -->
-        <!-- 文字部分 -->
+        <!-- 24. Logic Map (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h-15">Interaction logic map of the SoundMotion system</h2>
@@ -670,73 +391,49 @@
             </div>
         </div>
 
-        <!-- 图片部分：一张大图 -->
+        <!-- 25. Logic Map (图片) -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/15.webp" alt="Logic Map">
             </div>
         </div>
 
-
-        <!-- ==================== PART 16 ==================== -->
-        <!-- 文字部分 -->
+        <!-- 26. Video (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h-16">Concept video & Storyboard</h2>
             </div>
         </div>
 
-        <!-- 视频部分 -->
-        <div class="img-box img-wide hover-target">
-            <video 
-                src="images/soundmotion/16a.mp4" 
-                controls 
-                preload="metadata" 
-                poster="images/soundmotion/16b.webp"
-                style="width: 100%; height: auto; display: block;">
-            </video>
+        <!-- 27. Video (图片) -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <video src="images/soundmotion/16a.mp4" controls preload="metadata" poster="images/soundmotion/16b.webp" style="width: 100%; height: auto; display: block;"></video>
+            </div>
         </div>
-
-
-        <!-- 视频下的大图 -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/16.webp" alt="Storyboard">
             </div>
         </div>
 
-
-        <!-- ==================== PART 17 ==================== -->
-        <!-- 文字部分 -->
+        <!-- 28. Scenario (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h-17">Scenario</h2>
             </div>
         </div>
 
-        <!-- 纵向堆叠的两张大图 -->
+        <!-- 29. Scenario (图片) -->
         <div class="section-block">
-            <div class="image-group" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/17a.webp" alt="Scenario 1">
-                </div>
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/17b.webp" alt="Scenario 2">
-                </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <div class="img-box hover-target"><img src="images/soundmotion/17a.webp" alt="Scenario 1"></div>
+                <div class="img-box hover-target"><img src="images/soundmotion/17b.webp" alt="Scenario 2"></div>
             </div>
         </div>
 
+    </div> <!-- End of content-wrapper -->
 
-
-</div>
-
-
-
-
-    </div>
-    
-
-    <!-- 底部跳转 -->
     <div class="next-project">
         <span class="next-label" id="lbl-next">Next Project</span>
         <a href="project-dolce.html" class="next-title hover-target">Dolce↗</a>
@@ -748,224 +445,158 @@
     </footer>
 
     <script>
-    /* --- 语言切换逻辑 (SoundMotion 完整版) --- */
-    const langBtn = document.getElementById('lang-btn');
-    let currentLang = localStorage.getItem('siteLang') || 'en';
+        const langBtn = document.getElementById('lang-btn');
+        let currentLang = localStorage.getItem('siteLang') || 'en';
 
-    const translations = {
-        en: {
-            // 头部信息
-            title: "SoundMotion.",
-            subtitle: "A streamlined way of companionship designed for long-distance couples.",
-            meta: "Final master project, individual, 2023",
-            credits: "Designed by Zhujun Pang, supervised by Joep Frens",
-            school: "Eindhoven University of Technology",
-            disclaimer: "*This is a speculative project and I am not affiliated with Spotify.",
+        const translations = {
+            en: {
+                title: "SoundMotion.",
+                subtitle: "A streamlined way of companionship designed for long-distance couples.",
+                meta: "Final master project, individual, 2023",
+                credits: "Designed by Zhujun Pang, supervised by Joep Frens",
+                school: "Eindhoven University of Technology",
+                disclaimer: "*This is a speculative project and I am not affiliated with Spotify.",
+                h2_brief: "Brief:",
+                p3_brief: "37% of couples break up within 3 months of becoming geographically separated, highlighting the challenges of communication in long-distance relationships (LDRs). While the internet provides convenient channels for instant communication, such as text messages and video chats, these technologies primarily focus on explicit information transmission and overlook the emotionally rich communication needed in intimate relationships.",
+                p4_brief: "Researchers in the field of human-computer interaction have explored the use of haptic sensations, wearable technologies, hybrid interactions, and ambient media to foster emotional communication for LDR couples. However, most designs and studies have focused on imitating communication modes within intimate relationships from a technological standpoint. In reality, the lives of long-distance couples are often accompanied by complex emotional changes and needs, which necessitate a user-centered approach in research and design processes.",
+                h2_user: "User study: Workshop & Role-playing game",
+                p3_user: "Exploring the use of music to facilitate implicit emotional communication between long-distance couples has emerged as a new design exploration space. Data collected through interviews and workshops conducted during the early stages of this design project indicate that music sharing can create daily topics for couples, provide a sense of presence through synchronized listening, and convey emotions and care through shared music. Therefore, this project aims to address the limitations in current research on long-distance intimate relationship technologies in the field of human-computer interaction, and explore how the combination of music sharing and explicit and implicit interactions can better help long-distance couples enhance their sense of intimacy.",
+                p4_user: "The detailed research process is available here.",
+                h3_brain: "Brainstorm",
+                p5_brain: "Once the design direction was established, I embarked on a brainstorming process to generate initial design concepts. I began by gathering a collection of images to create an inspiration board, with a focus on themes related to fostering connection, music, physical interaction, and emotional attachment. This collection served as a source of inspiration. Next, I extensively sketched various ideas to explore specific design solutions. At this stage, each concept encompassed unique product forms and interaction styles, while aligning with the design guidelines outlined in the previous chapters.",
+                h3_init: "Initial Concept",
+                p3_init: "The design concept was tentatively determined to involve the integration of physical devices with a streaming service, aimed at creating a bespoke music sharing channel for couples. The physical interaction would afford users a sense of their partner's presence, while also serving as a means of message notification and a switch for the Couple Channel. The establishment of the Couple Channel and access to music sources would be realized within the framework of Spotify.",
+                p4_init: "Regarding the specific physical product design, swinging was chosen as the primary means of physical interaction. This motion, derived from the movement of a swinging bell, would signify the arrival of new messages. Furthermore, the swinging action would serve as an indicator of the partner's online status, akin to a vibrant pet playfully rolling on its owner's desk, striving to capture their attention. To address the challenge of potential disruption in communication due to divergent schedules, a switch was incorporated to allow users to actively express their status and exercise control over their willingness to engage in interaction.",
+                h3_iter: "Interaction Iteration",
+                p5_iter: "Following a low-fi prototype test and quick evaluation, it became apparent that placing the screen at the bottom of the main body design might conflict with users' expectations, thereby increasing their cognitive load. Consequently, the final design solution opted to position the screen in a more intuitively visible location. Furthermore, drawing inspiration from cuteness and personification: the design aimed to strengthen the sense of companionship between partners through the tangible product and anthropomorphism.",
+                h3_final: "Final Design",
+                p5_final: "SoundMotion was specifically developed as a communication system aimed at facilitating seamless interaction between long-distance couples by combining synchronized music listening and physical engagement. Each couple is equipped with a dedicated device known as SoundMotion, which enables music playback and basic physical interactions. This device is seamlessly integrated with the user's individual Spotify account, allowing them to access personalized music feeds and communication data provided by the Spotify server.",
+                h3_tang: "Tangible interaction design",
+                p5_tang: "In contrast to conveying explicit information through text messages and social media, this form of physical interaction subtly conveys the state of one partner and provides ambiguous cues of longing and care. Instead of forcefully interrupting the user's current activities with intrusive notifications, it naturally captures attention when the user chooses to engage. Users have the freedom to switch between subtle, peripheral interactions and explicit, visible interactions through physical gestures.",
+                h12: "The hat acts as a switch",
+                p12: "The Hat as a switch Control Bluetooth speakers by toggling the Hat on and off, which acts as a switch. Open the hat to the horizontal angle to turn on the device, it will act as a normal music speaker. Open the hat fully to enter the Couple Channel, and the screen will appear.",
+                h13: "Physical movement as notification",
+                p13: "When the device is turned on, if the partner is using the Couple Channel to listen to music, the Hat will continue to swing to indicate the partner's status.",
+                h14: "Prototyping iteration for user test",
+                p14_1: "Initially, I chose to use an electromagnet as the main driving component. I installed the electromagnet on the inner wall of the SoundMotion device and attached a magnet to the inner wall of the hat, as shown in the circuit diagram. However, during the actual experimentation process, I found that the electromagnet I purchased, which operates at 6-12V, had a limited magnetic field range and was unable to effectively attract and repel the magnet on the hat.",
+                p14_2: "Consequently, I opted for the second solution, which involves using a servo motor to drive the swinging motion of the hat. I connected a 5V motor to the ESP8266 and used Blinker to control the motor's amplitude range, frequency, and duration of rotation.",
+                h15: "Interaction logic map of the SoundMotion system",
+                p15: "SoundMotion utilizes the ESP8266 as its hardware platform to control the product's hardware and establish a connection with the Spotify server. This enables the transfer of emoji feedback data generated during user interaction, allowing Spotify to analyze the data using the Spotify Web API and provide personalized music recommendations for couples.",
+                h16: "Concept video & Storyboard",
+                h17: "Scenario",
+                nextLabel: "Next Project"
+            },
+            cn: {
+                title: "SoundMotion.",
+                subtitle: "专为异地恋情侣设计的轻量化陪伴方式。",
+                meta: "硕士毕业设计，个人项目，2023",
+                credits: "设计：庞竺君，导师：Joep Frens",
+                school: "埃因霍温理工大学",
+                disclaimer: "*这是一个概念项目，与 Spotify 无关。",
+                h2_brief: "项目背景：",
+                p3_brief: "37%的情侣在异地后的3个月内分手，这凸显了异地恋（LDR）沟通的挑战。虽然互联网提供了短信和视频聊天等即时沟通渠道，但这些技术主要侧重于显性信息的传递，忽视了亲密关系中所需的情感丰富交流。",
+                p4_brief: "人机交互领域的研究人员探索了触觉、可穿戴技术、混合交互和环境媒体，以促进异地情侣的情感交流。然而，大多数设计和研究都侧重于从技术角度模仿亲密关系中的沟通模式。实际上，异地情侣的生活往往伴随着复杂的情感变化和需求，这就需要在研究和设计过程中采用以用户为中心的方法。",
+                h2_user: "用户研究：工作坊与角色扮演",
+                p3_user: "探索利用音乐促进异地情侣间的隐性情感交流已成为一个新的设计探索空间。通过项目早期的访谈和工作坊收集的数据表明，音乐分享可以为情侣创造日常话题，通过同步聆听提供在场感，并通过分享音乐传递情感和关怀。因此，本项目旨在解决人机交互领域当前异地亲密关系技术研究的局限性，并探索音乐分享与显性及隐性交互的结合如何更好地帮助异地情侣增强亲密感。",
+                p4_user: "详细的研究过程可在此查看。",
+                h3_brain: "头脑风暴",
+                p5_brain: "确定设计方向后，我开始了头脑风暴以产生初步设计概念。我首先收集了一系列图片创建灵感板，重点关注与建立连接、音乐、物理交互和情感依恋相关的主题。接下来，我绘制了大量草图以探索具体的设计方案。在此阶段，每个概念都包含独特的产品形态和交互方式，同时符合前几章概述的设计准则。",
+                h3_init: "初步概念",
+                p3_init: "设计概念初步确定为将物理设备与流媒体服务相结合，旨在为情侣打造专属的音乐分享频道。物理交互将为用户提供伴侣在场的感觉，同时也作为消息通知和情侣频道开关的手段。情侣频道的建立和音乐源的获取将在 Spotify 的框架内实现。",
+                p4_init: "在具体的实体产品设计方面，选择了“摆动”作为主要的物理交互方式。这种源自摇铃的运动将标志着新消息的到来。此外，摆动动作还将作为伴侣在线状态的指示器，类似于一只充满活力的宠物在主人的桌子上顽皮地打滚，试图引起他们的注意。为了解决因日程安排不同而导致的沟通中断挑战，设计中加入了一个开关，允许用户主动表达状态并控制他们参与互动的意愿。",
+                h3_iter: "交互迭代",
+                p5_iter: "经过低保真原型测试和快速评估，我发现将屏幕放置在主体设计底部可能会与用户的预期冲突，从而增加认知负荷。因此，最终设计方案选择将屏幕放置在更直观可见的位置。此外，从可爱和拟人化中汲取灵感：设计旨在通过有形产品和拟人化特征加强伴侣间的陪伴感。",
+                h3_final: "最终设计",
+                p5_final: "SoundMotion 专为促进异地情侣间的无缝互动而开发，结合了同步音乐聆听和物理参与。每对情侣都配备一个名为 SoundMotion 的专用设备，支持音乐播放和基本的物理交互。该设备与用户的个人 Spotify 账户无缝集成，允许他们访问 Spotify 服务器提供的个性化音乐流和通信数据。",
+                h3_tang: "实体交互设计",
+                p5_tang: "与通过短信和社交媒体传达显性信息不同，这种形式的物理交互微妙地传达了伴侣的状态，并提供了思念和关怀的模糊线索。它不会用侵入性通知强行打断用户当前的活动，而是在用户选择参与时自然地吸引注意力。用户可以自由地通过物理手势在微妙的周边交互和显性的可见交互之间切换。",
+                h12: "帽子即开关",
+                p12: "通过切换帽子的开合来控制蓝牙音箱。打开帽子至水平角度即可开启设备，此时它作为普通音乐音箱使用。完全打开帽子则进入“情侣频道”，屏幕随之亮起。",
+                h13: "物理运动作为通知",
+                p13: "设备开启后，如果伴侣正在使用情侣频道听音乐，帽子将持续摆动以指示伴侣的状态。",
+                h14: "用户测试的原型迭代",
+                p14_1: "最初，我选择使用电磁铁作为主要驱动元件。我在 SoundMotion 设备内壁安装了电磁铁，并在帽子内壁吸附了磁铁，如电路图所示。然而，在实际实验过程中，我发现购买的 6-12V 电磁铁磁场范围有限，无法有效吸引和排斥帽子上的磁铁。",
+                p14_2: "因此，我选择了第二种方案，即使用伺服电机驱动帽子的摆动。我将 5V 电机连接到 ESP8266，并使用 Blinker 控制电机的摆动幅度、频率和旋转持续时间。",
+                h15: "SoundMotion 系统交互逻辑图",
+                p15: "SoundMotion 使用 ESP8266 作为硬件平台来控制产品硬件并与 Spotify 服务器建立连接。这使得能够传输用户交互过程中产生的表情符号反馈数据，允许 Spotify 使用 Web API 分析数据并为情侣提供个性化的音乐推荐。",
+                h16: "概念视频与故事板",
+                h17: "使用场景",
+                nextLabel: "下一个项目"
+            }
+        };
+
+        function applyLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-subtitle').innerText = t.subtitle;
+            document.getElementById('txt-meta').innerText = t.meta;
+            document.getElementById('txt-credits').innerText = t.credits;
+            document.getElementById('txt-school').innerText = t.school;
+            document.getElementById('txt-disclaimer').innerText = t.disclaimer;
             
-            // Part 4: Brief
-            h2_brief: "Brief:",
-            p3_brief: "37% of couples break up within 3 months of becoming geographically separated, highlighting the challenges of communication in long-distance relationships (LDRs). While the internet provides convenient channels for instant communication, such as text messages and video chats, these technologies primarily focus on explicit information transmission and overlook the emotionally rich communication needed in intimate relationships.",
-            p4_brief: "Researchers in the field of human-computer interaction have explored the use of haptic sensations, wearable technologies, hybrid interactions, and ambient media to foster emotional communication for LDR couples. However, most designs and studies have focused on imitating communication modes within intimate relationships from a technological standpoint. In reality, the lives of long-distance couples are often accompanied by complex emotional changes and needs, which necessitate a user-centered approach in research and design processes.",
-
-            // Part 6: User Study
-            h2_user: "User study: Workshop & Role-playing game",
-            p3_user: "Exploring the use of music to facilitate implicit emotional communication between long-distance couples has emerged as a new design exploration space. Data collected through interviews and workshops conducted during the early stages of this design project indicate that music sharing can create daily topics for couples, provide a sense of presence through synchronized listening, and convey emotions and care through shared music. Therefore, this project aims to address the limitations in current research on long-distance intimate relationship technologies in the field of human-computer interaction, and explore how the combination of music sharing and explicit and implicit interactions can better help long-distance couples enhance their sense of intimacy.",
-            p4_user: "The detailed research process is available here.",
-
-            // Part 7: Brainstorm
-            h3_brain: "Brainstorm",
-            p5_brain: "Once the design direction was established, I embarked on a brainstorming process to generate initial design concepts. I began by gathering a collection of images to create an inspiration board, with a focus on themes related to fostering connection, music, physical interaction, and emotional attachment. This collection served as a source of inspiration. Next, I extensively sketched various ideas to explore specific design solutions. At this stage, each concept encompassed unique product forms and interaction styles, while aligning with the design guidelines outlined in the previous chapters.",
-
-            // Part 8: Initial Concept
-            h3_init: "Initial Concept",
-            p3_init: "The design concept was tentatively determined to involve the integration of physical devices with a streaming service, aimed at creating a bespoke music sharing channel for couples. The physical interaction would afford users a sense of their partner's presence, while also serving as a means of message notification and a switch for the Couple Channel. The establishment of the Couple Channel and access to music sources would be realized within the framework of Spotify.",
-            p4_init: "Regarding the specific physical product design, swinging was chosen as the primary means of physical interaction. This motion, derived from the movement of a swinging bell, would signify the arrival of new messages. Furthermore, the swinging action would serve as an indicator of the partner's online status, akin to a vibrant pet playfully rolling on its owner's desk, striving to capture their attention. To address the challenge of potential disruption in communication due to divergent schedules, a switch was incorporated to allow users to actively express their status and exercise control over their willingness to engage in interaction.",
-
-            // Part 9: Interaction Iteration
-            h3_iter: "Interaction Iteration",
-            p5_iter: "Following a low-fi prototype test and quick evaluation, it became apparent that placing the screen at the bottom of the main body design might conflict with users' expectations, thereby increasing their cognitive load. Consequently, the final design solution opted to position the screen in a more intuitively visible location. Furthermore, drawing inspiration from cuteness and personification: the design aimed to strengthen the sense of companionship between partners through the tangible product and anthropomorphism.",
-
-            // Part 10: Final Design
-            h3_final: "Final Design",
-            p5_final: "SoundMotion was specifically developed as a communication system aimed at facilitating seamless interaction between long-distance couples by combining synchronized music listening and physical engagement. Each couple is equipped with a dedicated device known as SoundMotion, which enables music playback and basic physical interactions. This device is seamlessly integrated with the user's individual Spotify account, allowing them to access personalized music feeds and communication data provided by the Spotify server.",
-
-            // Part 11: Tangible Interaction
-            h3_tang: "Tangible interaction design",
-            p5_tang: "In contrast to conveying explicit information through text messages and social media, this form of physical interaction subtly conveys the state of one partner and provides ambiguous cues of longing and care. Instead of forcefully interrupting the user's current activities with intrusive notifications, it naturally captures attention when the user chooses to engage. Users have the freedom to switch between subtle, peripheral interactions and explicit, visible interactions through physical gestures.",
-
-            // Part 12
-            h12: "The hat acts as a switch",
-            p12: "The Hat as a switch Control Bluetooth speakers by toggling the Hat on and off, which acts as a switch. Open the hat to the horizontal angle to turn on the device, it will act as a normal music speaker. Open the hat fully to enter the Couple Channel, and the screen will appear.",
-            
-            // Part 13
-            h13: "Physical movement as notification",
-            p13: "When the device is turned on, if the partner is using the Couple Channel to listen to music, the Hat will continue to swing to indicate the partner's status.",
-            
-            // Part 14
-            h14: "Prototyping iteration for user test",
-            p14_1: "Initially, I chose to use an electromagnet as the main driving component. I installed the electromagnet on the inner wall of the SoundMotion device and attached a magnet to the inner wall of the hat, as shown in the circuit diagram. However, during the actual experimentation process, I found that the electromagnet I purchased, which operates at 6-12V, had a limited magnetic field range and was unable to effectively attract and repel the magnet on the hat.",
-            p14_2: "Consequently, I opted for the second solution, which involves using a servo motor to drive the swinging motion of the hat. I connected a 5V motor to the ESP8266 and used Blinker to control the motor's amplitude range, frequency, and duration of rotation.",
-            
-            // Part 15
-            h15: "Interaction logic map of the SoundMotion system",
-            p15: "SoundMotion utilizes the ESP8266 as its hardware platform to control the product's hardware and establish a connection with the Spotify server. This enables the transfer of emoji feedback data generated during user interaction, allowing Spotify to analyze the data using the Spotify Web API and provide personalized music recommendations for couples.",
-            
-            // Part 16 & 17
-            h16: "Concept video & Storyboard",
-            h17: "Scenario",
-            
-            nextLabel: "Next Project"
-        },
-        cn: {
-            // 头部信息
-            title: "SoundMotion.",
-            subtitle: "专为异地恋情侣设计的精简陪伴方式。",
-            meta: "硕士毕业设计，个人项目，2023",
-            credits: "设计：庞竺君，导师：Joep Frens",
-            school: "埃因霍温理工大学",
-            disclaimer: "*这是一个概念项目，与 Spotify 无关。",
-
-            // Part 4: Brief
-            h2_brief: "项目背景：",
-            p3_brief: "37%的情侣在异地后的3个月内分手，这凸显了异地恋（LDR）沟通的挑战。虽然互联网提供了短信和视频聊天等即时沟通渠道，但这些技术主要侧重于显性信息的传递，忽视了亲密关系中所需的情感丰富交流。",
-            p4_brief: "人机交互领域的研究人员探索了触觉、可穿戴技术、混合交互和环境媒体，以促进异地情侣的情感交流。然而，大多数设计和研究都侧重于从技术角度模仿亲密关系中的沟通模式。实际上，异地情侣的生活往往伴随着复杂的情感变化和需求，这就需要在研究和设计过程中采用以用户为中心的方法。",
-
-            // Part 6: User Study
-            h2_user: "用户研究：工作坊与角色扮演",
-            p3_user: "探索利用音乐促进异地情侣间的隐性情感交流已成为一个新的设计探索空间。通过项目早期的访谈和工作坊收集的数据表明，音乐分享可以为情侣创造日常话题，通过同步聆听提供在场感，并通过分享音乐传递情感和关怀。因此，本项目旨在解决人机交互领域当前异地亲密关系技术研究的局限性，并探索音乐分享与显性及隐性交互的结合如何更好地帮助异地情侣增强亲密感。",
-            p4_user: "详细的研究过程可在此查看。",
-
-            // Part 7: Brainstorm
-            h3_brain: "头脑风暴",
-            p5_brain: "确定设计方向后，我开始了头脑风暴以产生初步设计概念。我首先收集了一系列图片创建灵感板，重点关注与建立连接、音乐、物理交互和情感依恋相关的主题。接下来，我绘制了大量草图以探索具体的设计方案。在此阶段，每个概念都包含独特的产品形态和交互方式，同时符合前几章概述的设计准则。",
-
-            // Part 8: Initial Concept
-            h3_init: "初步概念",
-            p3_init: "设计概念初步确定为将物理设备与流媒体服务相结合，旨在为情侣打造专属的音乐分享频道。物理交互将为用户提供伴侣在场的感觉，同时也作为消息通知和情侣频道开关的手段。情侣频道的建立和音乐源的获取将在 Spotify 的框架内实现。",
-            p4_init: "在具体的实体产品设计方面，选择了“摆动”作为主要的物理交互方式。这种源自摇铃的运动将标志着新消息的到来。此外，摆动动作还将作为伴侣在线状态的指示器，类似于一只充满活力的宠物在主人的桌子上顽皮地打滚，试图引起他们的注意。为了解决因日程安排不同而导致的沟通中断挑战，设计中加入了一个开关，允许用户主动表达状态并控制他们参与互动的意愿。",
-
-            // Part 9: Interaction Iteration
-            h3_iter: "交互迭代",
-            p5_iter: "经过低保真原型测试和快速评估，我发现将屏幕放置在主体设计底部可能会与用户的预期冲突，从而增加认知负荷。因此，最终设计方案选择将屏幕放置在更直观可见的位置。此外，从可爱和拟人化中汲取灵感：设计旨在通过有形产品和拟人化特征加强伴侣间的陪伴感。",
-
-            // Part 10: Final Design
-            h3_final: "最终设计",
-            p5_final: "SoundMotion 专为促进异地情侣间的无缝互动而开发，结合了同步音乐聆听和物理参与。每对情侣都配备一个名为 SoundMotion 的专用设备，支持音乐播放和基本的物理交互。该设备与用户的个人 Spotify 账户无缝集成，允许他们访问 Spotify 服务器提供的个性化音乐流和通信数据。",
-
-            // Part 11: Tangible Interaction
-            h3_tang: "实体交互设计",
-            p5_tang: "与通过短信和社交媒体传达显性信息不同，这种形式的物理交互微妙地传达了伴侣的状态，并提供了思念和关怀的模糊线索。它不会用侵入性通知强行打断用户当前的活动，而是在用户选择参与时自然地吸引注意力。用户可以自由地通过物理手势在微妙的周边交互和显性的可见交互之间切换。",
-
-            // Part 12
-            h12: "帽子即开关",
-            p12: "通过切换帽子的开合来控制蓝牙音箱。打开帽子至水平角度即可开启设备，此时它作为普通音乐音箱使用。完全打开帽子则进入“情侣频道”，屏幕随之亮起。",
-            
-            // Part 13
-            h13: "物理运动作为通知",
-            p13: "设备开启后，如果伴侣正在使用情侣频道听音乐，帽子将持续摆动以指示伴侣的状态。",
-            
-            // Part 14
-            h14: "用户测试的原型迭代",
-            p14_1: "最初，我选择使用电磁铁作为主要驱动元件。我在 SoundMotion 设备内壁安装了电磁铁，并在帽子内壁吸附了磁铁，如电路图所示。然而，在实际实验过程中，我发现购买的 6-12V 电磁铁磁场范围有限，无法有效吸引和排斥帽子上的磁铁。",
-            p14_2: "因此，我选择了第二种方案，即使用伺服电机驱动帽子的摆动。我将 5V 电机连接到 ESP8266，并使用 Blinker 控制电机的摆动幅度、频率和旋转持续时间。",
-            
-            // Part 15
-            h15: "SoundMotion 系统交互逻辑图",
-            p15: "SoundMotion 使用 ESP8266 作为硬件平台来控制产品硬件并与 Spotify 服务器建立连接。这使得能够传输用户交互过程中产生的表情符号反馈数据，允许 Spotify 使用 Web API 分析数据并为情侣提供个性化的音乐推荐。",
-            
-            // Part 16 & 17
-            h16: "概念视频与故事板",
-            h17: "使用场景",
-            
-            nextLabel: "下一个项目"
-        }
-    };
-
-    // 绑定所有ID (修正版，匹配唯一ID)
-    function applyLanguage() {
-        const t = translations[currentLang];
-        
-        // 1. 头部信息
-        document.getElementById('txt-title').innerText = t.title;
-        document.getElementById('txt-subtitle').innerText = t.subtitle;
-        document.getElementById('txt-meta').innerText = t.meta;
-        document.getElementById('txt-credits').innerText = t.credits;
-        document.getElementById('txt-school').innerText = t.school;
-        document.getElementById('txt-disclaimer').innerText = t.disclaimer;
-
-        // 2. 中间部分 (Part 4 - 11) - 这里是之前失效的地方
-        if(document.getElementById('txt-h2-brief')) {
             document.getElementById('txt-h2-brief').innerText = t.h2_brief;
             document.getElementById('txt-p3-brief').innerText = t.p3_brief;
             document.getElementById('txt-p4-brief').innerText = t.p4_brief;
-        }
-
-        if(document.getElementById('txt-h2-user')) {
+            
             document.getElementById('txt-h2-user').innerText = t.h2_user;
             document.getElementById('txt-p3-user').innerText = t.p3_user;
             document.getElementById('txt-p4-user').innerText = t.p4_user;
-        }
-
-        if(document.getElementById('txt-h3-brain')) {
+            
             document.getElementById('txt-h3-brain').innerText = t.h3_brain;
             document.getElementById('txt-p5-brain').innerText = t.p5_brain;
-        }
-
-        if(document.getElementById('txt-h3-init')) {
+            
             document.getElementById('txt-h3-init').innerText = t.h3_init;
             document.getElementById('txt-p3-init').innerText = t.p3_init;
             document.getElementById('txt-p4-init').innerText = t.p4_init;
-        }
-
-        if(document.getElementById('txt-h3-iter')) {
+            
             document.getElementById('txt-h3-iter').innerText = t.h3_iter;
             document.getElementById('txt-p5-iter').innerText = t.p5_iter;
-        }
-
-        if(document.getElementById('txt-h3-final')) {
+            
             document.getElementById('txt-h3-final').innerText = t.h3_final;
             document.getElementById('txt-p5-final').innerText = t.p5_final;
-        }
-
-        if(document.getElementById('txt-h3-tang')) {
+            
             document.getElementById('txt-h3-tang').innerText = t.h3_tang;
             document.getElementById('txt-p5-tang').innerText = t.p5_tang;
+            
+            document.getElementById('txt-h-12').innerText = t.h12;
+            document.getElementById('txt-p-12').innerText = t.p12;
+            
+            document.getElementById('txt-h-13').innerText = t.h13;
+            document.getElementById('txt-p-13').innerText = t.p13;
+            
+            document.getElementById('txt-h-14').innerText = t.h14;
+            document.getElementById('txt-p-14-1').innerText = t.p14_1;
+            document.getElementById('txt-p-14-2').innerText = t.p14_2;
+            
+            document.getElementById('txt-h-15').innerText = t.h15;
+            document.getElementById('txt-p-15').innerText = t.p15;
+            
+            document.getElementById('txt-h-16').innerText = t.h16;
+            document.getElementById('txt-h-17').innerText = t.h17;
+            
+            document.getElementById('lbl-next').innerText = t.nextLabel;
         }
 
-        // 3. 后半部分 (Part 12 - 17)
-        document.getElementById('txt-h-12').innerText = t.h12;
-        document.getElementById('txt-p-12').innerText = t.p12;
-        
-        document.getElementById('txt-h-13').innerText = t.h13;
-        document.getElementById('txt-p-13').innerText = t.p13;
-        
-        document.getElementById('txt-h-14').innerText = t.h14;
-        document.getElementById('txt-p-14-1').innerText = t.p14_1;
-        document.getElementById('txt-p-14-2').innerText = t.p14_2;
-
-        document.getElementById('txt-h-15').innerText = t.h15;
-        document.getElementById('txt-p-15').innerText = t.p15;
-
-        document.getElementById('txt-h-16').innerText = t.h16;
-        document.getElementById('txt-h-17').innerText = t.h17;
-        
-        document.getElementById('lbl-next').innerText = t.nextLabel;
-    }
-
-    langBtn.addEventListener('click', () => {
-        currentLang = currentLang === 'en' ? 'cn' : 'en';
-        localStorage.setItem('siteLang', currentLang);
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            localStorage.setItem('siteLang', currentLang);
+            applyLanguage();
+        });
         applyLanguage();
-    });
-    applyLanguage();
 
-        /* 光标逻辑 (保持不变) */
+        const navBar = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navBar.classList.add('scrolled');
+            else navBar.classList.remove('scrolled');
+        });
+
         const cursor = document.querySelector('.custom-cursor');
         let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
         document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
         function animateCursor() {
             cursorX += (mouseX - cursorX) * 0.15; cursorY += (mouseY - cursorY) * 0.15;
-            cursor.style.left = cursorX + 'px'; cursor.style.top = cursorY + 'px';
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
             requestAnimationFrame(animateCursor);
         }
         animateCursor();
@@ -973,20 +604,6 @@
             t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
-
-        /* --- 导航栏滚动收缩逻辑 --- */
-        const navBar = document.querySelector('nav');
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                // 如果向下滑动超过 50px，添加 .scrolled 类 (变窄)
-                navBar.classList.add('scrolled');
-            } else {
-                // 如果回到顶部，移除 .scrolled 类 (变回原样)
-                navBar.classList.remove('scrolled');
-            }
-        });
     </script>
-
 </body>
 </html>

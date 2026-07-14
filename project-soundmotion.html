@@ -62,9 +62,10 @@
             position: relative; width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 20px; text-align: left;
         }
         .header-text-content {
-            width: 100%; padding-right: 300px; box-sizing: border-box;
+            width: 100%; box-sizing: border-box;
         }
-        #txt-subtitle { white-space: nowrap; overflow: visible; }
+        .header-details { padding-right: 300px; }
+        #txt-subtitle { white-space: normal; overflow: visible; }
 
         /* 🔴 Logo 区域修正 */
         .header-logos-absolute {
@@ -92,6 +93,8 @@
         .project-meta { text-align: left; font-size: 0.9rem; color: #888; margin-bottom: 60px; }
         h2.section-title { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 500; text-align: left; margin-bottom: 20px; color: #111; }
         p.body-text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.8; color: #333; font-weight: 400; text-align: justify; text-justify: inter-word; margin-bottom: 30px; }
+        .research-link { display: inline-block; color: #111; border-bottom: 1px solid #111; transition: transform 0.25s ease, opacity 0.25s ease; }
+        .research-link:hover { transform: translateX(6px); opacity: 0.55; }
 
         /* 图片排版 */
         .img-box { width: 100%; display: block; line-height: 0; }
@@ -113,9 +116,68 @@
             .content-wrapper { padding: 0 20px !important; }
             .header-wrapper-relative { padding-bottom: 80px; }
             .header-text-content { padding-right: 0; }
+            .header-details { padding-right: 0; }
             .header-logos-absolute { left: 20px; right: auto; bottom: 0; }
+            h1.project-title { font-size: 2.35rem; line-height: 1.12; }
+            #txt-subtitle { font-size: 1.05rem !important; }
             .custom-cursor { display: none; } * { cursor: auto; }
         }
+
+        /* --- 长图折叠/展开交互样式 --- */
+        .expand-container {
+            position: relative;
+            width: 100%;
+            /* 初始高度：只露出上半部分，你可以根据需要调整这个数值 */
+            height: 600px; 
+            overflow: hidden;
+            transition: height 1s ease; /* 展开时的丝滑过渡 */
+        }
+
+        /* 展开后的状态 (由 JS 添加) */
+        .expand-container.expanded {
+            height: auto; /* 高度自动，完全展示图片 */
+            overflow: visible;
+        }
+
+        /* 渐变遮罩层 */
+        .expand-mask {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px; /* 遮罩高度 */
+            /* 从透明到白色的渐变 */
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1) 80%);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 40px;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.5s;
+        }
+
+        /* 隐藏遮罩 (展开后) */
+        .expand-container.expanded .expand-mask {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 跳动的箭头按钮 */
+        .expand-btn {
+            font-size: 2rem;
+            color: #111;
+            animation: bounce 2s infinite;
+            font-weight: 300;
+        }
+
+        /* 复用之前的 bounce 动画，如果没有定义，这里补一个 */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
     </style>
 </head>
 <body>
@@ -144,17 +206,19 @@
         <div class="section-block">
             <div class="header-wrapper-relative">
                 <div class="header-text-content">
-                    <h1 class="project-title" id="txt-title">SoundMotion.</h1>
-                    <p id="txt-subtitle" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.5rem; font-weight: 400; color: #333; margin-bottom: 40px; line-height: 1.4;">
-                        A streamlined way of companionship designed for long-distance couples.
+                    <h1 class="project-title" id="txt-title" style="margin-bottom: 60px;">SoundMotion: A streamlined way of companionship designed for long-distance couples.</h1>
+                    <p class="body-text" id="txt-subtitle" style="font-size: 1.2rem; margin-bottom: 60px;">
+                        A playful and expressive listening companion for couples apart, turning music, movement and touch into an everyday way of being together.
                     </p>
-                    <div class="info-group" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.95rem; color: #888; line-height: 1.6; margin-bottom: 40px;">
-                        <div id="txt-meta">Final master project, individual, 2023</div>
-                        <div id="txt-credits">Designed by Zhujun Pang, supervised by Joep Frens</div>
-                        <div id="txt-school">Eindhoven University of Technology</div>
-                    </div>
-                    <div id="txt-disclaimer" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.75rem; color: #aaa; font-style: italic;">
-                        *This is a speculative project and I am not affiliated with Spotify.
+                    <div class="header-details">
+                        <div class="info-group" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.95rem; color: #888; line-height: 1.6; margin-bottom: 40px;">
+                            <div id="txt-meta">Final master project, individual, 2023</div>
+                            <div id="txt-credits">Designed by Zhujun Pang, supervised by Joep Frens</div>
+                            <div id="txt-school">Eindhoven University of Technology</div>
+                        </div>
+                        <div id="txt-disclaimer" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.75rem; color: #aaa; font-style: italic;">
+                            *This is a speculative project and I am not affiliated with Spotify.
+                        </div>
                     </div>
                 </div>
 
@@ -170,9 +234,22 @@
         </div>
 
         <!-- 3. 大图展示 (现在应该有边距了) -->
-        <div class="section-block">
+        <div class="section-block gap-small">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/2.webp" alt="Context">
+            </div>
+        </div>
+
+        <!-- 3.1 Meet SoundMotion: Concept video -->
+        <div class="section-block">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h2-glance">Concept video</h2>
+            </div>
+            <div class="img-box hover-target">
+                <video controls preload="metadata" playsinline aria-label="SoundMotion concept video">
+                    <source src="images/soundmotion/soundmotion-concept-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
         </div>
 
@@ -196,32 +273,49 @@
             </div>
         </div>
 
-        <!-- 6. User study (文字) -->
+        <!-- 6. User Study (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h2-user">User study: Workshop & Role-playing game</h2>
                 <p class="body-text" id="txt-p3-user">
-                    Exploring the use of music to facilitate implicit emotional communication between long-distance couples has emerged as a new design exploration space... (保留原文)
+                    Exploring the use of music to facilitate implicit emotional communication between long-distance couples has emerged as a new design exploration space. Data collected through interviews and workshops conducted during the early stages of this design project indicate that music sharing can create daily topics for couples, provide a sense of presence through synchronized listening, and convey emotions and care through shared music. Therefore, this project aims to address the limitations in current research on long-distance intimate relationship technologies in the field of human-computer interaction, and explore how the combination of music sharing and explicit and implicit interactions can better help long-distance couples enhance their sense of intimacy.
                 </p>
-                
-                <!-- 🔴 修正：加上了 <a> 标签，变成可点击的链接 -->
-                <p class="body-text" id="txt-p4-user">
-                    <a href="https://issuu.com/poohbearoooh/docs/m22_final_report_pang_zp_zhujun_project" target="_blank" class="hover-target" style="text-decoration: underline; color: #000; cursor: pointer;">
-                        The detailed research process is available here.
-                    </a>
-
+                <p class="body-text">
+                    <a class="research-link hover-target" id="txt-p4-user" href="files/soundmotion-final-report.pdf" target="_blank" rel="noopener noreferrer">The detailed research process is available here.</a>
                 </p>
             </div>
         </div>
 
-
-        <!-- 7. Workshop (图片) -->
+        <!-- 7. Workshop (图片区域) -->
         <div class="section-block">
-            <div class="grid-2">
-                <div class="img-box hover-target"><img src="images/soundmotion/4.webp" alt="Detail 1"></div>
-                <div class="img-box hover-target"><img src="images/soundmotion/5.webp" alt="Detail 2"></div>
+            
+            <!-- 原有的并排两张图 (保持不变) -->
+            <div class="grid-2" style="margin-bottom: 10px;">
+                <div class="img-box hover-target">
+                    <img src="images/soundmotion/4.webp" alt="Detail 1">
+                </div>
+                <div class="img-box hover-target">
+                    <img src="images/soundmotion/5.webp" alt="Detail 2">
+                </div>
             </div>
+
+            <!-- ✨ 新增：竖向长图 (带折叠遮罩) -->
+            <!-- 记得把你的长图命名为 5b_long.webp 放入文件夹 -->
+            <div class="expand-container" id="long-img-container">
+                
+                <div class="img-box hover-target">
+                    <img src="images/soundmotion/5b.webp" alt="Long Process Image">
+                </div>
+
+                <!-- 遮罩与按钮 -->
+                <div class="expand-mask hover-target" id="expand-trigger">
+                    <div class="expand-btn">↓</div>
+                </div>
+
+            </div>
+
         </div>
+
 
         <!-- 8. Brainstorm (文字) -->
         <div class="section-block gap-small">
@@ -402,19 +496,14 @@
             </div>
         </div>
 
-        <!-- 26. Video (文字) -->
+        <!-- 26. Storyboard (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
-                <h2 class="section-title" id="txt-h-16">Concept video & Storyboard</h2>
+                <h2 class="section-title" id="txt-h-16">Storyboard</h2>
             </div>
         </div>
 
-        <!-- 27. Video (图片) -->
-        <div class="section-block">
-            <div class="img-box hover-target">
-                <video src="images/soundmotion/16a.mp4" controls preload="metadata" poster="images/soundmotion/16b.webp" style="width: 100%; height: auto; display: block;"></video>
-            </div>
-        </div>
+        <!-- 27. Storyboard (图片) -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/16.webp" alt="Storyboard">
@@ -436,6 +525,16 @@
             </div>
         </div>
 
+        <!-- 30. AI Reflection -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h-ai">Reflection: From interaction data to AI companionship</h2>
+                <p class="body-text" id="txt-p-ai">
+                    Beyond connecting music sharing with tangible interaction, SoundMotion also hints at a future direction for AI companionship: when personal taste, interaction frequency, emotional feedback, and everyday contexts are gradually woven together, AI could move beyond functional recommendation and become a more situated companion. In this sense, the value of AI is not only to predict what users may like, but to understand how preferences are formed, shared, and emotionally reinforced within relationships.
+                </p>
+            </div>
+        </div>
+
     </div> <!-- End of content-wrapper -->
 
     <div class="next-project">
@@ -454,12 +553,13 @@
 
         const translations = {
             en: {
-                title: "SoundMotion.",
-                subtitle: "A streamlined way of companionship designed for long-distance couples.",
+                title: "SoundMotion: A streamlined way of companionship designed for long-distance couples.",
+                subtitle: "A playful and expressive listening companion for couples apart, turning music, movement and touch into an everyday way of being together.",
                 meta: "Final master project, individual, 2023",
                 credits: "Designed by Zhujun Pang, supervised by Joep Frens",
                 school: "Eindhoven University of Technology",
                 disclaimer: "*This is a speculative project and I am not affiliated with Spotify.",
+                h2_glance: "Concept video",
                 h2_brief: "Brief:",
                 p3_brief: "37% of couples break up within 3 months of becoming geographically separated, highlighting the challenges of communication in long-distance relationships (LDRs). While the internet provides convenient channels for instant communication, such as text messages and video chats, these technologies primarily focus on explicit information transmission and overlook the emotionally rich communication needed in intimate relationships.",
                 p4_brief: "Researchers in the field of human-computer interaction have explored the use of haptic sensations, wearable technologies, hybrid interactions, and ambient media to foster emotional communication for LDR couples. However, most designs and studies have focused on imitating communication modes within intimate relationships from a technological standpoint. In reality, the lives of long-distance couples are often accompanied by complex emotional changes and needs, which necessitate a user-centered approach in research and design processes.",
@@ -486,17 +586,20 @@
                 p14_2: "Consequently, I opted for the second solution, which involves using a servo motor to drive the swinging motion of the hat. I connected a 5V motor to the ESP8266 and used Blinker to control the motor's amplitude range, frequency, and duration of rotation.",
                 h15: "Interaction logic map of the SoundMotion system",
                 p15: "SoundMotion utilizes the ESP8266 as its hardware platform to control the product's hardware and establish a connection with the Spotify server. This enables the transfer of emoji feedback data generated during user interaction, allowing Spotify to analyze the data using the Spotify Web API and provide personalized music recommendations for couples.",
-                h16: "Concept video & Storyboard",
+                h16: "Storyboard",
                 h17: "Scenario",
+                h_ai: "Reflection: From interaction data to AI companionship",
+                p_ai: "Beyond connecting music sharing with tangible interaction, SoundMotion also hints at a future direction for AI companionship: when personal taste, interaction frequency, emotional feedback, and everyday contexts are gradually woven together, AI could move beyond functional recommendation and become a more situated companion. In this sense, the value of AI is not only to predict what users may like, but to understand how preferences are formed, shared, and emotionally reinforced within relationships.",
                 nextLabel: "Next Project"
             },
             cn: {
-                title: "SoundMotion.",
-                subtitle: "专为异地恋情侣设计的轻量化陪伴方式。",
+                title: "SoundMotion：专为异地情侣设计的轻量化陪伴方式。",
+                subtitle: "一个为异地伴侣设计的、有趣且富有表达力的聆听伙伴，将音乐、运动与触摸转化为日常相伴的方式。",
                 meta: "硕士毕业设计，个人项目，2023",
                 credits: "设计：庞竺君，导师：Joep Frens",
                 school: "埃因霍温理工大学",
                 disclaimer: "*这是一个概念项目，与 Spotify 无关。",
+                h2_glance: "概念视频",
                 h2_brief: "项目背景：",
                 p3_brief: "37%的情侣在异地后的3个月内分手，这凸显了异地恋（LDR）沟通的挑战。虽然互联网提供了短信和视频聊天等即时沟通渠道，但这些技术主要侧重于显性信息的传递，忽视了亲密关系中所需的情感丰富交流。",
                 p4_brief: "人机交互领域的研究人员探索了触觉、可穿戴技术、混合交互和环境媒体，以促进异地情侣的情感交流。然而，大多数设计和研究都侧重于从技术角度模仿亲密关系中的沟通模式。实际上，异地情侣的生活往往伴随着复杂的情感变化和需求，这就需要在研究和设计过程中采用以用户为中心的方法。",
@@ -523,8 +626,10 @@
                 p14_2: "因此，我选择了第二种方案，即使用伺服电机驱动帽子的摆动。我将 5V 电机连接到 ESP8266，并使用 Blinker 控制电机的摆动幅度、频率和旋转持续时间。",
                 h15: "SoundMotion 系统交互逻辑图",
                 p15: "SoundMotion 使用 ESP8266 作为硬件平台来控制产品硬件并与 Spotify 服务器建立连接。这使得能够传输用户交互过程中产生的表情符号反馈数据，允许 Spotify 使用 Web API 分析数据并为情侣提供个性化的音乐推荐。",
-                h16: "概念视频与故事板",
+                h16: "故事板",
                 h17: "使用场景",
+                h_ai: "延展思考：从交互数据到 AI 陪伴",
+                p_ai: "除了将音乐分享与实体交互结合，SoundMotion 也指向了我对未来 AI 陪伴的一种思考：当个人品味、互动频率、情绪反馈与日常情境逐渐融合，AI 不应只停留在功能性的推荐工具，而可以成为更理解关系语境的陪伴系统。它的价值不仅是预测用户喜欢什么，而是理解偏好如何在关系中被形成、共享，并被情感持续强化。",
                 nextLabel: "下一个项目"
             }
         };
@@ -537,6 +642,7 @@
             document.getElementById('txt-credits').innerText = t.credits;
             document.getElementById('txt-school').innerText = t.school;
             document.getElementById('txt-disclaimer').innerText = t.disclaimer;
+            document.getElementById('txt-h2-glance').innerText = t.h2_glance;
             
             document.getElementById('txt-h2-brief').innerText = t.h2_brief;
             document.getElementById('txt-p3-brief').innerText = t.p3_brief;
@@ -577,6 +683,8 @@
             
             document.getElementById('txt-h-16').innerText = t.h16;
             document.getElementById('txt-h-17').innerText = t.h17;
+            document.getElementById('txt-h-ai').innerText = t.h_ai;
+            document.getElementById('txt-p-ai').innerText = t.p_ai;
             
             document.getElementById('lbl-next').innerText = t.nextLabel;
         }
@@ -608,6 +716,30 @@
             t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
+
+        /* --- 长图展开交互逻辑 --- */
+        const expandTrigger = document.getElementById('expand-trigger');
+        const expandContainer = document.getElementById('long-img-container');
+
+        if (expandTrigger && expandContainer) {
+            expandTrigger.addEventListener('click', () => {
+                // 1. 获取图片真实高度
+                const img = expandContainer.querySelector('img');
+                const realHeight = img.scrollHeight;
+                
+                // 2. 显式设置高度以触发 CSS transition 动画
+                expandContainer.style.height = realHeight + 'px';
+                
+                // 3. 添加类名以淡出遮罩
+                expandContainer.classList.add('expanded');
+                
+                // 4. 动画结束后，将高度设为 auto，以适应窗口缩放
+                setTimeout(() => {
+                    expandContainer.style.height = 'auto';
+                }, 1000); // 时间要和 CSS transition 匹配
+            });
+        }
+
     </script>
 </body>
 </html>

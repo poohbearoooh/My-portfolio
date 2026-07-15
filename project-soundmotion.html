@@ -100,6 +100,12 @@
         .img-box { width: 100%; display: block; line-height: 0; }
         .img-box img, .img-box video { width: 100%; height: auto; display: block; object-fit: contain; }
 
+        .grid-4.intro-gif-grid { margin-top: 30px; }
+        .intro-gif-frame { aspect-ratio: 4 / 3; overflow: hidden; }
+        .intro-gif-frame img {
+            width: 100%; height: 100%; object-fit: cover; object-position: center bottom;
+        }
+
         /* Grid */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; margin-top: 10px; }
@@ -238,23 +244,11 @@
             <div class="img-box hover-target">
                 <img src="images/soundmotion/2.webp" alt="Context">
             </div>
-        </div>
-
-        <!-- 3.1 Meet SoundMotion: Concept video -->
-        <div class="section-block">
-            <div class="text-container">
-                <h2 class="section-title" id="txt-h2-glance">Concept video</h2>
-            </div>
-            <div class="img-box hover-target">
-                <video
-                    controls
-                    preload="metadata"
-                    playsinline
-                    aria-label="SoundMotion concept video"
-                    style="width: 100%; height: auto; aspect-ratio: auto; object-fit: contain;">
-                    <source src="images/soundmotion/16a.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <div class="grid-4 intro-gif-grid">
+                <div class="img-box hover-target intro-gif-frame"><img src="images/soundmotion/001.gif" alt="Normal speaker mode"></div>
+                <div class="img-box hover-target intro-gif-frame"><img src="images/soundmotion/002.gif" alt="Couple channel mode"></div>
+                <div class="img-box hover-target intro-gif-frame"><img src="images/soundmotion/003.gif" alt="Partner presence notification"></div>
+                <div class="img-box hover-target intro-gif-frame"><img src="images/soundmotion/004.gif" alt="Closing the couple channel"></div>
             </div>
         </div>
 
@@ -501,14 +495,23 @@
             </div>
         </div>
 
-        <!-- 26. Storyboard (文字) -->
+        <!-- 26. Concept video & Storyboard (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
-                <h2 class="section-title" id="txt-h-16">Storyboard</h2>
+                <h2 class="section-title" id="txt-h-16">Concept video & Storyboard</h2>
             </div>
         </div>
 
-        <!-- 27. Storyboard (图片) -->
+        <!-- 27. Concept video & Storyboard -->
+        <div class="section-block">
+            <div class="img-box hover-target">
+                <video controls preload="metadata" playsinline aria-label="SoundMotion concept video">
+                    <source src="images/soundmotion/16a.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/16.webp" alt="Storyboard">
@@ -564,7 +567,6 @@
                 credits: "Designed by Zhujun Pang, supervised by Joep Frens",
                 school: "Eindhoven University of Technology",
                 disclaimer: "*This is a speculative project and I am not affiliated with Spotify.",
-                h2_glance: "Concept video",
                 h2_brief: "Brief:",
                 p3_brief: "37% of couples break up within 3 months of becoming geographically separated, highlighting the challenges of communication in long-distance relationships (LDRs). While the internet provides convenient channels for instant communication, such as text messages and video chats, these technologies primarily focus on explicit information transmission and overlook the emotionally rich communication needed in intimate relationships.",
                 p4_brief: "Researchers in the field of human-computer interaction have explored the use of haptic sensations, wearable technologies, hybrid interactions, and ambient media to foster emotional communication for LDR couples. However, most designs and studies have focused on imitating communication modes within intimate relationships from a technological standpoint. In reality, the lives of long-distance couples are often accompanied by complex emotional changes and needs, which necessitate a user-centered approach in research and design processes.",
@@ -591,7 +593,7 @@
                 p14_2: "Consequently, I opted for the second solution, which involves using a servo motor to drive the swinging motion of the hat. I connected a 5V motor to the ESP8266 and used Blinker to control the motor's amplitude range, frequency, and duration of rotation.",
                 h15: "Interaction logic map of the SoundMotion system",
                 p15: "SoundMotion utilizes the ESP8266 as its hardware platform to control the product's hardware and establish a connection with the Spotify server. This enables the transfer of emoji feedback data generated during user interaction, allowing Spotify to analyze the data using the Spotify Web API and provide personalized music recommendations for couples.",
-                h16: "Storyboard",
+                h16: "Concept video & Storyboard",
                 h17: "Scenario",
                 h_ai: "Reflection: From interaction data to AI companionship",
                 p_ai: "Beyond connecting music sharing with tangible interaction, SoundMotion also hints at a future direction for AI companionship: when personal taste, interaction frequency, emotional feedback, and everyday contexts are gradually woven together, AI could move beyond functional recommendation and become a more situated companion. In this sense, the value of AI is not only to predict what users may like, but to understand how preferences are formed, shared, and emotionally reinforced within relationships.",
@@ -604,7 +606,6 @@
                 credits: "设计：庞竺君，导师：Joep Frens",
                 school: "埃因霍温理工大学",
                 disclaimer: "*这是一个概念项目，与 Spotify 无关。",
-                h2_glance: "概念视频",
                 h2_brief: "项目背景：",
                 p3_brief: "37%的情侣在异地后的3个月内分手，这凸显了异地恋（LDR）沟通的挑战。虽然互联网提供了短信和视频聊天等即时沟通渠道，但这些技术主要侧重于显性信息的传递，忽视了亲密关系中所需的情感丰富交流。",
                 p4_brief: "人机交互领域的研究人员探索了触觉、可穿戴技术、混合交互和环境媒体，以促进异地情侣的情感交流。然而，大多数设计和研究都侧重于从技术角度模仿亲密关系中的沟通模式。实际上，异地情侣的生活往往伴随着复杂的情感变化和需求，这就需要在研究和设计过程中采用以用户为中心的方法。",
@@ -631,7 +632,7 @@
                 p14_2: "因此，我选择了第二种方案，即使用伺服电机驱动帽子的摆动。我将 5V 电机连接到 ESP8266，并使用 Blinker 控制电机的摆动幅度、频率和旋转持续时间。",
                 h15: "SoundMotion 系统交互逻辑图",
                 p15: "SoundMotion 使用 ESP8266 作为硬件平台来控制产品硬件并与 Spotify 服务器建立连接。这使得能够传输用户交互过程中产生的表情符号反馈数据，允许 Spotify 使用 Web API 分析数据并为情侣提供个性化的音乐推荐。",
-                h16: "故事板",
+                h16: "概念视频与故事板",
                 h17: "使用场景",
                 h_ai: "延展思考：从交互数据到 AI 陪伴",
                 p_ai: "除了将音乐分享与实体交互结合，SoundMotion 也指向了我对未来 AI 陪伴的一种思考：当个人品味、互动频率、情绪反馈与日常情境逐渐融合，AI 不应只停留在功能性的推荐工具，而可以成为更理解关系语境的陪伴系统。它的价值不仅是预测用户喜欢什么，而是理解偏好如何在关系中被形成、共享，并被情感持续强化。",
@@ -647,8 +648,6 @@
             document.getElementById('txt-credits').innerText = t.credits;
             document.getElementById('txt-school').innerText = t.school;
             document.getElementById('txt-disclaimer').innerText = t.disclaimer;
-            document.getElementById('txt-h2-glance').innerText = t.h2_glance;
-            
             document.getElementById('txt-h2-brief').innerText = t.h2_brief;
             document.getElementById('txt-p3-brief').innerText = t.p3_brief;
             document.getElementById('txt-p4-brief').innerText = t.p4_brief;

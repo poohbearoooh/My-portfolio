@@ -100,6 +100,129 @@
         .img-box { width: 100%; display: block; line-height: 0; }
         .img-box img, .img-box video { width: 100%; height: auto; display: block; object-fit: contain; }
 
+        /* Interaction map + shared taste model */
+        .logic-focus-card {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #f7f7f7;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            user-select: none;
+            touch-action: pan-y;
+        }
+        .logic-map-primary {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 86%;
+            display: flex;
+            align-items: center;
+            transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+        }
+        .logic-map-primary img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+        .taste-model-panel {
+            position: absolute;
+            z-index: 2;
+            top: 7%;
+            bottom: 7%;
+            left: 78%;
+            width: 92%;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: -18px 0 50px rgba(0, 0, 0, 0.12);
+            transition: left 0.75s cubic-bezier(0.22, 1, 0.36, 1), top 0.75s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: grab;
+        }
+        .logic-focus-card.is-dragging .taste-model-panel { transition: none; cursor: grabbing; }
+        .taste-model-panel img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            object-position: left center;
+            pointer-events: none;
+        }
+        .taste-model-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(90deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.9) 24%, rgba(255,255,255,0.98) 48%);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: opacity 0.45s ease, background 0.45s ease;
+        }
+        .taste-model-label {
+            display: inline-block;
+            font-size: 1rem;
+            line-height: 1;
+            font-weight: 700;
+            color: #222;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+        .logic-focus-control {
+            position: absolute;
+            z-index: 4;
+            top: 50%;
+            left: 12%;
+            transform: translate(-50%, -50%);
+            width: auto;
+            height: auto;
+            min-height: 56px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.55rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: transform 0.25s ease, background 0.25s ease;
+            padding: 0 22px;
+            color: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            animation: taste-model-hint 2.4s ease-in-out infinite;
+        }
+        .logic-focus-control:hover { background: #fff; box-shadow: 0 16px 36px rgba(0, 0, 0, 0.17), 0 3px 10px rgba(0, 0, 0, 0.07); }
+        .logic-focus-control:focus-visible { border-color: #111; box-shadow: 0 0 0 3px rgba(0,0,0,0.08), 0 12px 30px rgba(0,0,0,0.14); }
+        .logic-focus-control .arrow-back { display: none; }
+        @keyframes taste-model-hint {
+            0%, 100% { transform: translate(-50%, calc(-50% - 3px)); }
+            50% { transform: translate(-50%, calc(-50% + 4px)); }
+        }
+        .logic-focus-card.is-ai-open .logic-map-primary { transform: translateX(-13%) scale(0.96); opacity: 0.38; }
+        .logic-focus-card.is-ai-open .taste-model-panel { left: 8%; top: 4%; bottom: 4%; }
+        .logic-focus-card.is-ai-open .taste-model-panel::after {
+            opacity: 0;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        .logic-focus-card.is-ai-open .taste-model-label { display: none; }
+        .logic-focus-card.is-ai-open .logic-focus-control {
+            left: 18px;
+            width: 54px;
+            height: 54px;
+            min-height: 54px;
+            padding: 0;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            animation: none;
+        }
+        .logic-focus-card.is-ai-open .logic-focus-control .arrow-forward { display: none; }
+        .logic-focus-card.is-ai-open .logic-focus-control .arrow-back { display: inline; }
+
         .grid-4.intro-gif-grid { margin-top: 30px; }
         .intro-gif-frame { aspect-ratio: 4 / 3; overflow: hidden; }
         .intro-gif-frame img {
@@ -127,6 +250,17 @@
             h1.project-title { font-size: 2.35rem; line-height: 1.12; }
             #txt-subtitle { font-size: 1.05rem !important; }
             .custom-cursor { display: none; } * { cursor: auto; }
+            .logic-map-primary { width: 92%; }
+            .taste-model-panel { left: 76%; top: 5%; bottom: 5%; }
+            .logic-focus-card.is-ai-open .taste-model-panel { left: 4%; top: 3%; bottom: 3%; }
+            .taste-model-label { font-size: 0.72rem; }
+            .logic-focus-control { left: 13%; min-height: 42px; padding: 0 12px; gap: 7px; font-size: 1.05rem; }
+            .logic-focus-card.is-ai-open .logic-focus-control {
+                left: 10px;
+                width: 42px;
+                height: 42px;
+                min-height: 42px;
+            }
         }
 
         /* --- 长图折叠/展开交互样式 --- */
@@ -488,10 +622,20 @@
             </div>
         </div>
 
-        <!-- 25. Logic Map (图片) -->
+        <!-- 25. Interaction Logic + Shared Taste Model -->
         <div class="section-block">
-            <div class="img-box hover-target">
-                <img src="images/soundmotion/15.webp" alt="Logic Map">
+            <div class="logic-focus-card hover-target" id="logic-focus-card">
+                <div class="logic-map-primary">
+                    <img src="images/soundmotion/15.webp" alt="SoundMotion interaction logic map" draggable="false">
+                </div>
+                <div class="taste-model-panel" id="taste-model-panel">
+                    <img src="images/soundmotion/19.webp" alt="SoundMotion shared taste model" draggable="false">
+                    <button class="logic-focus-control hover-target" id="logic-focus-control" type="button" aria-label="Show shared taste model" aria-expanded="false">
+                        <span class="taste-model-label" id="txt-taste-label">Shared taste model</span>
+                        <span class="arrow-forward" aria-hidden="true">👉</span>
+                        <span class="arrow-back" aria-hidden="true">👈</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -530,22 +674,6 @@
             <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
                 <div class="img-box hover-target"><img src="images/soundmotion/17a.webp" alt="Scenario 1"></div>
                 <div class="img-box hover-target"><img src="images/soundmotion/17b.webp" alt="Scenario 2"></div>
-            </div>
-        </div>
-
-        <!-- 30. AI Reflection -->
-        <div class="section-block gap-small">
-            <div class="text-container">
-                <h2 class="section-title" id="txt-h-ai">Reflection: From interaction data to AI companionship</h2>
-                <p class="body-text" id="txt-p-ai">
-                    SoundMotion blends both users' musical preferences and dynamically adapts to their feedback and personal settings; over time, it grows into a playlist unique to the couple, echoing how partners become more attuned to each other the longer they are together.
-                </p>
-            </div>
-        </div>
-
-        <div class="section-block">
-            <div class="img-box hover-target">
-                <img src="images/soundmotion/19.webp" alt="SoundMotion shared taste model">
             </div>
         </div>
 
@@ -598,11 +726,10 @@
                 p14_1: "Initially, I chose to use an electromagnet as the main driving component. I installed the electromagnet on the inner wall of the SoundMotion device and attached a magnet to the inner wall of the hat, as shown in the circuit diagram. However, during the actual experimentation process, I found that the electromagnet I purchased, which operates at 6-12V, had a limited magnetic field range and was unable to effectively attract and repel the magnet on the hat.",
                 p14_2: "Consequently, I opted for the second solution, which involves using a servo motor to drive the swinging motion of the hat. I connected a 5V motor to the ESP8266 and used Blinker to control the motor's amplitude range, frequency, and duration of rotation.",
                 h15: "Interaction logic map of the SoundMotion system",
-                p15: "SoundMotion utilizes the ESP8266 as its hardware platform to control the product's hardware and establish a connection with the Spotify server. This enables the transfer of emoji feedback data generated during user interaction, allowing Spotify to analyze the data using the Spotify Web API and provide personalized music recommendations for couples.",
+                p15: "SoundMotion uses the ESP8266 to control the physical product and connect its hardware states and emoji feedback with the Spotify service. At the software layer, a shared taste model learns from both partners' music preferences, emoji feedback, and listening patterns. As they spend more time listening together, the Couple Channel becomes increasingly attuned to their shared taste, echoing how couples grow more in sync over time.",
+                tasteLabel: "Shared taste model",
                 h16: "Concept video & Storyboard",
                 h17: "Scenario",
-                h_ai: "Reflection: From interaction data to AI companionship",
-                p_ai: "SoundMotion blends both users' musical preferences and dynamically adapts to their feedback and personal settings; over time, it grows into a playlist unique to the couple, echoing how partners become more attuned to each other the longer they are together.",
                 nextLabel: "Next Project"
             },
             cn: {
@@ -637,11 +764,10 @@
                 p14_1: "最初，我选择使用电磁铁作为主要驱动元件。我在 SoundMotion 设备内壁安装了电磁铁，并在帽子内壁吸附了磁铁，如电路图所示。然而，在实际实验过程中，我发现购买的 6-12V 电磁铁磁场范围有限，无法有效吸引和排斥帽子上的磁铁。",
                 p14_2: "因此，我选择了第二种方案，即使用伺服电机驱动帽子的摆动。我将 5V 电机连接到 ESP8266，并使用 Blinker 控制电机的摆动幅度、频率和旋转持续时间。",
                 h15: "SoundMotion 系统交互逻辑图",
-                p15: "SoundMotion 使用 ESP8266 作为硬件平台来控制产品硬件并与 Spotify 服务器建立连接。这使得能够传输用户交互过程中产生的表情符号反馈数据，允许 Spotify 使用 Web API 分析数据并为情侣提供个性化的音乐推荐。",
+                p15: "SoundMotion 使用 ESP8266 控制实体产品，并将硬件状态与 emoji 反馈连接至 Spotify 服务。在软件层，共同品味模型会根据双方的音乐偏好、emoji 反馈和聆听行为持续学习。随着两人共同使用的时间增加，Couple Channel 会越来越契合他们的共同品味，正如现实中的情侣也会在相处中逐渐磨合得更加默契。",
+                tasteLabel: "共同品味模型",
                 h16: "概念视频与故事板",
                 h17: "使用场景",
-                h_ai: "延展思考：从交互数据到 AI 陪伴",
-                p_ai: "SoundMotion 会融合两位用户的音乐偏好，并根据双方的反馈与个性化设置进行动态调整；随着使用时间增加，它会成长为越来越适合这对情侣的独属歌单，与现实中伴侣相处越久、彼此越默契的过程相呼应。",
                 nextLabel: "下一个项目"
             }
         };
@@ -690,11 +816,10 @@
             
             document.getElementById('txt-h-15').innerText = t.h15;
             document.getElementById('txt-p-15').innerText = t.p15;
+            document.getElementById('txt-taste-label').innerText = t.tasteLabel;
             
             document.getElementById('txt-h-16').innerText = t.h16;
             document.getElementById('txt-h-17').innerText = t.h17;
-            document.getElementById('txt-h-ai').innerText = t.h_ai;
-            document.getElementById('txt-p-ai').innerText = t.p_ai;
             
             document.getElementById('lbl-next').innerText = t.nextLabel;
         }
@@ -711,6 +836,74 @@
             if (window.scrollY > 50) navBar.classList.add('scrolled');
             else navBar.classList.remove('scrolled');
         });
+
+        /* --- Interaction map / shared taste model focus card --- */
+        const logicFocusCard = document.getElementById('logic-focus-card');
+        const tasteModelPanel = document.getElementById('taste-model-panel');
+        const logicFocusControl = document.getElementById('logic-focus-control');
+        let isTasteModelOpen = false;
+        let activePointer = null;
+        let dragStartX = 0;
+        let dragStartLeft = 0;
+        let hasDragged = false;
+
+        function setTasteModelOpen(open) {
+            isTasteModelOpen = open;
+            logicFocusCard.classList.toggle('is-ai-open', open);
+            logicFocusControl.setAttribute('aria-expanded', String(open));
+            logicFocusControl.setAttribute('aria-label', open ? 'Return to interaction logic map' : 'Show shared taste model');
+        }
+
+        logicFocusControl.addEventListener('click', (event) => {
+            event.stopPropagation();
+            setTasteModelOpen(!isTasteModelOpen);
+        });
+
+        logicFocusCard.addEventListener('pointerdown', (event) => {
+            if (event.target.closest('button')) return;
+            activePointer = event.pointerId;
+            dragStartX = event.clientX;
+            dragStartLeft = tasteModelPanel.offsetLeft;
+            hasDragged = false;
+            logicFocusCard.classList.add('is-dragging');
+            logicFocusCard.setPointerCapture(event.pointerId);
+        });
+
+        logicFocusCard.addEventListener('pointermove', (event) => {
+            if (event.pointerId !== activePointer) return;
+            const deltaX = event.clientX - dragStartX;
+            if (Math.abs(deltaX) > 4) hasDragged = true;
+
+            const cardWidth = logicFocusCard.clientWidth;
+            const openLeft = cardWidth * (window.innerWidth <= 768 ? 0.04 : 0.08);
+            const closedLeft = cardWidth * (window.innerWidth <= 768 ? 0.76 : 0.78);
+            const nextLeft = Math.min(closedLeft, Math.max(openLeft, dragStartLeft + deltaX));
+            tasteModelPanel.style.left = `${nextLeft}px`;
+        });
+
+        function finishLogicDrag(event) {
+            if (event.pointerId !== activePointer) return;
+
+            if (hasDragged) {
+                const cardWidth = logicFocusCard.clientWidth;
+                const openLeft = cardWidth * (window.innerWidth <= 768 ? 0.04 : 0.08);
+                const closedLeft = cardWidth * (window.innerWidth <= 768 ? 0.76 : 0.78);
+                const midpoint = (openLeft + closedLeft) / 2;
+                setTasteModelOpen(tasteModelPanel.offsetLeft < midpoint);
+            } else if (!isTasteModelOpen) {
+                setTasteModelOpen(true);
+            }
+
+            tasteModelPanel.style.left = '';
+            logicFocusCard.classList.remove('is-dragging');
+            if (logicFocusCard.hasPointerCapture(event.pointerId)) {
+                logicFocusCard.releasePointerCapture(event.pointerId);
+            }
+            activePointer = null;
+        }
+
+        logicFocusCard.addEventListener('pointerup', finishLogicDrag);
+        logicFocusCard.addEventListener('pointercancel', finishLogicDrag);
 
         const cursor = document.querySelector('.custom-cursor');
         let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;

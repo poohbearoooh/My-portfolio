@@ -229,6 +229,34 @@
             width: 100%; height: 100%; object-fit: cover; object-position: center bottom;
         }
 
+        /* Emoji feedback: physical action paired with its interface response */
+        .emoji-feedback-copy { margin-bottom: 20px; }
+        .emoji-feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            width: 100%;
+        }
+        .emoji-feedback-media {
+            aspect-ratio: 1100 / 995;
+            overflow: hidden;
+            background: #f4f4f4;
+        }
+        .emoji-feedback-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .emoji-feedback-secondary { margin-top: 80px; }
+        .emoji-feedback-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #111;
+            margin: 0 0 14px;
+        }
+
         /* Grid */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; margin-top: 10px; }
@@ -242,6 +270,8 @@
         @media (max-width: 768px) {
             :root { --nav-padding: 20px; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 20px; }
+            .emoji-feedback-grid { grid-template-columns: 1fr; gap: 20px; }
+            .emoji-feedback-secondary { margin-top: 60px; }
             .content-wrapper { padding: 0 20px !important; }
             .header-wrapper-relative { padding-bottom: 80px; }
             .header-text-content { padding-right: 0; }
@@ -551,44 +581,52 @@
             </div>
         </div>
 
-        <!-- 18. Switch (文字) -->
-        <div class="section-block gap-small">
-            <div class="text-container">
-                <h2 class="section-title" id="txt-h-12">The hat acts as a switch</h2>
-                <p class="body-text" id="txt-p-12">
-                    The Hat as a switch Control Bluetooth speakers by toggling the Hat on and off, which acts as a switch. Open the hat to the horizontal angle to turn on the device, it will act as a normal music speaker. Open the hat fully to enter the Couple Channel, and the screen will appear.
-                </p>
-            </div>
-        </div>
-
-        <!-- 19. Switch (图片) -->
+        <!-- 18. Hat switch & physical notification -->
         <div class="section-block">
-            <div style="display: flex; gap: 10px; width: 100%; height: 500px; justify-content: center;">
-                <div class="img-box hover-target" style="flex: 1; height: 100%;"><img src="images/soundmotion/12a.webp" alt="Switch Left" style="width: 100%; height: 100%; object-fit: cover;"></div>
-                <div class="img-box hover-target" style="flex: 1; height: 100%;"><img src="images/soundmotion/12b.webp" alt="Switch Right" style="width: 100%; height: 100%; object-fit: cover;"></div>
+            <div class="text-container emoji-feedback-copy">
+                <h2 class="section-title" id="txt-h-switch-motion">The hat as a switch &amp; physical notification</h2>
+                <p class="body-text" id="txt-p-switch-motion">The hat acts as a tangible switch between normal listening and the Couple Channel. When a partner is active, its gentle swinging movement communicates their presence without interrupting the room.</p>
+            </div>
+            <div class="emoji-feedback-grid">
+                <div class="img-box hover-target emoji-feedback-media">
+                    <img src="images/soundmotion/hat-as-switch.gif" alt="Opening the hat to switch listening modes" loading="lazy">
+                </div>
+                <div class="img-box hover-target emoji-feedback-media">
+                    <img src="images/soundmotion/physical-movement-notification.gif" alt="The hat gently swinging to signal a partner's presence" loading="lazy">
+                </div>
             </div>
         </div>
 
-        <!-- 20. Notification (文字) -->
-        <div class="section-block gap-small">
-            <div class="text-container">
-                <h2 class="section-title" id="txt-h-13">Physical movement as notification</h2>
-                <p class="body-text" id="txt-p-13">
-                    When the device is turned on, if the partner is using the Couple Channel to listen to music, the Hat will continue to swing to indicate the partner's status.
-                </p>
-            </div>
-        </div>
-
-        <!-- 21. Notification (图片) -->
+        <!-- 19. Emoji feedback -->
         <div class="section-block">
-            <div style="display: flex; gap: 10px; width: 100%; height: 450px; justify-content: center;">
-                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;"><img src="images/soundmotion/13a.webp" alt="Motion 1" style="width: 100%; height: 100%; object-fit: cover;"></div>
-                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;"><img src="images/soundmotion/13b.webp" alt="Motion 2" style="width: 100%; height: 100%; object-fit: cover;"></div>
-                <div class="img-box hover-target" style="flex: 1; height: 100%; position: relative;"><img src="images/soundmotion/13c.webp" alt="Motion 3" style="width: 100%; height: 100%; object-fit: cover;"></div>
+            <div class="text-container emoji-feedback-copy">
+                <h2 class="section-title" id="txt-h-emoji">Emoji feedback through the Halo</h2>
+                <p class="body-text" id="txt-p-emoji-select">Slide along the Halo to choose an emoji that reflects the listening moment, then double-tap to send it to your partner.</p>
+            </div>
+            <div class="emoji-feedback-grid">
+                <div class="img-box hover-target emoji-feedback-media">
+                    <img src="images/soundmotion/emoji-select-physical.gif" alt="Sliding along the physical Halo to choose an emoji" loading="lazy">
+                </div>
+                <div class="img-box hover-target emoji-feedback-media">
+                    <img src="images/soundmotion/emoji-select-interface.gif" alt="Emoji expression changing as the Halo is adjusted" loading="lazy">
+                </div>
+            </div>
+
+            <div class="text-container emoji-feedback-copy emoji-feedback-secondary">
+                <h3 class="emoji-feedback-subtitle" id="txt-h-emoji-presence">Presence &amp; response</h3>
+                <p class="body-text" id="txt-p-emoji-presence">When your partner is offline, the Halo breathes in white. Once they join, it shifts into color, while incoming emojis gather at the bottom of the display.</p>
+            </div>
+            <div class="emoji-feedback-grid">
+                <div class="img-box hover-target emoji-feedback-media">
+                    <img src="images/soundmotion/partner-online-halo.gif" alt="Halo changing from white to color when a partner comes online" loading="lazy">
+                </div>
+                <div class="img-box hover-target emoji-feedback-media">
+                    <img src="images/soundmotion/incoming-emoji.gif" alt="Incoming partner emoji appearing at the bottom of the display" loading="lazy">
+                </div>
             </div>
         </div>
 
-        <!-- 22. Prototyping (文字) -->
+        <!-- 23. Prototyping (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h-14">Prototyping iteration for user test</h2>
@@ -718,10 +756,12 @@
                 p5_final: "SoundMotion was specifically developed as a communication system aimed at facilitating seamless interaction between long-distance couples by combining synchronized music listening and physical engagement. Each couple is equipped with a dedicated device known as SoundMotion, which enables music playback and basic physical interactions. This device is seamlessly integrated with the user's individual Spotify account, allowing them to access personalized music feeds and communication data provided by the Spotify server.",
                 h3_tang: "Tangible interaction design",
                 p5_tang: "In contrast to conveying explicit information through text messages and social media, this form of physical interaction subtly conveys the state of one partner and provides ambiguous cues of longing and care. Instead of forcefully interrupting the user's current activities with intrusive notifications, it naturally captures attention when the user chooses to engage. Users have the freedom to switch between subtle, peripheral interactions and explicit, visible interactions through physical gestures.",
-                h12: "The hat acts as a switch",
-                p12: "The Hat as a switch Control Bluetooth speakers by toggling the Hat on and off, which acts as a switch. Open the hat to the horizontal angle to turn on the device, it will act as a normal music speaker. Open the hat fully to enter the Couple Channel, and the screen will appear.",
-                h13: "Physical movement as notification",
-                p13: "When the device is turned on, if the partner is using the Couple Channel to listen to music, the Hat will continue to swing to indicate the partner's status.",
+                switchMotionTitle: "The hat as a switch & physical notification",
+                switchMotionText: "The hat acts as a tangible switch between normal listening and the Couple Channel. When a partner is active, its gentle swinging movement communicates their presence without interrupting the room.",
+                emojiTitle: "Emoji feedback through the Halo",
+                emojiSelect: "Slide along the Halo to choose an emoji that reflects the listening moment, then double-tap to send it to your partner.",
+                emojiPresenceTitle: "Presence & response",
+                emojiPresence: "When your partner is offline, the Halo breathes in white. Once they join, it shifts into color, while incoming emojis gather at the bottom of the display.",
                 h14: "Prototyping iteration for user test",
                 p14_1: "Initially, I chose to use an electromagnet as the main driving component. I installed the electromagnet on the inner wall of the SoundMotion device and attached a magnet to the inner wall of the hat, as shown in the circuit diagram. However, during the actual experimentation process, I found that the electromagnet I purchased, which operates at 6-12V, had a limited magnetic field range and was unable to effectively attract and repel the magnet on the hat.",
                 p14_2: "Consequently, I opted for the second solution, which involves using a servo motor to drive the swinging motion of the hat. I connected a 5V motor to the ESP8266 and used Blinker to control the motor's amplitude range, frequency, and duration of rotation.",
@@ -756,10 +796,12 @@
                 p5_final: "SoundMotion 专为促进异地情侣间的无缝互动而开发，结合了同步音乐聆听和物理参与。每对情侣都配备一个名为 SoundMotion 的专用设备，支持音乐播放和基本的物理交互。该设备与用户的个人 Spotify 账户无缝集成，允许他们访问 Spotify 服务器提供的个性化音乐流和通信数据。",
                 h3_tang: "实体交互设计",
                 p5_tang: "与通过短信和社交媒体传达显性信息不同，这种形式的物理交互微妙地传达了伴侣的状态，并提供了思念和关怀的模糊线索。它不会用侵入性通知强行打断用户当前的活动，而是在用户选择参与时自然地吸引注意力。用户可以自由地通过物理手势在微妙的周边交互和显性的可见交互之间切换。",
-                h12: "帽子即开关",
-                p12: "通过切换帽子的开合来控制蓝牙音箱。打开帽子至水平角度即可开启设备，此时它作为普通音乐音箱使用。完全打开帽子则进入“情侣频道”，屏幕随之亮起。",
-                h13: "物理运动作为通知",
-                p13: "设备开启后，如果伴侣正在使用情侣频道听音乐，帽子将持续摆动以指示伴侣的状态。",
+                switchMotionTitle: "帽盖开关与实体动态通知",
+                switchMotionText: "帽盖是普通聆听与 Couple Channel 之间的实体开关。伴侣在线时，轻柔的摆动会传递对方的在场状态，而不打断当下活动。",
+                emojiTitle: "通过 Halo 进行 Emoji 情绪反馈",
+                emojiSelect: "沿 Halo 滑动选择代表此刻听歌感受的 emoji，双击即可发送给伴侣。",
+                emojiPresenceTitle: "在线状态与回应",
+                emojiPresence: "伴侣未上线时，Halo 以白色轻微呼吸；上线后转为彩色，收到的 emoji 会出现在显示区域下方。",
                 h14: "用户测试的原型迭代",
                 p14_1: "最初，我选择使用电磁铁作为主要驱动元件。我在 SoundMotion 设备内壁安装了电磁铁，并在帽子内壁吸附了磁铁，如电路图所示。然而，在实际实验过程中，我发现购买的 6-12V 电磁铁磁场范围有限，无法有效吸引和排斥帽子上的磁铁。",
                 p14_2: "因此，我选择了第二种方案，即使用伺服电机驱动帽子的摆动。我将 5V 电机连接到 ESP8266，并使用 Blinker 控制电机的摆动幅度、频率和旋转持续时间。",
@@ -804,11 +846,13 @@
             document.getElementById('txt-h3-tang').innerText = t.h3_tang;
             document.getElementById('txt-p5-tang').innerText = t.p5_tang;
             
-            document.getElementById('txt-h-12').innerText = t.h12;
-            document.getElementById('txt-p-12').innerText = t.p12;
-            
-            document.getElementById('txt-h-13').innerText = t.h13;
-            document.getElementById('txt-p-13').innerText = t.p13;
+            document.getElementById('txt-h-switch-motion').innerText = t.switchMotionTitle;
+            document.getElementById('txt-p-switch-motion').innerText = t.switchMotionText;
+
+            document.getElementById('txt-h-emoji').innerText = t.emojiTitle;
+            document.getElementById('txt-p-emoji-select').innerText = t.emojiSelect;
+            document.getElementById('txt-h-emoji-presence').innerText = t.emojiPresenceTitle;
+            document.getElementById('txt-p-emoji-presence').innerText = t.emojiPresence;
             
             document.getElementById('txt-h-14').innerText = t.h14;
             document.getElementById('txt-p-14-1').innerText = t.p14_1;

@@ -119,7 +119,7 @@
         .close-modal:hover { opacity: 1; }
 
         /* --- 8. 华为工作经历展示页 (全屏抽屉 + PPT Bento 排版) --- */
-        .work-drawer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #f9f9f9; z-index: 9000; overflow-y: auto; transform: translateY(100%); transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1); color: #111; }
+        .work-drawer { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #f9f9f9; z-index: 9500; overflow-y: auto; transform: translateY(100%); transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1); color: #111; }
         .work-drawer.active { transform: translateY(0); }
         
         .drawer-nav { display: flex; justify-content: space-between; align-items: center; padding: 40px var(--nav-padding); position: sticky; top: 0; background: rgba(249,249,249,0.9); backdrop-filter: blur(10px); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
@@ -184,6 +184,205 @@
         .expand-btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; border-bottom: 1px solid #111; padding-bottom: 2px; transition: gap 0.3s; margin-top: 10px; }
         .proj-core:hover .expand-btn { gap: 15px; }
 
+        /* --- 9. Professional Experience Library (design-379) --- */
+        .experience-library {
+            position: fixed;
+            inset: 0;
+            z-index: 9200;
+            background: #f2f2ef;
+            color: #111;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .experience-library.active { transform: translateY(0); }
+
+        .experience-nav,
+        .case-nav {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            height: 76px;
+            padding: 0 var(--nav-padding);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(242,242,239,0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        .experience-nav-title,
+        .case-nav-title { font-size: 0.95rem; font-weight: 600; }
+        .experience-nav-actions { display: flex; align-items: center; gap: 28px; }
+        .icon-close {
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            background: transparent;
+            color: #111;
+            font: 300 2rem/1 'Inter', sans-serif;
+            opacity: 0.65;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .icon-close:hover { opacity: 1; transform: rotate(4deg); }
+
+        .experience-shell { max-width: 1500px; margin: 0 auto; padding: 76px var(--nav-padding) 120px; }
+        .experience-heading { margin-bottom: 58px; max-width: 1120px; }
+        .experience-kicker { display: block; margin-bottom: 18px; color: #6f6f69; font-size: 0.78rem; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; }
+        .experience-heading h2 { font-size: 4rem; line-height: 1.08; font-weight: 300; letter-spacing: 0; margin-bottom: 24px; }
+        .experience-heading p { max-width: 720px; color: #5c5c57; font-size: 1.05rem; line-height: 1.75; }
+
+        .company-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+        .company-card {
+            position: relative;
+            display: block;
+            min-width: 0;
+            border: 0;
+            padding: 0;
+            background: #deded8;
+            color: #fff;
+            font: inherit;
+            text-decoration: none;
+            text-align: left;
+            overflow: hidden;
+            border-radius: 6px;
+            isolation: isolate;
+            aspect-ratio: 4 / 3;
+        }
+        .company-card.company-featured { grid-column: 1 / -1; aspect-ratio: 16 / 6.7; min-height: 430px; }
+        .company-card-media { position: absolute; inset: 0; background: #252827; }
+        .company-card-media img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); opacity: 0.82; transition: transform 0.8s cubic-bezier(0.19,1,0.22,1), filter 0.45s ease, opacity 0.45s ease; }
+        .company-card:hover .company-card-media img { transform: scale(1.025); filter: grayscale(15%); opacity: 1; }
+        .company-card-media.process-placeholder img { opacity: 0.28; filter: grayscale(100%) contrast(0.7); }
+        .company-card:hover .company-card-media.process-placeholder img { opacity: 0.38; filter: grayscale(100%) contrast(0.78); }
+        .company-card.byd-card::after { background: rgba(0,0,0,0.38); }
+        .company-card.byd-card:hover::after { background: rgba(0,0,0,0.28); }
+        .philips-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #111; }
+        .philips-preview-grid video { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
+        .company-card.philips-card::after { background: rgba(0,0,0,0.52); }
+        .company-card.philips-card:hover::after { background: rgba(0,0,0,0.42); }
+        .company-card-media.typographic {
+            display: flex;
+            align-items: flex-end;
+            padding: 30px;
+            background: #d9d9d2;
+            color: rgba(17,17,17,0.12);
+            font-size: 6.5rem;
+            font-weight: 600;
+            line-height: 0.8;
+            overflow: hidden;
+        }
+        .company-card:nth-child(3) .company-card-media.typographic { background: #c9d0cc; }
+        .company-card:nth-child(4) .company-card-media.typographic { background: #d4c9c2; }
+        .company-card::after { content: ''; position: absolute; inset: 0; z-index: 1; background: rgba(0,0,0,0.28); transition: background 0.35s ease; }
+        .company-card:hover::after { background: rgba(0,0,0,0.18); }
+        .company-card.company-featured::after { background: rgba(0,0,0,0.58); }
+        .company-card.company-featured:hover::after { background: rgba(0,0,0,0.48); }
+        .company-card-content { position: absolute; inset: 0; z-index: 2; padding: 30px; display: flex; flex-direction: column; justify-content: space-between; }
+        .company-featured .company-card-content { padding: 44px; }
+        .company-card-index { font-size: 0.75rem; font-weight: 600; letter-spacing: 1.2px; opacity: 0.72; }
+        .company-card-title { font-size: 2rem; font-weight: 400; line-height: 1.08; margin-bottom: 10px; letter-spacing: 0; }
+        .company-featured .company-card-title { font-size: 3rem; }
+        .company-card-role { font-size: 0.9rem; opacity: 0.78; margin-bottom: 18px; }
+        .company-card-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .company-card-tag { padding: 5px 9px; border: 1px solid rgba(255,255,255,0.45); border-radius: 3px; font-size: 0.7rem; letter-spacing: 0.2px; }
+        .company-card-open { position: absolute; right: 30px; bottom: 27px; font-size: 1.5rem; transition: transform 0.3s ease; }
+        .company-card:hover .company-card-open { transform: translateX(6px); }
+
+        .case-view { position: fixed; inset: 0; z-index: 9400; background: #f7f7f4; overflow-y: auto; opacity: 0; pointer-events: none; transform: translateY(24px); transition: opacity 0.38s ease, transform 0.5s cubic-bezier(0.2,0.8,0.2,1); }
+        .case-view.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .case-nav { background: rgba(247,247,244,0.92); }
+        .case-nav-meta { color: #74746e; font-size: 0.8rem; }
+        .case-shell { max-width: 1400px; margin: 0 auto; padding: 72px var(--nav-padding) 120px; }
+        .case-hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr); gap: 70px; align-items: end; min-height: 42vh; padding-bottom: 70px; border-bottom: 1px solid #cfcfca; }
+        .case-company { display: block; color: #73736d; font-size: 0.78rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 22px; }
+        .case-hero h2 { font-size: 5rem; line-height: 0.98; font-weight: 300; letter-spacing: 0; }
+        .case-summary { color: #555550; font-size: 1.08rem; line-height: 1.75; }
+        .case-facts { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); border-bottom: 1px solid #cfcfca; }
+        .case-fact { padding: 25px 22px 25px 0; }
+        .case-fact + .case-fact { border-left: 1px solid #d7d7d2; padding-left: 22px; }
+        .case-fact-label { color: #85857f; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
+        .case-fact-value { font-size: 0.95rem; line-height: 1.5; }
+        .case-section { padding: 84px 0; border-bottom: 1px solid #d7d7d2; }
+        .case-section-grid { display: grid; grid-template-columns: minmax(220px,0.33fr) minmax(0,0.67fr); gap: 70px; }
+        .case-section h3 { font-size: 1.65rem; font-weight: 400; line-height: 1.25; }
+        .case-copy { max-width: 800px; color: #4f4f4a; font-size: 1rem; line-height: 1.85; }
+        .case-copy p + p { margin-top: 18px; }
+        .case-media { margin-top: 42px; width: 100%; background: #e5e5e0; overflow: hidden; border-radius: 4px; }
+        .case-media img { width: 100%; display: block; }
+        .case-media-placeholder { min-height: 430px; display: flex; align-items: center; justify-content: center; padding: 40px; color: #85857f; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
+        .case-section-number { color: #8a8a84; font-size: 0.72rem; letter-spacing: 1px; margin-bottom: 16px; }
+
+        .dji-card::after { background: rgba(0,0,0,0.42); }
+        .dji-card:hover::after { background: rgba(0,0,0,0.32); }
+        .dji-card .company-card-media img { object-position: center 43%; }
+        .dji-category-section .case-section-grid,
+        .dji-accessory-section .case-section-grid { grid-template-columns: minmax(300px,0.36fr) minmax(0,0.64fr); align-items: start; }
+        .dji-category-copy,
+        .dji-accessory-copy { max-width: 390px; margin-top: 28px; color: #555550; font-size: 0.96rem; line-height: 1.82; }
+        .dji-category-copy p + p,
+        .dji-accessory-copy p + p { margin-top: 18px; }
+        .dji-category-copy p,
+        .dji-accessory-copy p { position: relative; padding-left: 17px; }
+        .dji-category-copy p::before,
+        .dji-accessory-copy p::before { content: ''; position: absolute; left: 0; top: 0.82em; width: 4px; height: 4px; border-radius: 50%; background: #555550; }
+        .dji-category-media { min-width: 0; aspect-ratio: 16 / 10; overflow: hidden; border: 1px dashed #c8c8c2; border-radius: 4px; background: #f1f1ee; }
+        .dji-concept-stage { position: relative; width: 100%; padding: 0; appearance: none; color: inherit; cursor: pointer; }
+        .dji-particle-canvas,
+        .dji-safe-image { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.55s ease; }
+        .dji-particle-canvas { display: block; opacity: 1; }
+        .dji-safe-image { object-fit: cover; opacity: 0; transform: scale(1.15); }
+        .dji-concept-stage.revealed .dji-particle-canvas { opacity: 0; }
+        .dji-concept-stage.revealed .dji-safe-image { opacity: 1; }
+        .dji-concept-stage:focus-visible { outline: 2px solid #111; outline-offset: 4px; }
+        .dji-accessory-carousel { position: relative; min-width: 0; }
+        .dji-accessory-stage { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 4px; background: #ededE9; }
+        .dji-accessory-slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 0.45s ease; pointer-events: none; }
+        .dji-accessory-slide.active { opacity: 1; }
+        .dji-accessory-slide > img { width: 100%; height: 100%; display: block; object-fit: contain; }
+        .dji-nano-pair { display: grid; grid-template-columns: minmax(0,1.62fr) minmax(0,1fr); gap: 2px; background: #d9dadd; }
+        .dji-nano-pair .nano-product-image { width: 100%; height: 100%; min-width: 0; display: block; object-fit: cover; object-position: center; }
+        .nano-cmf-stack { min-width: 0; display: grid; grid-template-rows: 1fr 1fr; gap: 2px; }
+        .nano-cmf-slice { position: relative; min-height: 0; overflow: hidden; background: #d9dadd; }
+        .nano-cmf-slice img { position: absolute; top: -4%; width: 200%; height: auto; max-width: none; display: block; }
+        .nano-cmf-slice:first-child img { left: 0; }
+        .nano-cmf-slice:last-child img { left: -100%; }
+        .dji-accessory-arrow {
+            position: absolute;
+            z-index: 2;
+            top: 50%;
+            width: 44px;
+            height: 44px;
+            transform: translateY(-50%);
+            border: 1px solid rgba(17,17,17,0.18);
+            border-radius: 50%;
+            background: rgba(247,247,244,0.9);
+            color: #111;
+            font: 300 1.35rem/1 'Inter', sans-serif;
+            backdrop-filter: blur(8px);
+            transition: transform 0.25s ease, background 0.25s ease;
+        }
+        .dji-accessory-prev { left: 20px; }
+        .dji-accessory-next { right: 20px; }
+        .dji-accessory-next:hover { transform: translateY(-50%) translateX(3px); background: #fff; }
+        .dji-accessory-prev:hover { transform: translateY(-50%) translateX(-3px); background: #fff; }
+        .dji-accessory-meta { display: flex; justify-content: space-between; gap: 24px; margin-top: 14px; color: #74746e; font-size: 0.74rem; letter-spacing: 0.2px; }
+        .dji-accessory-caption { text-align: right; }
+
+        .case-view.philips-case { overflow: hidden; }
+        .philips-case .case-shell { height: calc(100vh - 76px); padding-top: 42px; padding-bottom: 42px; display: flex; align-items: center; }
+        .philips-one-screen { width: 100%; display: grid; grid-template-columns: minmax(340px, 0.72fr) minmax(620px, 1.28fr); gap: 72px; align-items: center; }
+        .philips-copy .case-company { margin-bottom: 18px; }
+        .philips-copy h2 { font-size: 4.4rem; line-height: 0.98; font-weight: 300; letter-spacing: 0; margin-bottom: 22px; }
+        .philips-subtitle { color: #62625d; font-size: 0.92rem; margin-bottom: 22px; }
+        .philips-description { max-width: 520px; color: #52524d; font-size: 0.95rem; line-height: 1.78; font-weight: 400; }
+        .philips-video-pair { display: flex; align-items: center; justify-content: flex-end; gap: 34px; min-width: 0; }
+        .philips-video-pair video { height: min(64vh, 560px); max-width: calc(50% - 17px); aspect-ratio: 9 / 16; object-fit: contain; background: #111; border-radius: 4px; box-shadow: 0 18px 45px rgba(0,0,0,0.09); }
+
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-10px);} 60% {transform: translateX(-50%) translateY(-5px);} }
         @keyframes slideHint { 0%, 100% {transform: translateX(0);} 50% {transform: translateX(10px);} }
 
@@ -192,6 +391,12 @@
             .core-top { grid-template-columns: 1fr; gap: 30px; }
             .slide-card { flex: 0 0 90%; min-width: 300px; }
             .bento-grid { grid-template-columns: 1fr; }
+            .company-grid { grid-template-columns: 1fr 1fr; }
+            .company-card.company-featured { grid-column: 1 / -1; aspect-ratio: 16 / 8; }
+            .company-card:last-child { grid-column: 1 / -1; aspect-ratio: 2 / 1; }
+            .case-hero { grid-template-columns: 1fr; gap: 35px; }
+            .experience-heading h2 { font-size: 3.4rem; }
+            .case-hero h2 { font-size: 4.2rem; }
         }
         @media (max-width: 768px) {
             :root { --nav-padding: 20px; }
@@ -202,6 +407,23 @@
             .wechat-reveal { opacity: 1; transform: translateX(0); font-size: 0.9rem; color: #888; }
             .timeline-track { padding: 140px 0; }
             .drawer-controls { gap: 20px; }
+            .experience-shell, .case-shell { padding-top: 48px; padding-bottom: 80px; }
+            .experience-heading { margin-bottom: 38px; }
+            .experience-heading h2 { font-size: 2.6rem; }
+            .company-grid { grid-template-columns: 1fr; gap: 16px; }
+            .company-card,
+            .company-card.company-featured,
+            .company-card:last-child { grid-column: auto; aspect-ratio: 4 / 3; min-height: 0; }
+            .company-card-content, .company-featured .company-card-content { padding: 24px; }
+            .company-featured .company-card-title { font-size: 2.2rem; }
+            .company-card-open { right: 24px; bottom: 21px; }
+            .case-hero { min-height: 0; padding-bottom: 48px; }
+            .case-hero h2 { font-size: 3.35rem; }
+            .case-facts { grid-template-columns: 1fr; }
+            .case-fact + .case-fact { border-left: 0; border-top: 1px solid #d7d7d2; padding-left: 0; }
+            .case-section { padding: 58px 0; }
+            .case-section-grid { grid-template-columns: 1fr; gap: 24px; }
+            .case-media-placeholder { min-height: 280px; }
         }
     </style>
 </head>
@@ -489,6 +711,227 @@
             </div>
         </div>
     </div>
+
+    <div class="experience-library" id="experience-library" aria-hidden="true">
+        <div class="experience-nav">
+            <div class="experience-nav-title">Professional Experience</div>
+            <div class="experience-nav-actions">
+                <div class="drawer-lang hover-target lang-toggle-btn">EN / 中</div>
+                <button class="icon-close hover-target" id="close-library" type="button" aria-label="Close professional experience" title="Close">×</button>
+            </div>
+        </div>
+
+        <main class="experience-shell">
+            <header class="experience-heading">
+                <span class="experience-kicker">
+                    <span class="text-en">Selected work / 2022-2026</span>
+                    <span class="text-cn">精选经历 / 2022-2026</span>
+                </span>
+                <h2>
+                    <span class="text-en">Professional work,<br>made tangible.</span>
+                    <span class="text-cn">从洞察、定义到可验证的产品。</span>
+                </h2>
+                <p>
+                    <span class="text-en">Selected experience across terminal innovation, handheld imaging, automotive interiors and visual storytelling.</span>
+                    <span class="text-cn">涵盖终端创新、手持影像、汽车座舱与产品视觉表达的部分工作经历。</span>
+                </p>
+            </header>
+
+            <section class="company-grid" aria-label="Professional experience projects">
+                <button class="company-card company-featured hover-target" type="button" data-open-case="huawei">
+                    <div class="company-card-media process-placeholder">
+                        <img class="text-en" src="images/about/9d-en.svg" alt="Huawei terminal innovation process overview">
+                        <img class="text-cn" src="images/about/9d.webp" alt="华为终端创新项目过程概览">
+                    </div>
+                    <div class="company-card-content">
+                        <span class="company-card-index">01 / 04</span>
+                        <div>
+                            <h3 class="company-card-title">Huawei</h3>
+                            <p class="company-card-role">
+                                <span class="text-en">Industrial Designer / Terminal Innovation</span>
+                                <span class="text-cn">工业设计师 / 终端创新定义</span>
+                            </p>
+                            <div class="company-card-tags">
+                                <span class="company-card-tag">Imaging Innovation</span>
+                                <span class="company-card-tag">User Research</span>
+                                <span class="company-card-tag">Wearable UX</span>
+                            </div>
+                        </div>
+                        <span class="company-card-open" aria-hidden="true">→</span>
+                    </div>
+                </button>
+
+                <button class="company-card dji-card hover-target" type="button" data-open-case="dji">
+                    <div class="company-card-media"><img src="images/about/experience/dji/card-action-camera.png" alt="DJI action camera with protective case"></div>
+                    <div class="company-card-content">
+                        <span class="company-card-index">02 / 04</span>
+                        <div>
+                            <h3 class="company-card-title">DJI</h3>
+                            <p class="company-card-role">
+                                <span class="text-en">Industrial Designer / Handheld Imaging</span>
+                                <span class="text-cn">工业设计师 / 手持影像</span>
+                            </p>
+                            <div class="company-card-tags"><span class="company-card-tag">0-1 Category</span><span class="company-card-tag">Accessories</span></div>
+                        </div>
+                        <span class="company-card-open" aria-hidden="true">→</span>
+                    </div>
+                </button>
+
+                <a class="company-card byd-card hover-target" href="https://www.byd.com/jp/racco-special" target="_blank" rel="noopener noreferrer" aria-label="Open the BYD Racco official website">
+                    <div class="company-card-media"><img src="images/about/experience/byd/racco.png" alt="BYD Racco"></div>
+                    <div class="company-card-content">
+                        <span class="company-card-index">03 / 04</span>
+                        <div>
+                            <h3 class="company-card-title">BYD</h3>
+                            <p class="company-card-role">
+                                <span class="text-en">Interior Designer / Overseas Research</span>
+                                <span class="text-cn">整车内饰设计师 / 海外用户研究</span>
+                            </p>
+                            <div class="company-card-tags"><span class="company-card-tag">Cabin Experience</span><span class="company-card-tag">Japan Market</span></div>
+                        </div>
+                        <span class="company-card-open" aria-hidden="true">→</span>
+                    </div>
+                </a>
+
+                <button class="company-card philips-card hover-target" type="button" data-open-case="philips">
+                    <div class="company-card-media philips-preview-grid" aria-hidden="true">
+                        <video class="philips-preview-video" muted loop playsinline preload="metadata"><source src="images/about/experience/philips/preview-1.m4v" type="video/mp4"></video>
+                        <video class="philips-preview-video" muted loop playsinline preload="metadata"><source src="images/about/experience/philips/preview-2.m4v" type="video/mp4"></video>
+                    </div>
+                    <div class="company-card-content">
+                        <span class="company-card-index">04 / 04</span>
+                        <div>
+                            <h3 class="company-card-title">Philips DA</h3>
+                            <p class="company-card-role">
+                                <span class="text-en">3D Visualization / Brand Storytelling</span>
+                                <span class="text-cn">3D 视觉设计 / 品牌叙事</span>
+                            </p>
+                            <div class="company-card-tags"><span class="company-card-tag">Cinema 4D</span><span class="company-card-tag">Global Collaboration</span></div>
+                        </div>
+                        <span class="company-card-open" aria-hidden="true">→</span>
+                    </div>
+                </button>
+            </section>
+        </main>
+
+        <article class="case-view" data-case="huawei" aria-hidden="true">
+            <div class="case-nav">
+                <div><div class="case-nav-title">Huawei / Terminal Innovation</div><div class="case-nav-meta">2024.02 - 2026.02</div></div>
+                <div class="experience-nav-actions"><div class="drawer-lang hover-target lang-toggle-btn">EN / 中</div><button class="icon-close case-close hover-target" type="button" aria-label="Return to professional experience" title="Close">×</button></div>
+            </div>
+            <div class="case-shell">
+                <header class="case-hero">
+                    <div><span class="case-company">Huawei Technologies</span><h2><span class="text-en">Terminal<br>Innovation</span><span class="text-cn">终端创新<br>与体验定义</span></h2></div>
+                    <p class="case-summary"><span class="text-en">Forward-looking product definition across imaging terminals and wearable experiences, connecting market insight, user research, tangible prototypes and cross-functional validation.</span><span class="text-cn">聚焦影像终端与穿戴体验的前瞻产品定义，将市场洞察、用户研究、实体原型与跨团队验证转化为可评审、可迭代的创新方案。</span></p>
+                </header>
+                <div class="case-facts">
+                    <div class="case-fact"><div class="case-fact-label">Role</div><div class="case-fact-value"><span class="text-en">Industrial Designer</span><span class="text-cn">工业设计师</span></div></div>
+                    <div class="case-fact"><div class="case-fact-label">Focus</div><div class="case-fact-value"><span class="text-en">Imaging / Wearable UX</span><span class="text-cn">影像创新 / 穿戴体验</span></div></div>
+                    <div class="case-fact"><div class="case-fact-label">Contribution</div><div class="case-fact-value"><span class="text-en">Research, definition, prototyping</span><span class="text-cn">研究、定义与原型验证</span></div></div>
+                </div>
+                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">01</div><h3><span class="text-en">Reframing the imaging opportunity</span><span class="text-cn">重新定义影像创新机会</span></h3></div><div class="case-copy"><p><span class="text-en">Identified structural and scenario homogenization through market, competitor and technology research. Reframed the opportunity around portability, playfulness and expressive imaging, then translated it into differentiated terminal forms and accessory concepts.</span><span class="text-cn">通过市场、竞品与技术趋势研究，识别产品架构与使用场景的同质化问题；围绕便携性、可玩性与影像表达重构机会，并转化为差异化终端形态及配件概念。</span></p><div class="case-media"><img class="text-en" src="images/about/9d-en.svg" alt="Imaging innovation strategy"><img class="text-cn" src="images/about/9d.webp" alt="影像创新策略"></div></div></div></section>
+                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">02</div><h3><span class="text-en">Making concepts testable</span><span class="text-cn">将概念转化为可验证原型</span></h3></div><div class="case-copy"><p><span class="text-en">Developed multiple specifications, dynamic appearance models and supporting accessories to evaluate ergonomics, hardware architecture and product character, enabling project reviews and direction convergence.</span><span class="text-cn">通过多规格探索、动态精模与配套配件，验证人机尺寸、硬件架构及产品调性，支撑阶段评审与方向收敛。</span></p><div class="case-media"><img class="text-en" src="images/about/9b-en.svg" alt="Concept prototyping"><img class="text-cn" src="images/about/9b.webp" alt="概念原型验证"></div></div></div></section>
+                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">03</div><h3><span class="text-en">Research and concept validation</span><span class="text-cn">用户研究与概念验证</span></h3></div><div class="case-copy"><p><span class="text-en">Led collaboration with an external research agency. Defined participant screening and semi-structured interviews around imaging devices, shooting contexts, creative goals and current pain points, while evaluating concept acceptance, ergonomics and scenario imagination.</span><span class="text-cn">牵头对接外部调研机构，制定用户筛选条件与半结构化访谈大纲；围绕影像设备、拍摄场景、创作目的与现有痛点开展深访，同步验证新概念的接受度、人机体验与场景想象。</span></p><div class="case-media"><img class="text-en" src="images/about/9c-en.svg" alt="User research and validation"><img class="text-cn" src="images/about/9c.webp" alt="用户研究与验证"></div></div></div></section>
+                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">04</div><h3><span class="text-en">Wearable interaction optimization</span><span class="text-cn">穿戴交互体验优化</span></h3></div><div class="case-copy"><p><span class="text-en">Explored more than ten hardware-software interaction concepts for a health sensing feature. Worked with sensor, algorithm and testing teams to turn operation time, learning attempts, success rate and feasibility into evaluation criteria, supporting iterative convergence.</span><span class="text-cn">针对健康检测特性探索10余种软硬件交互方案；协同传感器、算法与测试团队，将操作时长、学习次数、成功率与硬件可实现性转化为评价依据，推动方案迭代收敛。</span></p><div class="case-media"><img class="text-en" src="images/about/10-en.svg" alt="Wearable interaction process"><img class="text-cn" src="images/about/10.webp" alt="穿戴交互项目过程"></div></div></div></section>
+            </div>
+        </article>
+
+        <article class="case-view" data-case="dji" aria-hidden="true">
+            <div class="case-nav">
+                <div><div class="case-nav-title">DJI / Handheld Imaging</div><div class="case-nav-meta">2026.03 - Present</div></div>
+                <div class="experience-nav-actions"><div class="drawer-lang hover-target lang-toggle-btn">EN / 中</div><button class="icon-close case-close hover-target" type="button" aria-label="Return to professional experience" title="Close">×</button></div>
+            </div>
+            <div class="case-shell">
+                <header class="case-hero">
+                    <div><span class="case-company">DJI</span><h2><span class="text-en">Handheld<br>Imaging</span><span class="text-cn">手持影像<br>与配件生态</span></h2></div>
+                    <p class="case-summary"><span class="text-en">0-1 category exploration connecting creator scenarios, product architecture, industrial design and production-ready accessories.</span><span class="text-cn">从创作者场景、产品架构到工业设计与量产配件的0-1新品类探索。</span></p>
+                </header>
+                <div class="case-facts">
+                    <div class="case-fact"><div class="case-fact-label">Role</div><div class="case-fact-value">Industrial Designer</div></div>
+                    <div class="case-fact"><div class="case-fact-label">Focus</div><div class="case-fact-value">0-1 Category / Accessories</div></div>
+                    <div class="case-fact"><div class="case-fact-label">Contribution</div><div class="case-fact-value">ID / CMF / Production</div></div>
+                </div>
+                <section class="case-section dji-category-section">
+                    <div class="case-section-grid">
+                        <div>
+                            <div class="case-section-number">01</div>
+                            <h3><span class="text-en">0-1 Handheld Imaging Exploration</span><span class="text-cn">手持影像新品类 0-1 探索</span></h3>
+                            <div class="dji-category-copy">
+                                <p><span class="text-en">User research data, personas and creation scenarios; market and competitor analysis plus product-specification teardown to define design opportunities.</span><span class="text-cn">基于用户研究数据提炼用户画像与创作场景，结合市场/竞品分析及产品规格拆解明确设计机会点。</span></p>
+                                <p><span class="text-en">Host, lens and accessory architecture, module stacking and use flows with product leads, product managers and multidisciplinary engineers; design proposals and high-fidelity prototypes for review and convergence.</span><span class="text-cn">协同产品经理、产品负责人及多领域工程师讨论主机、镜头与配件架构堆叠及使用链路，参与输出设计方案及高成熟度原型样机，支撑项目评审与方案收敛。</span></p>
+                                <p><span class="text-en">CMF validation: laser-etched textile texture | waterproof technical textiles and PU leather grains | glass-fiber coating inspired by smartphone battery covers.</span><span class="text-cn">验证多种 CMF 方案：特殊镭雕仿织物纹理｜多种防水科技织物及 PU 皮纹｜玻纤仿手机电池盖喷涂工艺。</span></p>
+                            </div>
+                        </div>
+                        <button class="dji-category-media dji-concept-stage hover-target" type="button" data-dji-particle-camera data-reveal-target="cloud" aria-label="Reveal abstract camera image">
+                            <canvas class="dji-particle-canvas" aria-hidden="true"></canvas>
+                            <img class="dji-safe-image" src="images/about/experience/dji/cloud-safe-camera.png" alt="Abstract camera placeholder">
+                        </button>
+                    </div>
+                </section>
+                <section class="case-section dji-accessory-section">
+                    <div class="case-section-grid">
+                        <div>
+                            <div class="case-section-number">02</div>
+                            <h3><span class="text-en">Accessory Ecosystem</span><span class="text-cn">配件生态</span></h3>
+                            <div class="dji-accessory-copy">
+                                <p><span class="text-en">Next-generation Nano protective case: design and production follow-through; color validation, excimer coating, UV printing and other surface processes; product storytelling with the communications team around a core selling point.</span><span class="text-cn">负责下一代 Nano 保护壳的设计和量产跟进；作为核心卖点之一，验证多种颜色及准分子涂层、UV 丝印等表面工艺效果，与宣传部门围绕产品故事开展合作。</span></p>
+                                <p><span class="text-en">Accessory design guidelines across materials, processes, color, logo treatment and placement, and surface transitions; ODM design reviews and production-process guidance based on the standards.</span><span class="text-cn">参与配件设计规范制定，从材质、工艺、颜色、LOGO 处理方式及位置、形面处理等维度，为运动相机配件生态建立统一规范；依据规范审核并指导 ODM 厂商的配件设计与量产工艺。</span></p>
+                            </div>
+                        </div>
+                        <div class="dji-accessory-carousel" data-carousel="dji-accessories">
+                            <div class="dji-accessory-stage">
+                                <figure class="dji-accessory-slide dji-nano-pair active">
+                                    <img class="nano-product-image" src="images/about/experience/dji/accessory-01-nano.png" alt="DJI Nano protective case product rendering">
+                                    <div class="nano-cmf-stack" aria-label="DJI Nano CMF exploration">
+                                        <div class="nano-cmf-slice"><img src="images/about/experience/dji/accessory-01-nano-cmf.png" alt="DJI Nano CMF variants one and two"></div>
+                                        <div class="nano-cmf-slice"><img src="images/about/experience/dji/accessory-01-nano-cmf.png" alt="DJI Nano CMF variants three and four"></div>
+                                    </div>
+                                </figure>
+                                <figure class="dji-accessory-slide"><img src="images/about/experience/dji/accessory-02-neck-mount.jpg" alt="DJI action camera neck mount"></figure>
+                                <figure class="dji-accessory-slide"><img src="images/about/experience/dji/accessory-03-support.png" alt="DJI camera support accessory"></figure>
+                                <figure class="dji-accessory-slide"><img src="images/about/experience/dji/accessory-04-case.png" alt="DJI action camera carrying case"></figure>
+                                <button class="dji-accessory-arrow dji-accessory-prev hover-target" type="button" aria-label="Previous accessory image">←</button>
+                                <button class="dji-accessory-arrow dji-accessory-next hover-target" type="button" aria-label="Next accessory image">→</button>
+                            </div>
+                            <div class="dji-accessory-meta">
+                                <span class="dji-accessory-counter">01 / 04</span>
+                                <span class="dji-accessory-caption"><span class="text-en">Nano protective case · Differentiated CMF and production</span><span class="text-cn">Nano 保护壳 · 差异化 CMF 与量产验证</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </article>
+
+        <article class="case-view" data-case="byd" aria-hidden="true">
+            <div class="case-nav"><div><div class="case-nav-title">BYD / Automotive Interior</div><div class="case-nav-meta">2023.10 - 2024.01</div></div><div class="experience-nav-actions"><div class="drawer-lang hover-target lang-toggle-btn">EN / 中</div><button class="icon-close case-close hover-target" type="button" aria-label="Return to professional experience" title="Close">×</button></div></div>
+            <div class="case-shell"><header class="case-hero"><div><span class="case-company">BYD</span><h2><span class="text-en">Cabin<br>Experience</span><span class="text-cn">海外用户洞察<br>与座舱体验</span></h2></div><p class="case-summary"><span class="text-en">Early-stage research and cabin concept development for the brand's first Japan-market vehicle.</span><span class="text-cn">面向品牌首款日本市场车型的前期用户研究与座舱概念探索。</span></p></header><div class="case-facts"><div class="case-fact"><div class="case-fact-label">Role</div><div class="case-fact-value">Interior Designer</div></div><div class="case-fact"><div class="case-fact-label">Market</div><div class="case-fact-value">Japan / K-car</div></div><div class="case-fact"><div class="case-fact-label">Contribution</div><div class="case-fact-value">Research / Concept</div></div></div><section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">01</div><h3><span class="text-en">Understanding compact-car life</span><span class="text-cn">理解日本小型车用户的真实生活</span></h3></div><div class="case-copy"><p><span class="text-en">Combined remote interviews, desk research, competitor mapping and first-person K-car scenario simulation to identify target users, everyday contexts and unmet cabin needs.</span><span class="text-cn">结合海外用户深访、网络调研、竞品车型梳理与K-car实地场景模拟，提炼目标用户、日常使用场景及未被满足的座舱需求。</span></p><div class="case-media case-media-placeholder"><span class="text-en">Research and scenario imagery</span><span class="text-cn">研究与场景图像</span></div></div></div></section><section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">02</div><h3><span class="text-en">Turning insight into cabin concepts</span><span class="text-cn">将用户洞察转化为座舱概念</span></h3></div><div class="case-copy"><p><span class="text-en">Translated research findings into user profiles, opportunity areas and modular experience proposals that supported early product definition and design discussion.</span><span class="text-cn">将研究结果转化为用户画像、体验机会点与模块化座舱方案，为前期产品定义与设计讨论提供依据。</span></p><div class="case-media case-media-placeholder"><span class="text-en">Cabin concept development</span><span class="text-cn">座舱概念发展</span></div></div></div></section></div>
+        </article>
+
+        <article class="case-view philips-case" data-case="philips" aria-hidden="true">
+            <div class="case-nav">
+                <div><div class="case-nav-title">Philips Domestic Appliances / 3D Visualization</div><div class="case-nav-meta">2022.09 - 2023.01</div></div>
+                <div class="experience-nav-actions"><div class="drawer-lang hover-target lang-toggle-btn">EN / 中</div><button class="icon-close case-close hover-target" type="button" aria-label="Return to professional experience" title="Close">×</button></div>
+            </div>
+            <div class="case-shell">
+                <div class="philips-one-screen">
+                    <div class="philips-copy">
+                        <span class="case-company">Philips Domestic Appliances</span>
+                        <h2><span class="text-en">Visual<br>Storytelling</span><span class="text-cn">产品叙事<br>与动态视觉</span></h2>
+                        <p class="philips-subtitle">3D Visualization · Cinema 4D / Octane · 2022.09–2023.01</p>
+                        <p class="philips-description">
+                            <span class="text-en">Collaborated with product design, market and marketing teams to translate product features and brand guidelines into clear visual narratives and aesthetic directions. Independently produced 3D films for the Conscious Collection and Air Purifier 8000 Series, and presented the proposals to global design and marketing leadership.</span>
+                            <span class="text-cn">与产品设计、市场及营销团队跨职能协作，将产品特性与品牌指南转化为具备清晰叙事和美学方向的动态视觉方案；独立完成 Conscious Collection 与 Air Purifier 8000 Series 的 3D 动画，并向全球设计总监及营销负责人汇报设计提案。</span>
+                        </p>
+                    </div>
+                    <div class="philips-video-pair">
+                        <video class="philips-detail-video" controls playsinline preload="metadata"><source src="images/about/experience/philips/final-1.mp4" type="video/mp4"></video>
+                        <video class="philips-detail-video" controls playsinline preload="metadata"><source src="images/about/experience/philips/final-2.mp4" type="video/mp4"></video>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
     
     <script>
         // --- 1. 交互画廊逻辑 (恢复鼠标靠近浮现照片与视差效果) ---
@@ -590,8 +1033,204 @@
         const coreProjBtn = document.getElementById('core-proj-btn');
         const coreDetails = document.getElementById('core-details');
 
+        const experienceLibrary = document.getElementById('experience-library');
+        const closeLibraryBtn = document.getElementById('close-library');
+        const companyCards = document.querySelectorAll('[data-open-case]');
+        const caseViews = document.querySelectorAll('.case-view');
+        const caseCloseBtns = document.querySelectorAll('.case-close');
+        const philipsPreviewVideos = document.querySelectorAll('.philips-preview-video');
+        const philipsDetailVideos = document.querySelectorAll('.philips-detail-video');
+        const djiParticleStages = document.querySelectorAll('[data-dji-particle-camera]');
+        const djiAccessoryCarousel = document.querySelector('[data-carousel="dji-accessories"]');
+        let directExperienceCase = '';
+
+        djiParticleStages.forEach(stage => {
+            const canvas = stage.querySelector('.dji-particle-canvas');
+            if (!canvas) return;
+
+            const context = canvas.getContext('2d');
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let particles = [];
+            let animationFrame = null;
+            let animationStart = performance.now();
+
+            const ease = value => value * value * (3 - 2 * value);
+
+            const buildTargets = (width, height) => {
+                const targets = [];
+                const centerX = width * 0.5;
+                const centerY = height * 0.51;
+                const bodyWidth = width * 0.42;
+                const bodyHeight = height * 0.34;
+                const left = centerX - bodyWidth / 2;
+                const top = centerY - bodyHeight / 2;
+
+                for (let index = 0; index < 34; index += 1) {
+                    const progress = index / 33;
+                    targets.push([left + bodyWidth * progress, top]);
+                    targets.push([left + bodyWidth * progress, top + bodyHeight]);
+                }
+                for (let index = 1; index < 18; index += 1) {
+                    const progress = index / 18;
+                    targets.push([left, top + bodyHeight * progress]);
+                    targets.push([left + bodyWidth, top + bodyHeight * progress]);
+                }
+                for (let index = 0; index < 44; index += 1) {
+                    const angle = Math.PI * 2 * index / 44;
+                    targets.push([centerX + bodyHeight * 0.29 * Math.cos(angle), centerY + bodyHeight * 0.29 * Math.sin(angle)]);
+                }
+                for (let index = 0; index < 12; index += 1) {
+                    const angle = Math.PI * 2 * index / 12;
+                    targets.push([left + bodyWidth * 0.78 + 10 * Math.cos(angle), top - 7 + 5 * Math.sin(angle)]);
+                }
+                return targets;
+            };
+
+            const resizeCanvas = () => {
+                const bounds = stage.getBoundingClientRect();
+                const width = Math.max(1, Math.round(bounds.width));
+                const height = Math.max(1, Math.round(bounds.height));
+                const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+                canvas.width = Math.round(width * pixelRatio);
+                canvas.height = Math.round(height * pixelRatio);
+                context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+                particles = buildTargets(width, height).map((target, index) => ({
+                    target,
+                    angle: index * 2.399,
+                    radius: Math.min(width, height) * (0.24 + (index % 11) * 0.018),
+                    size: 0.9 + (index % 4) * 0.35
+                }));
+                return { width, height };
+            };
+
+            let canvasSize = resizeCanvas();
+
+            const draw = timestamp => {
+                const phase = ((timestamp - animationStart) % 6800) / 6800;
+                const gather = phase < 0.28 ? ease(phase / 0.28) : phase < 0.62 ? 1 : ease(1 - (phase - 0.62) / 0.38);
+                context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+
+                particles.forEach((particle, index) => {
+                    const orbit = particle.angle + phase * Math.PI * 2;
+                    const drift = 1 - gather;
+                    const x = particle.target[0] + Math.cos(orbit) * particle.radius * drift;
+                    const y = particle.target[1] + Math.sin(orbit * 1.13) * particle.radius * 0.66 * drift;
+                    context.beginPath();
+                    context.arc(x, y, particle.size, 0, Math.PI * 2);
+                    context.fillStyle = `rgba(70, 72, 70, ${0.2 + gather * 0.62 + (index % 3) * 0.04})`;
+                    context.fill();
+                });
+
+                if (!reduceMotion && !stage.classList.contains('revealed')) animationFrame = requestAnimationFrame(draw);
+            };
+
+            const restartAnimation = () => {
+                if (animationFrame) cancelAnimationFrame(animationFrame);
+                animationStart = performance.now();
+                animationFrame = requestAnimationFrame(draw);
+            };
+
+            if (reduceMotion) draw(animationStart + 3000);
+            else restartAnimation();
+
+            window.addEventListener('resize', () => {
+                canvasSize = resizeCanvas();
+                if (reduceMotion) draw(animationStart + 3000);
+            });
+
+            stage.addEventListener('click', () => {
+                if (stage.dataset.revealTarget === 'local') {
+                    stage.closest('.dji-local-category-stage')?.classList.add('revealed');
+                    if (animationFrame) cancelAnimationFrame(animationFrame);
+                    return;
+                }
+
+                stage.classList.toggle('revealed');
+                stage.setAttribute('aria-label', stage.classList.contains('revealed') ? 'Replay camera particle animation' : 'Reveal abstract camera image');
+                if (stage.classList.contains('revealed')) {
+                    if (animationFrame) cancelAnimationFrame(animationFrame);
+                } else if (!reduceMotion) {
+                    restartAnimation();
+                }
+            });
+        });
+
+        if (djiAccessoryCarousel) {
+            const slides = Array.from(djiAccessoryCarousel.querySelectorAll('.dji-accessory-slide'));
+            const previousButton = djiAccessoryCarousel.querySelector('.dji-accessory-prev');
+            const nextButton = djiAccessoryCarousel.querySelector('.dji-accessory-next');
+            const counter = djiAccessoryCarousel.querySelector('.dji-accessory-counter');
+            const captionEn = djiAccessoryCarousel.querySelector('.dji-accessory-caption .text-en');
+            const captionCn = djiAccessoryCarousel.querySelector('.dji-accessory-caption .text-cn');
+            const captions = [
+                ['Nano protective case · Differentiated CMF and production', 'Nano 保护壳 · 差异化 CMF 与量产验证'],
+                ['Wearable action-camera mount', '运动相机挂脖配件'],
+                ['Camera support and grip', '相机支架与手持支持'],
+                ['Protective carrying solution', '运动相机收纳配件']
+            ];
+            let currentSlide = 0;
+
+            const showSlide = nextSlide => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (nextSlide + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+                counter.textContent = `${String(currentSlide + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+                captionEn.textContent = captions[currentSlide][0];
+                captionCn.textContent = captions[currentSlide][1];
+            };
+
+            previousButton.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextButton.addEventListener('click', () => showSlide(currentSlide + 1));
+        }
+
+        const playPhilipsPreviews = () => {
+            philipsPreviewVideos.forEach(video => {
+                video.currentTime = 0;
+                video.play().catch(() => {});
+            });
+        };
+
+        const pausePhilipsPreviews = () => {
+            philipsPreviewVideos.forEach(video => video.pause());
+        };
+
+        const resetPhilipsDetails = () => {
+            philipsDetailVideos.forEach(video => {
+                video.pause();
+                video.currentTime = 0;
+            });
+        };
+
+        const openExperienceLibrary = () => {
+            experienceLibrary.classList.add('active');
+            experienceLibrary.setAttribute('aria-hidden', 'false');
+            experienceLibrary.scrollTop = 0;
+            playPhilipsPreviews();
+            document.body.style.overflow = 'hidden';
+        };
+
+        const openLegacyHuawei = isDirect => {
+            directExperienceCase = isDirect ? 'huawei' : '';
+            workDrawer.classList.add('active');
+            workDrawer.scrollTop = 0;
+            document.body.style.overflow = 'hidden';
+        };
+
+        const openCaseView = (caseName, isDirect = false) => {
+            const targetCase = document.querySelector(`.case-view[data-case="${caseName}"]`);
+            if (!targetCase) return;
+
+            directExperienceCase = isDirect ? caseName : '';
+            pausePhilipsPreviews();
+            experienceLibrary.scrollTop = 0;
+            targetCase.classList.add('active');
+            targetCase.setAttribute('aria-hidden', 'false');
+            targetCase.scrollTop = 0;
+        };
+
         // 【设定的访问密码】
-        const CORRECT_PASSWORD = "design";
+        const STANDARD_PASSWORD = "design";
+        const MATERIAL_PASSWORD = "design-379";
 
         unlockBtn.addEventListener('click', () => {
             pwdModal.classList.add('active');
@@ -604,15 +1243,15 @@
             pwdError.style.opacity = 0;
         });
 
-        pwdInput.addEventListener('keypress', (e) => {
+        pwdInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                if (pwdInput.value === CORRECT_PASSWORD) {
-                    // 密码正确，解除错误提示，关闭弹窗，打开抽屉
+                const enteredPassword = pwdInput.value.trim();
+
+                if (enteredPassword === STANDARD_PASSWORD || enteredPassword === MATERIAL_PASSWORD) {
                     pwdError.style.opacity = 0;
                     pwdModal.classList.remove('active');
-                    workDrawer.classList.add('active');
-                    pwdInput.value = ''; 
-                    document.body.style.overflow = 'hidden'; // 禁止底部的 About 页面发生滚动
+                    openExperienceLibrary();
+                    pwdInput.value = '';
                 } else {
                     pwdError.style.opacity = 1;
                     pwdInput.value = '';
@@ -622,8 +1261,88 @@
 
         closeDrawerBtn.addEventListener('click', () => {
             workDrawer.classList.remove('active');
-            document.body.style.overflow = ''; // 恢复底部滚动
+            if (directExperienceCase === 'huawei') {
+                directExperienceCase = '';
+                closeLibraryBtn.click();
+            } else if (!experienceLibrary.classList.contains('active')) {
+                document.body.style.overflow = '';
+            }
         });
+
+        closeLibraryBtn.addEventListener('click', () => {
+            pausePhilipsPreviews();
+            resetPhilipsDetails();
+            caseViews.forEach(view => {
+                view.classList.remove('active');
+                view.setAttribute('aria-hidden', 'true');
+            });
+            experienceLibrary.classList.remove('active');
+            experienceLibrary.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+
+            const returnTarget = sessionStorage.getItem('experienceReturn');
+            if (returnTarget) {
+                sessionStorage.removeItem('experienceReturn');
+                window.location.href = returnTarget;
+            }
+        });
+
+        companyCards.forEach(card => {
+            card.addEventListener('click', () => {
+                if (card.dataset.openCase === 'huawei') {
+                    pausePhilipsPreviews();
+                    openLegacyHuawei(false);
+                    return;
+                }
+                openCaseView(card.dataset.openCase, false);
+            });
+        });
+
+        caseCloseBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentCase = btn.closest('.case-view');
+                currentCase.classList.remove('active');
+                currentCase.setAttribute('aria-hidden', 'true');
+                resetPhilipsDetails();
+                if (directExperienceCase === currentCase.dataset.case) {
+                    directExperienceCase = '';
+                    closeLibraryBtn.click();
+                    return;
+                }
+                if (experienceLibrary.classList.contains('active')) playPhilipsPreviews();
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+
+            if (workDrawer.classList.contains('active')) {
+                closeDrawerBtn.click();
+                return;
+            }
+
+            const activeCase = document.querySelector('.case-view.active');
+            if (activeCase) {
+                activeCase.classList.remove('active');
+                activeCase.setAttribute('aria-hidden', 'true');
+                resetPhilipsDetails();
+                if (experienceLibrary.classList.contains('active')) playPhilipsPreviews();
+                return;
+            }
+
+            if (experienceLibrary.classList.contains('active')) {
+                closeLibraryBtn.click();
+            }
+        });
+
+        if (window.location.hash === '#experience' && sessionStorage.getItem('experienceAccess') === 'granted') {
+            sessionStorage.removeItem('experienceAccess');
+            openExperienceLibrary();
+            const requestedCase = sessionStorage.getItem('experienceDirectCase');
+            sessionStorage.removeItem('experienceDirectCase');
+            if (requestedCase === 'huawei') openLegacyHuawei(true);
+            else if (requestedCase) openCaseView(requestedCase, true);
+        }
 
         // 展开横向滑动面板 (排除滑动卡片内部的点击，防止误触收起)
         coreProjBtn.addEventListener('click', (e) => {

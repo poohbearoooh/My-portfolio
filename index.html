@@ -1,4 +1,4 @@
-、<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -115,7 +115,30 @@
             grid-template-columns: repeat(2, 1fr); 
             gap: 80px;
             padding: 100px var(--nav-padding); min-height: 100vh;
+            align-items: start;
         }
+
+        .project-column { min-width: 0; transition: opacity 0.35s ease; }
+        .gallery.column-focused .project-column { opacity: 0.84; }
+        .gallery.column-focused .project-column.is-focused { opacity: 1; }
+        .column-heading {
+            position: relative;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 32px; padding-bottom: 12px; border-bottom: 1px solid #aaa;
+            color: #777; font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+        .column-heading::after {
+            content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+            background: #111; transform: scaleX(0); transform-origin: left center;
+            transition: transform 0.55s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .column-heading:hover,
+        .project-column.is-focused .column-heading { color: #111; }
+        .column-heading:hover::after,
+        .project-column.is-focused .column-heading::after { transform: scaleX(1); }
+        .column-count { min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; }
+        .project-list { display: flex; flex-direction: column; gap: 80px; }
         
         .project-card {
             display: block; opacity: 0; transform: translateY(50px);
@@ -135,10 +158,62 @@
             width: 100%; height: 100%; object-fit: cover;
             transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1); filter: grayscale(100%);
         }
-        .project-card:hover .image-container img { transform: scale(1.05); filter: grayscale(0%); }
+        .image-container video {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), filter 0.5s ease;
+            filter: grayscale(100%);
+        }
+        .project-card:hover .image-container img,
+        .project-card:hover .image-container video { transform: scale(1.05); filter: grayscale(0%); }
+        .philips-home-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #111; }
+        .philips-home-preview video { min-width: 0; }
+        .huawei-home-collage {
+            display: grid; grid-template-columns: 35% 35% 30%; gap: 2px; background: #111;
+        }
+        .huawei-home-panel { position: relative; min-width: 0; overflow: hidden; }
+        .huawei-home-panel img { position: absolute; inset: 0; }
+        .huawei-foldable img { object-position: 56% center; }
+        .huawei-camera img { object-position: 54% 48%; filter: grayscale(100%) saturate(0.76) contrast(1.03); }
+        .huawei-camera::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(to top left, rgba(0,0,0,0.22), transparent 58%);
+        }
+        .huawei-watch img { object-position: 17% center; }
+        .project-card:hover .huawei-camera img { filter: grayscale(0%) saturate(0.78) contrast(1.03); }
         .project-info { display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 15px; }
         .project-title { font-weight: 600; font-size: 1.1rem; }
+        .project-title-row { display: flex; align-items: center; gap: 10px; }
+        .project-lock {
+            padding: 2px 6px; border: 1px solid #bbb; border-radius: 3px;
+            color: #777; font-size: 0.62rem; font-weight: 600; text-transform: uppercase;
+        }
         .project-cat { color: #666; font-size: 0.9rem; }
+
+        /* Home experience access */
+        .home-pwd-modal {
+            position: fixed; inset: 0; z-index: 8000;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+        }
+        .home-pwd-modal.active { opacity: 1; pointer-events: auto; }
+        .home-pwd-box {
+            width: min(400px,90vw); padding: 50px; border: 1px solid #333; border-radius: 8px;
+            background: #1a1a1a; color: #fff; text-align: center;
+            transform: translateY(20px); transition: transform 0.35s ease;
+        }
+        .home-pwd-modal.active .home-pwd-box { transform: translateY(0); }
+        .home-pwd-box h3 { margin-bottom: 10px; font-size: 1.2rem; font-weight: 400; }
+        .home-pwd-box p { margin-bottom: 28px; color: #777; font-size: 0.9rem; }
+        .home-pwd-input {
+            width: 100%; padding: 10px; border: 0; border-bottom: 2px solid #444; outline: 0;
+            background: transparent; color: #fff; font: 1.5rem 'Inter', sans-serif; letter-spacing: 5px; text-align: center;
+        }
+        .home-pwd-input:focus { border-color: #fff; }
+        .home-pwd-input::placeholder { color: #444; font-size: 1rem; letter-spacing: 0; }
+        .home-pwd-error { margin-top: 14px; color: #ff5d5d; font-size: 0.82rem; opacity: 0; }
+        .home-pwd-close { position: absolute; top: 38px; right: 42px; border: 0; background: none; color: #fff; font-size: 2rem; opacity: 0.55; }
+        .home-pwd-close:hover { opacity: 1; }
 
         /* Footer */
         footer {
@@ -167,7 +242,7 @@
             :root { --nav-padding: 20px; }
             .hero h1 { font-size: 2.5rem; }
             .gallery { grid-template-columns: 1fr; gap: 60px; padding-top: 50px; }
-            .project-card:nth-child(even) { margin-top: 0; }
+            .project-list { gap: 60px; }
             .custom-cursor { display: none; } * { cursor: auto; }
             .nav-right { gap: 20px; }
         }
@@ -181,15 +256,15 @@
         <a href="index.html" class="logo hover-target">Pang, Zhujun</a>
         <div class="nav-right">
             <div class="menu">
-                <a href="#work" class="hover-target" onclick="document.getElementById('work').scrollIntoView({behavior: 'smooth'})">Work</a>
-                <a href="about.html" class="hover-target">About</a>
+                <a href="#work" class="hover-target" data-en="Work" data-cn="作品" onclick="document.getElementById('work').scrollIntoView({behavior: 'smooth'})">Work</a>
+                <a href="about.html" class="hover-target" data-en="About" data-cn="关于">About</a>
             </div>
             <div class="lang-switch hover-target" id="lang-btn">EN / 中</div>
         </div>
     </nav>
 
     <section class="hero">
-        <h1 id="home-intro">I’m Zhujun Pang, an innovative designer dedicated to seamlessly integrating consumer electronics into everyday life.</h1>
+        <h1 id="home-intro">I’m Zhujun Pang, an industrial designer dedicated to seamlessly integrating consumer electronics into everyday life.</h1>
     </section>
 
     <div class="scroll-arrow hover-target" id="arrow-btn">
@@ -197,53 +272,86 @@
     </div>
 
     <section class="gallery" id="work">
-        <!-- 1. SoundMotion -->
-        <a href="project-soundmotion.html" class="project-card hover-target">
-            <div class="image-container"><img src="images/soundmotion/1.webp" alt="SoundMotion"></div>
-            <div class="project-info"><span class="project-title">SoundMotion</span><span class="project-cat">Industrial Design | Tangible Interaction </span></div>
-        </a>
-        <!-- 2. Dolce -->
-        <a href="project-dolce.html" class="project-card hover-target" style="transition-delay: 0.1s;">
-            <div class="image-container"><img src="images/dolce/5a.webp" alt="Dolce"></div>
-            <div class="project-info"><span class="project-title">Dolce</span><span class="project-cat">Research Project | Tactile Interaction</span></div>
-        </a>
-        <!-- 3. Morpheus -->
-        <a href="project-morpheus.html" class="project-card hover-target" style="transition-delay: 0s;">
-            <div class="image-container"><img src="images/morpheus/Morpheus_hero.webp" alt="Morpheus"></div>
-            <div class="project-info"><span class="project-title">Morpheus</span><span class="project-cat">Industrial Design | Healthcare</span></div>
-        </a>
-        <!-- 4. Music Linker -->
-        <a href="project-musiclinker.html" class="project-card hover-target" style="transition-delay: 0.1s;">
-            <div class="image-container"><img src="images/musiclinker/musiclinker_hero.webp" alt="Music Linker"></div>
-            <div class="project-info"><span class="project-title">Music Linker</span><span class="project-cat">Industrial Design | Tangible Interaction</span></div>
-        </a>
-        <!-- 5. Body Fat Scale -->
-        <a href="project-scale.html" class="project-card hover-target" style="transition-delay: 0s;">
-            <div class="image-container"><img src="images/scale/0.webp" alt="Scale"></div>
-            <div class="project-info"><span class="project-title">Body Fat Scale</span><span class="project-cat">Product Design</span></div>
-        </a>
+        <div class="project-column">
+            <div class="column-heading"><span data-en="Professional" data-cn="工作项目">Professional</span><span class="column-count" data-total="5">05</span></div>
+            <div class="project-list">
+                <a href="about.html#experience" class="project-card hover-target protected-experience-card" data-experience-target="about.html#experience" data-direct-case="huawei">
+                    <div class="image-container huawei-home-collage">
+                        <div class="huawei-home-panel huawei-foldable"><img src="images/about/experience/huawei/home-foldable.png" alt="Huawei foldable imaging product"></div>
+                        <div class="huawei-home-panel huawei-camera"><img src="images/about/experience/huawei/home-camera.png" alt="Compact camera in use"></div>
+                        <div class="huawei-home-panel huawei-watch"><img src="images/about/experience/huawei/home-watch.png" alt="Huawei wearable product"></div>
+                    </div>
+                    <div class="project-info"><span class="project-title-row"><span class="project-title">Huawei</span><span class="project-lock" data-en="Protected" data-cn="加密">Protected</span></span><span class="project-cat" data-en="Pocket Imaging | AI Entry Point | Wearable Health" data-cn="口袋影像｜AI新入口｜穿戴健康">Pocket Imaging | AI Entry Point | Wearable Health</span></div>
+                </a>
 
-        <!-- 6. Vinylify -->
-        <a href="project-vinylify.html" class="project-card hover-target">
-            <div class="image-container">
-                <!-- 记得放一张封面图 images/vinylify/0.webp -->
-                <img src="images/vinylify/0.webp" alt="Vinylify">
-            </div>
-            <div class="project-info">
-                <span class="project-title">Vinylify</span>
-                <span class="project-cat">UX Research</span>
-            </div>
-        </a>
+                <a href="about.html#experience" class="project-card hover-target protected-experience-card" data-experience-target="about.html#experience" data-direct-case="dji">
+                    <div class="image-container"><img src="images/about/experience/dji/card-action-camera.png" alt="DJI Nano"></div>
+                    <div class="project-info"><span class="project-title-row"><span class="project-title">DJI</span><span class="project-lock" data-en="Protected" data-cn="加密">Protected</span></span><span class="project-cat" data-en="Action Cameras & Accessory Ecosystem" data-cn="运动相机及配件生态">Action Cameras & Accessory Ecosystem</span></div>
+                </a>
 
+                <a href="https://www.byd.com/jp/racco-special" target="_blank" rel="noopener noreferrer" class="project-card hover-target">
+                    <div class="image-container"><img src="images/about/experience/byd/racco.png" alt="BYD Racco"></div>
+                    <div class="project-info"><span class="project-title">BYD</span><span class="project-cat" data-en="Racco | Overseas Research & Early Concepts" data-cn="海獭｜出海调研及早期概念">Racco | Overseas Research & Early Concepts</span></div>
+                </a>
+
+                <a href="project-philips.html" class="project-card hover-target protected-experience-card" data-experience-target="project-philips.html">
+                    <div class="image-container philips-home-preview">
+                        <video muted loop autoplay playsinline preload="metadata"><source src="images/about/experience/philips/preview-1.m4v" type="video/mp4"></video>
+                        <video muted loop autoplay playsinline preload="metadata"><source src="images/about/experience/philips/preview-2.m4v" type="video/mp4"></video>
+                    </div>
+                    <div class="project-info"><span class="project-title-row"><span class="project-title">Philips DA</span><span class="project-lock" data-en="Protected" data-cn="加密">Protected</span></span><span class="project-cat" data-en="Product Storytelling | 3D Motion" data-cn="产品叙事｜3D动态视觉">Product Storytelling | 3D Motion</span></div>
+                </a>
+
+                <a href="project-scale.html" class="project-card hover-target">
+                    <div class="image-container"><img src="images/scale/0.webp" alt="Scale"></div>
+                    <div class="project-info"><span class="project-title">Body Fat Scale</span><span class="project-cat" data-en="Product Design" data-cn="产品设计">Product Design</span></div>
+                </a>
+            </div>
+        </div>
+
+        <div class="project-column">
+            <div class="column-heading"><span data-en="Academic" data-cn="学生项目">Academic</span><span class="column-count" data-total="5">05</span></div>
+            <div class="project-list">
+                <a href="project-soundmotion.html" class="project-card hover-target" style="transition-delay: 0.1s;">
+                    <div class="image-container"><img src="images/soundmotion/1.webp" alt="SoundMotion"></div>
+                    <div class="project-info"><span class="project-title">SoundMotion</span><span class="project-cat" data-en="Industrial Design | Tangible Interaction" data-cn="工业设计｜实体交互">Industrial Design | Tangible Interaction</span></div>
+                </a>
+
+                <a href="project-dolce.html" class="project-card hover-target" style="transition-delay: 0.1s;">
+                    <div class="image-container"><img src="images/dolce/5a.webp" alt="Dolce"></div>
+                    <div class="project-info"><span class="project-title">Dolce</span><span class="project-cat" data-en="Research Project | Tactile Interaction" data-cn="研究项目｜触觉交互">Research Project | Tactile Interaction</span></div>
+                </a>
+
+                <a href="project-morpheus.html" class="project-card hover-target" style="transition-delay: 0.1s;">
+                    <div class="image-container"><img src="images/morpheus/Morpheus_hero.webp" alt="Morpheus"></div>
+                    <div class="project-info"><span class="project-title">Morpheus</span><span class="project-cat" data-en="Industrial Design | Sleep Health" data-cn="工业设计｜睡眠健康">Industrial Design | Sleep Health</span></div>
+                </a>
+
+                <a href="project-musiclinker.html" class="project-card hover-target" style="transition-delay: 0.1s;">
+                    <div class="image-container"><img src="images/musiclinker/musiclinker_hero.webp" alt="Music Linker"></div>
+                    <div class="project-info"><span class="project-title">Music Linker</span><span class="project-cat" data-en="Industrial Design | Tangible Interaction" data-cn="工业设计｜实体交互">Industrial Design | Tangible Interaction</span></div>
+                </a>
+
+                <a href="project-vinylify.html" class="project-card hover-target" style="transition-delay: 0.1s;">
+                    <div class="image-container"><img src="images/vinylify/0.webp" alt="Vinylify"></div>
+                    <div class="project-info"><span class="project-title">Vinylify</span><span class="project-cat" data-en="UX Research" data-cn="用户体验研究">UX Research</span></div>
+                </a>
+            </div>
+        </div>
     </section>
 
-
-    </section>
-
-
+    <div class="home-pwd-modal" id="home-pwd-modal" aria-hidden="true">
+        <button class="home-pwd-close hover-target" id="home-pwd-close" type="button" aria-label="Close password dialog">×</button>
+        <div class="home-pwd-box">
+            <h3 data-en="Protected Content" data-cn="加密内容">Protected Content</h3>
+            <p data-en="Enter the portfolio password. No data is collected." data-cn="请输入作品集密码，页面不会收集任何数据。">Enter the portfolio password. No data is collected.</p>
+            <input class="home-pwd-input hover-target" id="home-pwd-input" type="password" placeholder="Password" autocomplete="off">
+            <div class="home-pwd-error" id="home-pwd-error" data-en="Incorrect password. Please try again." data-cn="密码错误，请重试。">Incorrect password. Please try again.</div>
+        </div>
+    </div>
     <footer>
         <span>© 2025 Zhujun Pang</span>
-        <span>Designed & Coded by me</span>
+        <span data-en="Designed & Coded by me" data-cn="设计与开发：庞竺君">Designed & Coded by me</span>
     </footer>
 
     <script>
@@ -253,7 +361,7 @@
 
         const homeTrans = {
             en: "I’m Zhujun Pang, an industrial designer dedicated to seamlessly integrating consumer electronics into everyday life.",
-            cn: "我是庞竺君，一名创新设计工程师，致力于将消费电子产品无缝融入日常生活。"
+            cn: "我是庞竺君，一名工业设计师，致力于将消费电子产品无缝融入日常生活。"
         };
 
         // 检查本地存储的语言偏好
@@ -268,6 +376,9 @@
                     homeIntro.style.opacity = 1;
                 }, 300);
             }
+            document.querySelectorAll('[data-en][data-cn]').forEach(element => {
+                element.textContent = element.dataset[currentLang];
+            });
             // 保存设置到浏览器
             localStorage.setItem('siteLang', currentLang);
         }
@@ -276,10 +387,94 @@
         if (currentLang === 'cn') {
             homeIntro.innerText = homeTrans.cn; // 立即设置，避免闪烁
         }
+        document.querySelectorAll('[data-en][data-cn]').forEach(element => {
+            element.textContent = element.dataset[currentLang];
+        });
 
         langBtn.addEventListener('click', () => {
             currentLang = currentLang === 'en' ? 'cn' : 'en';
             updateLanguage();
+        });
+
+        /* --- 工作经历密码入口 --- */
+        const protectedExperienceCards = document.querySelectorAll('.protected-experience-card');
+        const homePwdModal = document.getElementById('home-pwd-modal');
+        const homePwdInput = document.getElementById('home-pwd-input');
+        const homePwdError = document.getElementById('home-pwd-error');
+        const homePwdClose = document.getElementById('home-pwd-close');
+        let pendingExperienceTarget = 'about.html#experience';
+        let pendingExperienceCase = '';
+
+        const closeHomePassword = () => {
+            homePwdModal.classList.remove('active');
+            homePwdModal.setAttribute('aria-hidden', 'true');
+            homePwdInput.value = '';
+            homePwdError.style.opacity = 0;
+        };
+
+        protectedExperienceCards.forEach(card => {
+            card.addEventListener('click', event => {
+                event.preventDefault();
+                pendingExperienceTarget = card.dataset.experienceTarget;
+                pendingExperienceCase = card.dataset.directCase || '';
+                homePwdModal.classList.add('active');
+                homePwdModal.setAttribute('aria-hidden', 'false');
+                setTimeout(() => homePwdInput.focus(), 100);
+            });
+        });
+
+        homePwdClose.addEventListener('click', closeHomePassword);
+        homePwdInput.addEventListener('keydown', event => {
+            if (event.key !== 'Enter') return;
+            if (homePwdInput.value.trim() === 'design-379') {
+                if (pendingExperienceTarget === 'project-philips.html') {
+                    sessionStorage.setItem('philipsAccess', 'granted');
+                } else {
+                    sessionStorage.setItem('experienceAccess', 'granted');
+                    sessionStorage.setItem('experienceReturn', 'index.html#work');
+                    if (pendingExperienceCase) sessionStorage.setItem('experienceDirectCase', pendingExperienceCase);
+                }
+                window.location.href = pendingExperienceTarget;
+                return;
+            }
+            homePwdInput.value = '';
+            homePwdError.style.opacity = 1;
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && homePwdModal.classList.contains('active')) closeHomePassword();
+        });
+
+        /* --- 双列标题微交互 --- */
+        const gallery = document.querySelector('.gallery');
+        const columnHeadings = document.querySelectorAll('.column-heading');
+
+        columnHeadings.forEach(heading => {
+            let countTimer;
+            const column = heading.closest('.project-column');
+            const count = heading.querySelector('.column-count');
+            const total = Number(count.dataset.total);
+
+            heading.addEventListener('mouseenter', () => {
+                gallery.classList.add('column-focused');
+                column.classList.add('is-focused');
+                clearInterval(countTimer);
+
+                let value = 0;
+                count.textContent = '00';
+                countTimer = setInterval(() => {
+                    value += 1;
+                    count.textContent = String(value).padStart(2, '0');
+                    if (value >= total) clearInterval(countTimer);
+                }, 55);
+            });
+
+            heading.addEventListener('mouseleave', () => {
+                clearInterval(countTimer);
+                count.textContent = String(total).padStart(2, '0');
+                column.classList.remove('is-focused');
+                gallery.classList.remove('column-focused');
+            });
         });
 
         /* --- 光标与动画逻辑 (保持不变) --- */

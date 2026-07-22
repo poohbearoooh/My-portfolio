@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="5005" height="1100" viewBox="0 0 5005 1100">
+  <g font-family="Inter, Helvetica, Arial, sans-serif">
+    <path d="M1835 98V52H4444V112" fill="none" stroke="#858585" stroke-width="10" stroke-dasharray="18 12"/>
+    <path d="M1818 92h34l-17 24z" fill="#858585"/>
+    <circle cx="4444" cy="112" r="22" fill="#858585"/>
+    <text x="3140" y="40" font-size="62" font-weight="700" fill="#777" text-anchor="middle">Iteration Loop</text>
+
+    <g fill="#f1f1f1">
+      <rect x="0" y="108" width="1075" height="950" rx="50"/>
+      <rect x="1310" y="108" width="1075" height="950" rx="50"/>
+      <rect x="2620" y="108" width="1075" height="950" rx="50"/>
+      <rect x="3930" y="108" width="1075" height="950" rx="50"/>
+    </g>
+
+    <g fill="#777" font-weight="700" font-size="62">
+      <text x="120" y="295">Project Context</text>
+      <text x="1430" y="295">Early Design</text>
+      <text x="2740" y="295">Design + Validation</text>
+      <text x="4050" y="520">Concept Selection</text>
+      <text x="4050" y="600">+ Detail Refinement</text>
+    </g>
+    <g fill="#111" font-size="54">
+      <text x="120" y="430">Input</text>
+      <text x="120" y="500">Emerging health technology</text>
+      <text x="120" y="650">Challenge</text>
+      <text x="120" y="720">High interaction effort</text>
+
+      <text x="1430" y="430">&#8226; Technical principles</text>
+      <text x="1430" y="595">&#8226; 15+ concepts</text>
+      <text x="1525" y="665">Active / Passive / Hybrid</text>
+
+      <text x="2740" y="430">&#8226; Hardware-software demo</text>
+      <text x="2740" y="595">&#8226; Internal + external user tests</text>
+    </g>
+  </g>
+</svg>

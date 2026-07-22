@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2060" height="1002" viewBox="0 0 2060 1002">
+  <rect width="2060" height="1002" fill="#fff"/>
+  <g font-family="Inter, Helvetica, Arial, sans-serif">
+    <rect x="32" y="127" width="723" height="318" rx="25" fill="#f1f1f1"/>
+    <circle cx="100" cy="218" r="10" fill="#858585"/>
+    <path d="M100 228V558H944V218H1045" fill="none" stroke="#858585" stroke-width="2" stroke-dasharray="7 7"/>
+    <circle cx="1045" cy="218" r="10" fill="#858585"/>
+
+    <text x="137" y="236" font-size="38" font-weight="700" fill="#777">Imaging Concept Expansion</text>
+    <text x="137" y="327" font-size="30" fill="#111">Co-create with Camera Team</text>
+    <text x="137" y="392" font-size="30" fill="#111">High-fidelity prototypes</text>
+    <text x="137" y="537" font-size="34" font-weight="700" fill="#777">External Research | Workshop</text>
+    <g font-size="28" fill="#111">
+      <text x="137" y="633">Research goals</text>
+      <text x="137" y="697">Participant criteria</text>
+      <text x="137" y="761">Interview guide + tasks</text>
+      <text x="137" y="825">Observation + analysis</text>
+    </g>
+
+    <rect x="992" y="127" width="1005" height="738" rx="25" fill="#f1f1f1"/>
+    <text x="1080" y="236" font-size="38" font-weight="700" fill="#777">Research Outputs</text>
+
+    <g fill="#d4d4d4">
+      <rect x="1329" y="326" width="145" height="132" rx="10"/>
+      <rect x="1515" y="326" width="145" height="132" rx="10"/>
+      <rect x="1236" y="484" width="145" height="132" rx="10"/>
+      <rect x="1422" y="484" width="145" height="132" rx="10"/>
+      <rect x="1608" y="484" width="145" height="132" rx="10"/>
+    </g>
+    <g font-size="18" font-weight="600" fill="#777" text-anchor="middle">
+      <text x="1401" y="379">Concept</text><text x="1401" y="405">Preference</text>
+      <text x="1587" y="379">Ergonomic</text><text x="1587" y="405">Feedback</text>
+      <text x="1308" y="537">Expected</text><text x="1308" y="563">Price</text>
+      <text x="1494" y="537">Performance</text><text x="1494" y="563">Needs</text>
+      <text x="1680" y="537">Use</text><text x="1680" y="563">Scenarios</text>
+    </g>
+    <g font-size="28" fill="#111">
+      <text x="1034" y="702">&#8226;</text><text x="1091" y="702">Enthusiast + prosumer behavior</text>
+      <text x="1034" y="776">&#8226;</text><text x="1091" y="776">Research report + prototype review</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philips DA | Visual Storytelling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        if (sessionStorage.getItem('philipsAccess') !== 'granted') {
+            window.location.replace('index.html#work');
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-width: 1024px; min-height: 100vh; overflow: hidden;
+            background: #f4f4f2; color: #111; font-family: 'Inter', sans-serif;
+        }
+        a { color: inherit; text-decoration: none; }
+        .text-cn { display: none; }
+        body.lang-cn .text-en { display: none; }
+        body.lang-cn .text-cn { display: inline; }
+
+        .topbar {
+            height: 76px; padding: 0 60px; border-bottom: 1px solid #ddd;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .topbar-title { font-size: 0.85rem; font-weight: 600; }
+        .topbar-actions { display: flex; align-items: center; gap: 22px; }
+        .lang-switch {
+            padding: 6px 12px; border: 1px solid #ccc; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 600; background: transparent;
+        }
+        .close-link {
+            width: 32px; height: 32px; display: grid; place-items: center;
+            font-size: 1.7rem; font-weight: 300; opacity: 0.55; transition: opacity 0.25s ease;
+        }
+        .close-link:hover { opacity: 1; }
+
+        main {
+            height: calc(100vh - 76px); padding: 46px 60px 54px;
+            display: grid; grid-template-columns: 0.82fr 1.18fr; gap: 56px; align-items: center;
+        }
+        .copy { align-self: center; max-width: 520px; }
+        .eyebrow {
+            display: block; margin-bottom: 22px; color: #777;
+            font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+        }
+        h1 { margin-bottom: 22px; font-size: 64px; line-height: 0.98; font-weight: 400; }
+        .subtitle { margin-bottom: 26px; color: #666; font-size: 0.82rem; }
+        .description { color: #555; font-size: 0.98rem; line-height: 1.75; }
+
+        .video-pair {
+            min-width: 0; height: min(72vh, 700px);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+        }
+        .video-item { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+        .video-item video {
+            min-width: 0; width: 100%; height: calc(100% - 28px); object-fit: contain;
+            background: #111;
+        }
+        .video-label {
+            display: flex; justify-content: space-between; color: #777;
+            font-size: 0.68rem; font-weight: 500; text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-title">Philips Domestic Appliances / 3D Visualization</div>
+        <div class="topbar-actions">
+            <button class="lang-switch" id="lang-btn" type="button">EN / 中</button>
+            <a class="close-link" href="index.html#work" aria-label="Return to home" title="Close">×</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="copy">
+            <span class="eyebrow">Philips Domestic Appliances</span>
+            <h1><span class="text-en">Visual<br>Storytelling</span><span class="text-cn">产品叙事<br>与动态视觉</span></h1>
+            <p class="subtitle">3D Visualization · Cinema 4D / Octane · 2022.09-2023.01</p>
+            <p class="description">
+                <span class="text-en">Collaborated with product design, market and marketing teams to translate product features and brand guidelines into clear visual narratives and aesthetic directions. Independently produced 3D films for the Conscious Collection and Air Purifier 8000 Series, and presented the proposals to global design and marketing leadership.</span>
+                <span class="text-cn">与产品设计、市场及营销团队跨职能协作，将产品特性与品牌指南转化为具备清晰叙事和美学方向的动态视觉方案；独立完成 Conscious Collection 与 Air Purifier 8000 Series 的 3D 动画，并向全球设计总监及营销负责人汇报设计提案。</span>
+            </p>
+        </section>
+
+        <section class="video-pair" aria-label="Philips 3D visualization films">
+            <div class="video-item">
+                <video controls playsinline preload="metadata"><source src="images/about/experience/philips/final-1.mp4" type="video/mp4"></video>
+                <div class="video-label"><span>Conscious Collection</span><span>01</span></div>
+            </div>
+            <div class="video-item">
+                <video controls playsinline preload="metadata"><source src="images/about/experience/philips/final-2.mp4" type="video/mp4"></video>
+                <div class="video-label"><span>Air Purifier 8000 Series</span><span>02</span></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentLang = localStorage.getItem('siteLang') || 'en';
+        const langBtn = document.getElementById('lang-btn');
+
+        const applyLanguage = () => {
+            document.body.className = `lang-${currentLang}`;
+            localStorage.setItem('siteLang', currentLang);
+        };
+
+        applyLanguage();
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            applyLanguage();
+        });
+    </script>
+</body>
+</html>

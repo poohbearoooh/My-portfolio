@@ -97,18 +97,46 @@
 
         /* --- Hero --- */
         .hero {
-            height: 100vh; display: flex; align-items: center; padding: 0 var(--nav-padding);
-            /* 增加顶部内边距，防止导航栏遮挡内容（虽然全屏hero一般垂直居中，但为了保险） */
-            padding-top: var(--nav-height); 
+            position: relative;
+            height: 155vh;
+            padding: 0 var(--nav-padding);
+        }
+        .hero-story-inner {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: var(--nav-height);
+            opacity: 0;
+            animation: heroFade 0.9s ease forwards 0.35s;
         }
         .hero h1 {
-            font-size: 4rem; line-height: 1.2; font-weight: 400; max-width: 1180px;
-            opacity: 0; transform: translateY(30px);
-            animation: fadeUp 1s ease forwards 0.5s;
-            /* 额外保险：防止单词断开 */
-            word-wrap: break-word;
+            max-width: 1180px;
+            margin: 0;
+            font-size: 5rem;
+            line-height: 1.12;
+            font-weight: 400;
+            transform-origin: left center;
+            will-change: transform;
+            transition: opacity 0.3s ease;
             text-wrap: balance;
         }
+        .hero-detail {
+            max-width: 900px;
+            max-height: 0;
+            margin-top: 0;
+            overflow: hidden;
+            color: #505050;
+            font-size: 1.2rem;
+            line-height: 1.75;
+            opacity: 0;
+            transform: translateY(32px);
+            will-change: opacity, transform;
+            pointer-events: none;
+        }
+        .hero-detail p + p { margin-top: 15px; }
 
         /* --- 作品列表 (平齐 + 动效) --- */
         .gallery {
@@ -232,6 +260,7 @@
         .scroll-arrow svg { stroke: var(--text-color); stroke-width: 2; fill: none; }
 
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes heroFade { to { opacity: 1; } }
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
             40% {transform: translateX(-50%) translateY(-10px);}
@@ -242,6 +271,7 @@
         @media (max-width: 768px) {
             :root { --nav-padding: 20px; }
             .hero h1 { font-size: 2.5rem; }
+            .hero-detail { font-size: 1rem; line-height: 1.65; }
             .gallery { grid-template-columns: 1fr; gap: 60px; padding-top: 50px; }
             .project-list { gap: 60px; }
             .custom-cursor { display: none; } * { cursor: auto; }
@@ -264,8 +294,14 @@
         </div>
     </nav>
 
-    <section class="hero">
-        <h1 id="home-intro">I’m Zhujun Pang, an innovative designer dedicated to seamlessly integrating consumer electronics into everyday life.</h1>
+    <section class="hero" id="hero-story">
+        <div class="hero-story-inner">
+            <h1 id="home-intro">The best technology recedes, allowing interaction to unfold naturally.</h1>
+            <div class="hero-detail" id="home-detail">
+                <p data-en="I work across physical products and interactive experiences, translating complex technologies into intuitive, self-evident interactions grounded in how people behave, perceive, and move." data-cn="我是一名横跨实体产品与交互体验的设计师，习惯从人的行为与直觉出发，把复杂技术转化为自然、无需解释的体验。">I work across physical products and interactive experiences, translating complex technologies into intuitive, self-evident interactions grounded in how people behave, perceive, and move.</p>
+                <p data-en="To me, electronic devices should do more than work efficiently. They should invite curiosity, make room for discovery, and bring a quiet sense of pleasure to everyday use." data-cn="我相信电子设备不该只是高效的工具，也应回应人的好奇心，让探索和使用本身成为一种愉悦。">To me, electronic devices should do more than work efficiently. They should invite curiosity, make room for discovery, and bring a quiet sense of pleasure to everyday use.</p>
+            </div>
+        </div>
     </section>
 
     <div class="scroll-arrow hover-target" id="arrow-btn">
@@ -361,8 +397,8 @@
         const homeIntro = document.getElementById('home-intro');
 
         const homeTrans = {
-            en: "I’m Zhujun Pang, an innovative designer dedicated to seamlessly integrating consumer electronics into everyday life.",
-            cn: "我是庞竺君，一名创新设计师，致力于将消费电子产品自然融入日常生活。"
+            en: "The best technology recedes, allowing interaction to unfold naturally.",
+            cn: "让技术退后，让人与产品的互动自然发生。"
         };
 
         // 检查本地存储的语言偏好
@@ -380,6 +416,7 @@
             document.querySelectorAll('[data-en][data-cn]').forEach(element => {
                 element.textContent = element.dataset[currentLang];
             });
+            setTimeout(() => requestHeroUpdate(), 320);
             // 保存设置到浏览器
             localStorage.setItem('siteLang', currentLang);
         }
@@ -396,6 +433,39 @@
             currentLang = currentLang === 'en' ? 'cn' : 'en';
             updateLanguage();
         });
+
+        /* --- 首屏滚动叙事 --- */
+        const heroStory = document.getElementById('hero-story');
+        const homeDetail = document.getElementById('home-detail');
+        let heroAnimationFrame = null;
+
+        const clamp = value => Math.min(Math.max(value, 0), 1);
+        const easeStory = value => value * value * (3 - 2 * value);
+
+        const updateHeroStory = () => {
+            heroAnimationFrame = null;
+            if (!heroStory || !homeIntro || !homeDetail) return;
+
+            const scrollRange = Math.max(heroStory.offsetHeight - window.innerHeight, 1);
+            const progress = clamp((window.scrollY - heroStory.offsetTop) / scrollRange);
+            const titleProgress = easeStory(clamp(progress / 0.72));
+            const detailProgress = easeStory(clamp((progress - 0.2) / 0.58));
+
+            homeIntro.style.transform = `translate3d(0, ${-28 * titleProgress}px, 0) scale(${1 - 0.18 * titleProgress})`;
+            homeDetail.style.maxHeight = `${homeDetail.scrollHeight * detailProgress}px`;
+            homeDetail.style.marginTop = `${42 * detailProgress}px`;
+            homeDetail.style.opacity = detailProgress;
+            homeDetail.style.transform = `translate3d(0, ${32 * (1 - detailProgress)}px, 0)`;
+        };
+
+        const requestHeroUpdate = () => {
+            if (heroAnimationFrame) return;
+            heroAnimationFrame = requestAnimationFrame(updateHeroStory);
+        };
+
+        updateHeroStory();
+        window.addEventListener('scroll', requestHeroUpdate, { passive: true });
+        window.addEventListener('resize', requestHeroUpdate);
 
         /* --- 工作经历密码入口 --- */
         const protectedExperienceCards = document.querySelectorAll('.protected-experience-card');
@@ -507,7 +577,12 @@
         // 箭头逻辑
         const arrowBtn = document.getElementById('arrow-btn');
         if(arrowBtn) {
-            arrowBtn.addEventListener('click', () => document.getElementById('work').scrollIntoView({behavior: 'smooth'}));
+            arrowBtn.addEventListener('click', () => {
+                const revealPoint = heroStory
+                    ? heroStory.offsetTop + (heroStory.offsetHeight - window.innerHeight) * 0.72
+                    : document.getElementById('work').offsetTop;
+                window.scrollTo({ top: revealPoint, behavior: 'smooth' });
+            });
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 100) arrowBtn.classList.add('hidden');
                 else arrowBtn.classList.remove('hidden');

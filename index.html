@@ -102,11 +102,12 @@
             padding-top: var(--nav-height); 
         }
         .hero h1 {
-            font-size: 4.5vw; line-height: 1.2; font-weight: 400; max-width: 900px;
+            font-size: 4rem; line-height: 1.2; font-weight: 400; max-width: 1180px;
             opacity: 0; transform: translateY(30px);
             animation: fadeUp 1s ease forwards 0.5s;
             /* 额外保险：防止单词断开 */
             word-wrap: break-word;
+            text-wrap: balance;
         }
 
         /* --- 作品列表 (平齐 + 动效) --- */
@@ -264,7 +265,7 @@
     </nav>
 
     <section class="hero">
-        <h1 id="home-intro">I’m Zhujun Pang, an industrial designer dedicated to seamlessly integrating consumer electronics into everyday life.</h1>
+        <h1 id="home-intro">I’m Zhujun Pang, an innovative designer dedicated to seamlessly integrating consumer electronics into everyday life.</h1>
     </section>
 
     <div class="scroll-arrow hover-target" id="arrow-btn">
@@ -281,7 +282,7 @@
                         <div class="huawei-home-panel huawei-camera"><img src="images/about/experience/huawei/home-camera.webp" alt="Compact camera in use"></div>
                         <div class="huawei-home-panel huawei-watch"><img src="images/about/experience/huawei/home-watch.webp" alt="Huawei wearable product"></div>
                     </div>
-                    <div class="project-info"><span class="project-title-row"><span class="project-title">Huawei</span><span class="project-lock" data-en="Protected" data-cn="加密">Protected</span></span><span class="project-cat" data-en="Pocket Camera | AI Hardware | Wearable Health" data-cn="口袋影像｜AI新入口｜穿戴健康">Pocket Imaging | AI Entry Point | Wearable Health</span></div>
+                    <div class="project-info"><span class="project-title-row"><span class="project-title">Huawei</span><span class="project-lock" data-en="Protected" data-cn="加密">Protected</span></span><span class="project-cat" data-en="Pocket Camera | AI Hardware | Wearable Health" data-cn="口袋影像｜AI硬件｜穿戴健康">Pocket Camera | AI Hardware | Wearable Health</span></div>
                 </a>
 
                 <a href="about.html#experience" class="project-card hover-target protected-experience-card" data-experience-target="about.html#experience" data-direct-case="dji">
@@ -360,8 +361,8 @@
         const homeIntro = document.getElementById('home-intro');
 
         const homeTrans = {
-            en: "I’m Zhujun Pang, an industrial designer dedicated to seamlessly integrating consumer electronics into everyday life.",
-            cn: "我是庞竺君，一名工业设计师，致力于将消费电子产品无缝融入日常生活。"
+            en: "I’m Zhujun Pang, an innovative designer dedicated to seamlessly integrating consumer electronics into everyday life.",
+            cn: "我是庞竺君，一名创新设计师，致力于将消费电子产品自然融入日常生活。"
         };
 
         // 检查本地存储的语言偏好

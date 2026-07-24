@@ -231,9 +231,9 @@
         .icon-close:hover { opacity: 1; transform: rotate(4deg); }
 
         .experience-shell { max-width: 1500px; margin: 0 auto; padding: 76px var(--nav-padding) 120px; }
-        .experience-heading { margin-bottom: 58px; max-width: 1120px; }
+        .experience-heading { margin-bottom: 38px; max-width: 1280px; }
         .experience-kicker { display: block; margin-bottom: 18px; color: #6f6f69; font-size: 0.78rem; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; }
-        .experience-heading h2 { font-size: 4rem; line-height: 1.08; font-weight: 300; letter-spacing: 0; margin-bottom: 24px; }
+        .experience-heading h2 { font-size: 3.25rem; line-height: 1.08; font-weight: 300; letter-spacing: 0; margin-bottom: 0; white-space: nowrap; }
         .experience-heading p { max-width: 720px; color: #5c5c57; font-size: 1.05rem; line-height: 1.75; }
 
         .company-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
@@ -317,6 +317,163 @@
         .case-media-placeholder { min-height: 430px; display: flex; align-items: center; justify-content: center; padding: 40px; color: #85857f; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
         .case-section-number { color: #8a8a84; font-size: 0.72rem; letter-spacing: 1px; margin-bottom: 16px; }
 
+        .huawei-cloud-section .case-section-grid {
+            grid-template-columns: minmax(300px,0.36fr) minmax(0,0.64fr);
+            align-items: start;
+        }
+        .huawei-cloud-copy {
+            max-width: 410px;
+            margin-top: 28px;
+            color: #555550;
+            font-size: 0.96rem;
+            line-height: 1.82;
+        }
+        .huawei-cloud-copy p {
+            position: relative;
+            padding-left: 17px;
+        }
+        .huawei-cloud-copy p + p { margin-top: 18px; }
+        .huawei-cloud-copy p::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.82em;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #555550;
+        }
+        .huawei-confidential-note {
+            max-width: 410px;
+            margin-top: 14px;
+            color: #898983;
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+        .huawei-confidential-emoji {
+            display: inline-block;
+            margin-left: 3px;
+            font-size: 2em;
+            line-height: 0;
+            vertical-align: -0.3em;
+        }
+        .huawei-process-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+            padding: 0 0 2px;
+            appearance: none;
+            border: 0;
+            border-bottom: 1px solid #111;
+            border-radius: 0;
+            background: transparent;
+            color: #111;
+            font: 600 0.86rem/1.4 'Inter', sans-serif;
+            transition: gap 0.3s ease;
+        }
+        .huawei-process-toggle:hover { gap: 15px; }
+        .huawei-process-toggle-arrow { transition: transform 0.32s ease; }
+        .huawei-process-toggle[aria-expanded="true"] .huawei-process-toggle-arrow { transform: rotate(90deg); }
+        .huawei-process-details {
+            grid-column: 1 / -1;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            margin-top: 0;
+            transition: max-height 0.7s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease, margin-top 0.5s ease;
+        }
+        .huawei-process-details.expanded {
+            max-height: 760px;
+            opacity: 1;
+            margin-top: 58px;
+        }
+        .huawei-process-details .horizontal-slider { padding-bottom: 14px; }
+        .huawei-process-details .slide-card { flex-basis: 74%; }
+        .huawei-process-details .proj-img-placeholder {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border: 1px solid #deded8;
+            border-radius: 4px;
+            background: #fff;
+        }
+        .huawei-process-details .proj-img-placeholder img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        .huawei-health-media-stack {
+            display: grid;
+            gap: 18px;
+            min-width: 0;
+            margin-top: 24px;
+        }
+        .huawei-health-media {
+            width: 100%;
+            margin: 0;
+            overflow: hidden;
+            border: 1px solid #deded8;
+            border-radius: 4px;
+            background: #f4f4f1;
+        }
+        .huawei-health-media img {
+            width: 100%;
+            display: block;
+            object-fit: contain;
+        }
+        .huawei-health-media-process {
+            width: 108%;
+        }
+        .huawei-health-media-process img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        .huawei-health-media-watch {
+            width: 108%;
+            aspect-ratio: 4 / 1;
+        }
+        .huawei-health-media-watch img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .huawei-terminal-particle {
+            position: relative;
+            min-width: 0;
+            aspect-ratio: 5 / 4;
+            padding: 0;
+            overflow: hidden;
+            border: 0;
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+        }
+        .huawei-terminal-particle .dji-particle-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            opacity: 1;
+            transition: opacity 0.55s ease;
+        }
+        .huawei-terminal-reveal {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.55s ease;
+        }
+        .huawei-terminal-particle.revealed .dji-particle-canvas { opacity: 0; }
+        .huawei-terminal-particle.revealed .huawei-terminal-reveal { opacity: 1; }
+
         .dji-card::after { background: rgba(0,0,0,0.42); }
         .dji-card:hover::after { background: rgba(0,0,0,0.32); }
         .dji-card .company-card-media img { object-position: center 43%; }
@@ -330,15 +487,32 @@
         .dji-accessory-copy p { position: relative; padding-left: 17px; }
         .dji-category-copy p::before,
         .dji-accessory-copy p::before { content: ''; position: absolute; left: 0; top: 0.82em; width: 4px; height: 4px; border-radius: 50%; background: #555550; }
-        .dji-category-media { min-width: 0; aspect-ratio: 16 / 10; overflow: hidden; border: 1px dashed #c8c8c2; border-radius: 4px; background: #f1f1ee; }
-        .dji-concept-stage { position: relative; width: 100%; padding: 0; appearance: none; color: inherit; cursor: pointer; }
-        .dji-particle-canvas,
-        .dji-safe-image { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.55s ease; }
-        .dji-particle-canvas { display: block; opacity: 1; }
-        .dji-safe-image { object-fit: cover; opacity: 0; transform: scale(1.15); }
-        .dji-concept-stage.revealed .dji-particle-canvas { opacity: 0; }
-        .dji-concept-stage.revealed .dji-safe-image { opacity: 1; }
-        .dji-concept-stage:focus-visible { outline: 2px solid #111; outline-offset: 4px; }
+        .dji-category-media { position: relative; min-width: 0; aspect-ratio: 16 / 10; overflow: hidden; border: 1px dashed #c8c8c2; border-radius: 4px; background: #f1f1ee; }
+        .dji-concept-stage { position: absolute; inset: 0; z-index: 2; width: 100%; padding: 0; border: 0; appearance: none; background: transparent; color: inherit; cursor: pointer; transition: opacity 0.5s ease; }
+        .dji-particle-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 1; transition: opacity 0.55s ease; }
+        .dji-concept-stage:focus-visible { outline: 2px solid #111; outline-offset: -5px; }
+        .dji-category-carousel { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        .dji-category-media.revealed .dji-concept-stage { opacity: 0; pointer-events: none; }
+        .dji-category-media.revealed .dji-category-carousel { opacity: 1; pointer-events: auto; }
+        .dji-category-slide { position: absolute; inset: 0; margin: 0; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; background: #ecece8; }
+        .dji-category-slide.active { opacity: 1; }
+        .dji-category-slide-overview { display: flex; align-items: center; justify-content: center; }
+        .dji-category-slide-overview img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; }
+        .dji-category-collage { display: grid; gap: 2px; background: #d8d8d3; }
+        .dji-category-collage-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .dji-category-collage-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .dji-category-collage-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .dji-category-collage img { width: 100%; height: 100%; min-width: 0; display: block; object-fit: cover; object-position: center; }
+        .dji-category-arrow {
+            position: absolute; z-index: 3; top: 50%; width: 42px; height: 42px; transform: translateY(-50%);
+            border: 1px solid rgba(17,17,17,0.18); border-radius: 50%; background: rgba(247,247,244,0.9);
+            color: #111; font: 300 1.25rem/1 'Inter', sans-serif; cursor: pointer; backdrop-filter: blur(8px);
+        }
+        .dji-category-prev { left: 18px; }
+        .dji-category-next { right: 18px; }
+        .dji-category-meta { position: absolute; z-index: 3; right: 18px; bottom: 15px; display: flex; gap: 14px; color: #686863; font-size: 0.7rem; letter-spacing: 0.2px; }
+        .dji-category-caption { padding: 4px 8px; background: rgba(247,247,244,0.88); backdrop-filter: blur(8px); }
+        .dji-category-counter { padding: 4px 0; }
         .dji-accessory-carousel { position: relative; min-width: 0; }
         .dji-accessory-stage { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 4px; background: #ededE9; }
         .dji-accessory-slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 0.45s ease; pointer-events: none; }
@@ -728,20 +902,15 @@
                     <span class="text-cn">精选经历 / 2022-2026</span>
                 </span>
                 <h2>
-                    <span class="text-en">Professional work,<br>made tangible.</span>
-                    <span class="text-cn">从洞察、定义到可验证的产品。</span>
+                    <span class="text-en">Professional work｜Consumer electronics</span>
+                    <span class="text-cn">专业工作｜消费电子</span>
                 </h2>
-                <p>
-                    <span class="text-en">Selected experience across terminal innovation, handheld imaging, automotive interiors and visual storytelling.</span>
-                    <span class="text-cn">涵盖终端创新、手持影像、汽车座舱与产品视觉表达的部分工作经历。</span>
-                </p>
             </header>
 
             <section class="company-grid" aria-label="Professional experience projects">
                 <button class="company-card company-featured hover-target" type="button" data-open-case="huawei">
-                    <div class="company-card-media process-placeholder">
-                        <img class="text-en" src="images/about/9d-en.svg" alt="Huawei terminal innovation process overview">
-                        <img class="text-cn" src="images/about/9d.webp" alt="华为终端创新项目过程概览">
+                    <div class="company-card-media">
+                        <img src="images/about/experience/huawei/huawei-card-triptych-v1.webp" alt="Huawei consumer electronics projects">
                     </div>
                     <div class="company-card-content">
                         <span class="company-card-index">01 / 04</span>
@@ -814,7 +983,7 @@
             </section>
         </main>
 
-        <article class="case-view" data-case="huawei" aria-hidden="true">
+        <article class="case-view huawei-case" data-case="huawei" aria-hidden="true">
             <div class="case-nav">
                 <div><div class="case-nav-title">Huawei / Terminal Innovation</div><div class="case-nav-meta">2024.02 - 2026.02</div></div>
                 <div class="experience-nav-actions"><div class="drawer-lang hover-target lang-toggle-btn">EN / 中</div><button class="icon-close case-close hover-target" type="button" aria-label="Return to professional experience" title="Close">×</button></div>
@@ -829,10 +998,69 @@
                     <div class="case-fact"><div class="case-fact-label">Focus</div><div class="case-fact-value"><span class="text-en">Imaging / Wearable UX</span><span class="text-cn">影像创新 / 穿戴体验</span></div></div>
                     <div class="case-fact"><div class="case-fact-label">Contribution</div><div class="case-fact-value"><span class="text-en">Research, definition, prototyping</span><span class="text-cn">研究、定义与原型验证</span></div></div>
                 </div>
-                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">01</div><h3><span class="text-en">Reframing the imaging opportunity</span><span class="text-cn">重新定义影像创新机会</span></h3></div><div class="case-copy"><p><span class="text-en">Identified structural and scenario homogenization through market, competitor and technology research. Reframed the opportunity around portability, playfulness and expressive imaging, then translated it into differentiated terminal forms and accessory concepts.</span><span class="text-cn">通过市场、竞品与技术趋势研究，识别产品架构与使用场景的同质化问题；围绕便携性、可玩性与影像表达重构机会，并转化为差异化终端形态及配件概念。</span></p><div class="case-media"><img class="text-en" src="images/about/9d-en.svg" alt="Imaging innovation strategy"><img class="text-cn" src="images/about/9d.webp" alt="影像创新策略"></div></div></div></section>
-                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">02</div><h3><span class="text-en">Making concepts testable</span><span class="text-cn">将概念转化为可验证原型</span></h3></div><div class="case-copy"><p><span class="text-en">Developed multiple specifications, dynamic appearance models and supporting accessories to evaluate ergonomics, hardware architecture and product character, enabling project reviews and direction convergence.</span><span class="text-cn">通过多规格探索、动态精模与配套配件，验证人机尺寸、硬件架构及产品调性，支撑阶段评审与方向收敛。</span></p><div class="case-media"><img class="text-en" src="images/about/9b-en.svg" alt="Concept prototyping"><img class="text-cn" src="images/about/9b.webp" alt="概念原型验证"></div></div></div></section>
-                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">03</div><h3><span class="text-en">Research and concept validation</span><span class="text-cn">用户研究与概念验证</span></h3></div><div class="case-copy"><p><span class="text-en">Led collaboration with an external research agency. Defined participant screening and semi-structured interviews around imaging devices, shooting contexts, creative goals and current pain points, while evaluating concept acceptance, ergonomics and scenario imagination.</span><span class="text-cn">牵头对接外部调研机构，制定用户筛选条件与半结构化访谈大纲；围绕影像设备、拍摄场景、创作目的与现有痛点开展深访，同步验证新概念的接受度、人机体验与场景想象。</span></p><div class="case-media"><img class="text-en" src="images/about/9c-en.svg" alt="User research and validation"><img class="text-cn" src="images/about/9c.webp" alt="用户研究与验证"></div></div></div></section>
-                <section class="case-section"><div class="case-section-grid"><div><div class="case-section-number">04</div><h3><span class="text-en">Wearable interaction optimization</span><span class="text-cn">穿戴交互体验优化</span></h3></div><div class="case-copy"><p><span class="text-en">Explored more than ten hardware-software interaction concepts for a health sensing feature. Worked with sensor, algorithm and testing teams to turn operation time, learning attempts, success rate and feasibility into evaluation criteria, supporting iterative convergence.</span><span class="text-cn">针对健康检测特性探索10余种软硬件交互方案；协同传感器、算法与测试团队，将操作时长、学习次数、成功率与硬件可实现性转化为评价依据，推动方案迭代收敛。</span></p><div class="case-media"><img class="text-en" src="images/about/10-en.svg" alt="Wearable interaction process"><img class="text-cn" src="images/about/10.webp" alt="穿戴交互项目过程"></div></div></div></section>
+                <section class="case-section huawei-cloud-section huawei-health-section">
+                    <div class="case-section-grid">
+                        <div>
+                            <div class="case-section-number">01</div>
+                            <h3><span class="text-en">0-1 Watch Health Experience Design</span><span class="text-cn">手表健康新特性0-1体验设计优化</span></h3>
+                            <p class="huawei-confidential-note"><span class="text-en">Interaction details cannot be shown while the product remains under development and strict confidentiality. <span class="huawei-confidential-emoji">🧎</span></span><span class="text-cn">因为量产中高保密，无法展示交互设计细节<span class="huawei-confidential-emoji">🧎</span></span></p>
+                            <div class="huawei-cloud-copy">
+                                <p><span class="text-en">Led 15+ hardware-software interaction concepts for a wearable health-sensing feature where measurement accuracy was tightly coupled with the user's operation.</span><span class="text-cn">面向穿戴健康检测特性，针对检测精度与操作体验高度耦合的问题，主导15+软硬件交互方案探索；</span></p>
+                                <p><span class="text-en">Partnered with sensor, algorithm and testing teams across multiple functional Demos and user studies. Built an evaluation framework spanning human factors and perceived form quality, translating task time, learning attempts, success rate and hardware feasibility into selection criteria. Converged on a low-learning-cost, step-based UI guidance flow; worked with frontend engineers in Pixso to deliver three rounds of low-fidelity interactive Demos, supporting key development gates and two invention patents.</span><span class="text-cn">协同传感器、算法与测试团队完成多轮功能Demo及用户测试，从人因与外观感知维度建立体验评价机制，将操作时长、学习次数、操作成功率及硬件可实现性量化为方案筛选指标。最终收敛至低学习成本的分级式UI交互引导方案，使用Pixso与前端同事合作，制作三轮低保真交互Demo，支撑项目通过关键研发节点并输出2项发明专利；</span></p>
+                                <p><span class="text-en">Worked with UI and product teams through later-stage delivery, refining interaction details and following visual execution into implementation.</span><span class="text-cn">与UI界面设计以及产品部门合作，跟进项目后期具体视觉效果的实现以及交互细化工作。</span></p>
+                            </div>
+                        </div>
+                        <div class="huawei-health-media-stack">
+                            <figure class="huawei-health-media huawei-health-media-process">
+                                <img class="text-en" src="images/about/10-en.svg" alt="Watch health experience evaluation process">
+                                <img class="text-cn" src="images/about/10.webp" alt="手表健康新特性体验评价流程">
+                            </figure>
+                            <figure class="huawei-health-media huawei-health-media-watch">
+                                <img src="images/about/experience/huawei/cloud/huawei-watch-health.webp" alt="Huawei watches">
+                            </figure>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="case-section huawei-cloud-section huawei-terminal-section">
+                    <div class="case-section-grid">
+                        <div>
+                            <div class="case-section-number">02</div>
+                            <h3><span class="text-en">Pocket Camera</span><span class="text-cn">口袋影像</span></h3>
+                            <div class="huawei-cloud-copy">
+                                <p><span class="text-en">Next-generation exploration within an existing category: structural and scenario homogenization reframed through target-user needs and the product's intrinsic form; led a differentiated imaging experience and new form architecture.</span><span class="text-cn">口袋影像（已有品类下一代探索）：基于现有产品架构与使用场景同质化问题，回归目标群体与产品本身形态特质进行洞察，主导提出大颗粒度差异化影像体验与创新形态方案；</span></p>
+                                <p><span class="text-en">Dynamic appearance models and accessories developed with Camera, hinge and prototype teams; high-fidelity prototype delivery, executive recognition at Demo Show, project conversion and three key invention patents.</span><span class="text-cn">与Camera、转轴团队以及原型机部门合作，制作多轮动态精模原型与配件进行验证，以高成熟度原型样机交付，方案在Demo秀中获高层认可，形成项目转换，输出3项关键发明专利；</span></p>
+                                <p><span class="text-en">Led terminal-imaging concept validation with an external research agency: participant screening, semi-structured interview guide and in-person workshops in Shanghai and Shenzhen; synthesized ratings, interview feedback and behavioral observations into opportunity areas and a research report for expert review, Demo presentation and iteration.</span><span class="text-cn">牵头与外部调研机构合作开展终端影像概念验证，制定目标用户筛选条件与半结构化访谈大纲，线下参与上海、深圳两地用户研究Workshop；整理用户评分、访谈反馈与行为观察所得数据，提炼体验机会点并输出调研报告，支撑专家评审、Demo汇报及后续方案迭代；</span></p>
+                            </div>
+                            <button class="huawei-process-toggle hover-target" type="button" aria-expanded="false" aria-controls="huawei-cloud-process">
+                                <span class="text-en">View Process Breakdown</span>
+                                <span class="text-cn">展开项目推演链路</span>
+                                <span class="huawei-process-toggle-arrow" aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                        <button class="huawei-terminal-particle hover-target" type="button" data-dji-particle-camera aria-label="Reveal pocket camera reference">
+                            <canvas class="dji-particle-canvas" aria-hidden="true"></canvas>
+                            <img class="huawei-terminal-reveal" src="images/about/experience/huawei/cloud/pocket-camera-reference.webp" alt="Pocket camera reference held in hand">
+                        </button>
+                        <div class="huawei-process-details" id="huawei-cloud-process">
+                            <div class="slider-hint"><span class="text-en">Swipe to explore process</span><span class="text-cn">横向滑动查看各阶段重点</span></div>
+                            <div class="horizontal-slider hover-target">
+                                <div class="slide-card">
+                                    <div class="slide-header"><span class="step-num">01</span><span class="text-en">Insights & Strategy Definition</span><span class="text-cn">市场洞察与破局思路</span></div>
+                                    <div class="proj-img-placeholder"><img class="text-en" src="images/about/9d-en.svg" alt="Insights and strategy definition process"><img class="text-cn" src="images/about/9d.webp" alt="市场洞察与策略定义"></div>
+                                </div>
+                                <div class="slide-card">
+                                    <div class="slide-header"><span class="step-num">02</span><span class="text-en">Ideation & Prototyping</span><span class="text-cn">方案发散与原型验证</span></div>
+                                    <div class="proj-img-placeholder"><img class="text-en" src="images/about/9b-en.svg" alt="Ideation and prototyping process"><img class="text-cn" src="images/about/9b.webp" alt="方案发散与原型验证"></div>
+                                </div>
+                                <div class="slide-card">
+                                    <div class="slide-header"><span class="step-num">03</span><span class="text-en">Incubation & UX Validation</span><span class="text-cn">多方向孵化与用户验证</span></div>
+                                    <div class="proj-img-placeholder"><img class="text-en" src="images/about/9c-en.svg" alt="Incubation and UX validation process"><img class="text-cn" src="images/about/9c.webp" alt="多方向孵化与用户验证"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </article>
 
@@ -858,14 +1086,42 @@
                             <h3><span class="text-en">0-1 Handheld Imaging Exploration</span><span class="text-cn">手持影像新品类 0-1 探索</span></h3>
                             <div class="dji-category-copy">
                                 <p><span class="text-en">User research data, personas and creation scenarios; market and competitor analysis plus product-specification teardown to define design opportunities.</span><span class="text-cn">基于用户研究数据提炼用户画像与创作场景，结合市场/竞品分析及产品规格拆解明确设计机会点。</span></p>
-                                <p><span class="text-en">Host, lens and accessory architecture, module stacking and use flows with product leads, product managers and multidisciplinary engineers; design proposals and high-fidelity prototypes for review and convergence.</span><span class="text-cn">协同产品经理、产品负责人及多领域工程师讨论主机、镜头与配件架构堆叠及使用链路，参与输出设计方案及高成熟度原型样机，支撑项目评审与方案收敛。</span></p>
+                                <p><span class="text-en">Host, lens and accessory architecture, module stacking and use flows with product leads, product managers and multidisciplinary engineers; design proposals and high-fidelity prototypes for review and convergence. Highest score in the external review.</span><span class="text-cn">协同产品经理、产品负责人及多领域工程师讨论主机、镜头与配件架构堆叠及使用链路，参与输出设计方案及高成熟度原型样机，支撑项目评审与方案收敛。方案获外部评审最高分。</span></p>
                                 <p><span class="text-en">CMF validation: laser-etched textile texture | waterproof technical textiles and PU leather grains | glass-fiber coating inspired by smartphone battery covers.</span><span class="text-cn">验证多种 CMF 方案：特殊镭雕仿织物纹理｜多种防水科技织物及 PU 皮纹｜玻纤仿手机电池盖喷涂工艺。</span></p>
                             </div>
                         </div>
-                        <button class="dji-category-media dji-concept-stage hover-target" type="button" data-dji-particle-camera data-reveal-target="cloud" aria-label="Reveal abstract camera image">
-                            <canvas class="dji-particle-canvas" aria-hidden="true"></canvas>
-                            <img class="dji-safe-image" src="images/about/experience/dji/cloud-safe-camera.webp" alt="Abstract camera placeholder">
-                        </button>
+                        <div class="dji-category-media">
+                            <button class="dji-concept-stage hover-target" type="button" data-dji-particle-camera data-reveal-target="cloud-gallery" aria-label="Reveal CMF material gallery">
+                                <canvas class="dji-particle-canvas" aria-hidden="true"></canvas>
+                            </button>
+                            <div class="dji-category-carousel" data-carousel="dji-category" aria-label="DJI CMF material exploration">
+                                <figure class="dji-category-slide dji-category-slide-overview active">
+                                    <img src="images/about/experience/dji/cmf/cmf-01-overview.webp" alt="CMF material palette overview">
+                                </figure>
+                                <figure class="dji-category-slide dji-category-slide-overview">
+                                    <img src="images/about/experience/dji/cmf/cmf-02-overview.webp" alt="CMF candidate material overview">
+                                </figure>
+                                <figure class="dji-category-slide dji-category-collage dji-category-collage-two">
+                                    <img src="images/about/experience/dji/cmf/cmf-03-b.webp" alt="Handheld grey material sample">
+                                    <img src="images/about/experience/dji/cmf/cmf-03-c.webp" alt="Handheld fabric material sample">
+                                </figure>
+                                <figure class="dji-category-slide dji-category-collage dji-category-collage-four">
+                                    <img src="images/about/experience/dji/cmf/cmf-04-a.webp" alt="Black woven material detail">
+                                    <img src="images/about/experience/dji/cmf/cmf-04-b.webp" alt="Black fabric material detail">
+                                    <img src="images/about/experience/dji/cmf/cmf-04-c.webp" alt="White woven material detail">
+                                    <img src="images/about/experience/dji/cmf/cmf-04-d.webp" alt="Black textured surface detail">
+                                </figure>
+                                <figure class="dji-category-slide dji-category-slide-overview">
+                                    <img src="images/about/experience/dji/cmf/cmf-04-e.webp" alt="Black woven textile close-up">
+                                </figure>
+                                <button class="dji-category-arrow dji-category-prev hover-target" type="button" aria-label="Previous CMF image">←</button>
+                                <button class="dji-category-arrow dji-category-next hover-target" type="button" aria-label="Next CMF image">→</button>
+                                <div class="dji-category-meta">
+                                    <span class="dji-category-caption"><span class="text-en">Material palette · Color and texture</span><span class="text-cn">材料色彩与纹理调研</span></span>
+                                    <span class="dji-category-counter">01 / 05</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
                 <section class="case-section dji-accessory-section">
@@ -1041,7 +1297,10 @@
         const philipsPreviewVideos = document.querySelectorAll('.philips-preview-video');
         const philipsDetailVideos = document.querySelectorAll('.philips-detail-video');
         const djiParticleStages = document.querySelectorAll('[data-dji-particle-camera]');
+        const djiCategoryCarousel = document.querySelector('[data-carousel="dji-category"]');
         const djiAccessoryCarousel = document.querySelector('[data-carousel="dji-accessories"]');
+        const huaweiProcessToggle = document.querySelector('.huawei-process-toggle');
+        const huaweiProcessDetails = document.querySelector('#huawei-cloud-process');
         let directExperienceCase = '';
 
         djiParticleStages.forEach(stage => {
@@ -1138,7 +1397,15 @@
                 if (reduceMotion) draw(animationStart + 3000);
             });
 
+            if (stage.dataset.particleStatic === 'true') return;
+
             stage.addEventListener('click', () => {
+                if (stage.dataset.revealTarget === 'cloud-gallery') {
+                    stage.closest('.dji-category-media')?.classList.add('revealed');
+                    if (animationFrame) cancelAnimationFrame(animationFrame);
+                    return;
+                }
+
                 if (stage.dataset.revealTarget === 'local') {
                     stage.closest('.dji-local-category-stage')?.classList.add('revealed');
                     if (animationFrame) cancelAnimationFrame(animationFrame);
@@ -1154,6 +1421,35 @@
                 }
             });
         });
+
+        if (djiCategoryCarousel) {
+            const slides = Array.from(djiCategoryCarousel.querySelectorAll('.dji-category-slide'));
+            const previousButton = djiCategoryCarousel.querySelector('.dji-category-prev');
+            const nextButton = djiCategoryCarousel.querySelector('.dji-category-next');
+            const counter = djiCategoryCarousel.querySelector('.dji-category-counter');
+            const captionEn = djiCategoryCarousel.querySelector('.dji-category-caption .text-en');
+            const captionCn = djiCategoryCarousel.querySelector('.dji-category-caption .text-cn');
+            const captions = [
+                ['Material palette · Color and texture', '材料色彩与纹理调研'],
+                ['Candidate materials · Comparative review', '候选材料对比筛选'],
+                ['Material combinations · Fabric and coating', '材料组合｜织物与涂层'],
+                ['Surface details · Texture and finish', '表面细节｜纹理与工艺'],
+                ['Woven texture · Material detail', '黑色布纹｜材质细节']
+            ];
+            let currentSlide = 0;
+
+            const showSlide = nextSlide => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (nextSlide + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+                counter.textContent = `${String(currentSlide + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+                captionEn.textContent = captions[currentSlide][0];
+                captionCn.textContent = captions[currentSlide][1];
+            };
+
+            previousButton.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextButton.addEventListener('click', () => showSlide(currentSlide + 1));
+        }
 
         if (djiAccessoryCarousel) {
             const slides = Array.from(djiAccessoryCarousel.querySelectorAll('.dji-accessory-slide'));
@@ -1181,6 +1477,14 @@
 
             previousButton.addEventListener('click', () => showSlide(currentSlide - 1));
             nextButton.addEventListener('click', () => showSlide(currentSlide + 1));
+        }
+
+        if (huaweiProcessToggle && huaweiProcessDetails) {
+            huaweiProcessToggle.addEventListener('click', () => {
+                const expanded = huaweiProcessToggle.getAttribute('aria-expanded') === 'true';
+                huaweiProcessToggle.setAttribute('aria-expanded', String(!expanded));
+                huaweiProcessDetails.classList.toggle('expanded', !expanded);
+            });
         }
 
         const playPhilipsPreviews = () => {
@@ -1290,8 +1594,7 @@
         companyCards.forEach(card => {
             card.addEventListener('click', () => {
                 if (card.dataset.openCase === 'huawei') {
-                    pausePhilipsPreviews();
-                    openLegacyHuawei(false);
+                    openCaseView('huawei', false);
                     return;
                 }
                 openCaseView(card.dataset.openCase, false);
@@ -1340,7 +1643,7 @@
             openExperienceLibrary();
             const requestedCase = sessionStorage.getItem('experienceDirectCase');
             sessionStorage.removeItem('experienceDirectCase');
-            if (requestedCase === 'huawei') openLegacyHuawei(true);
+            if (requestedCase === 'huawei') openCaseView('huawei', true);
             else if (requestedCase) openCaseView(requestedCase, true);
         }
 

@@ -96,6 +96,344 @@
         .research-link { display: inline-block; color: #111; border-bottom: 1px solid #111; transition: transform 0.25s ease, opacity 0.25s ease; }
         .research-link:hover { transform: translateX(6px); opacity: 0.55; }
 
+        .opportunity-illustration-section { margin-bottom: 90px; }
+        .opportunity-illustration {
+            width: min(62%, 760px);
+            margin: 0 auto;
+            line-height: 0;
+        }
+        .opportunity-illustration img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .research-journey {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 8.2;
+            min-height: 590px;
+            overflow: hidden;
+            background: #f3f3f3;
+        }
+        .research-media {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            background: #f3f3f3;
+            transition: right 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .research-media img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+            transition: opacity 0.24s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .research-journey.is-switching .research-media img {
+            opacity: 0;
+            transform: scale(1.012);
+        }
+        .research-journey.is-analysis .research-media {
+            right: 32%;
+            background: #fff;
+        }
+        .research-journey.is-analysis .research-media img {
+            padding: 22px;
+            object-fit: contain;
+            object-position: left center;
+        }
+        .research-caption {
+            position: absolute;
+            z-index: 2;
+            left: 24px;
+            bottom: 22px;
+            max-width: 58%;
+            padding: 9px 12px;
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 0.72rem;
+            line-height: 1.45;
+            color: #444;
+        }
+        .research-overlay {
+            position: absolute;
+            z-index: 3;
+            inset: 0;
+            display: flex;
+            align-items: stretch;
+            padding: 48px 32px 24px 63%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 28%,
+                rgba(255, 255, 255, 0.7) 46%,
+                rgba(255, 255, 255, 0.96) 59%,
+                #fff 69%,
+                #fff 100%
+            );
+        }
+        .research-timeline {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .research-steps {
+            position: relative;
+            display: grid;
+            gap: 25px;
+        }
+        .research-steps::before {
+            content: "";
+            position: absolute;
+            top: 13px;
+            bottom: 36px;
+            left: 7px;
+            width: 1px;
+            background: rgba(17, 17, 17, 0.24);
+        }
+        .research-step {
+            position: relative;
+            width: 100%;
+            min-height: 50px;
+            padding: 0 0 0 38px;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            color: #111;
+            font-family: inherit;
+            outline: none;
+        }
+        .research-step::before {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            top: 6px;
+            left: 0;
+            width: 15px;
+            height: 15px;
+            border: 1.5px solid #111;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+        .research-step[aria-pressed="false"]::after {
+            content: "";
+            position: absolute;
+            top: 6px;
+            left: 0;
+            width: 15px;
+            height: 15px;
+            border: 1px solid rgba(17, 17, 17, 0.34);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: research-node-pulse 2.4s ease-out infinite;
+        }
+        .research-step:nth-child(2)::after { animation-delay: 0.35s; }
+        .research-step:nth-child(3)::after { animation-delay: 0.7s; }
+        .research-step:nth-child(4)::after { animation-delay: 1.05s; }
+        @keyframes research-node-pulse {
+            0% {
+                opacity: 0.52;
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(17, 17, 17, 0.12);
+            }
+            72% {
+                opacity: 0;
+                transform: scale(2.05);
+                box-shadow: 0 0 0 5px rgba(17, 17, 17, 0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(2.05);
+                box-shadow: 0 0 0 5px rgba(17, 17, 17, 0);
+            }
+        }
+        .research-step[aria-pressed="true"]::before { background: #111; }
+        .research-step:hover::before,
+        .research-step:focus-visible::before,
+        .research-step[aria-pressed="true"]::before {
+            transform: scale(1.18);
+            box-shadow: 0 0 0 5px rgba(17, 17, 17, 0.08);
+        }
+        .research-step-title {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 0.92rem;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+        .research-step-meta {
+            display: block;
+            max-width: 430px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 0.74rem;
+            line-height: 1.48;
+            color: #666;
+        }
+        .research-step[aria-pressed="false"] .research-step-title,
+        .research-step[aria-pressed="false"] .research-step-meta {
+            opacity: 0.62;
+            transition: opacity 0.25s ease;
+        }
+        .research-step:hover .research-step-title,
+        .research-step:hover .research-step-meta,
+        .research-step:focus-visible .research-step-title,
+        .research-step:focus-visible .research-step-meta {
+            opacity: 1;
+        }
+        .research-outcome {
+            position: relative;
+            min-height: 32px;
+            margin-left: 38px;
+            margin-top: 38px;
+            padding-top: 1px;
+            font-size: 0.84rem;
+            line-height: 1.4;
+            font-weight: 500;
+            color: #555;
+        }
+        .research-outcome::before {
+            content: "";
+            position: absolute;
+            left: -31px;
+            top: -75px;
+            width: 1px;
+            height: 107px;
+            background: rgba(17, 17, 17, 0.36);
+        }
+        .research-tail {
+            position: relative;
+            flex: 1;
+            min-height: 88px;
+            margin-left: 7px;
+        }
+        .research-tail::before,
+        .research-tail::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 1px;
+        }
+        .research-tail::before {
+            top: 0;
+            height: 36%;
+            background: rgba(17, 17, 17, 0.36);
+        }
+        .research-tail::after {
+            top: 36%;
+            bottom: 10px;
+            border-left: 1px dashed rgba(17, 17, 17, 0.52);
+        }
+        .research-tail-arrow {
+            position: absolute;
+            left: -5px;
+            bottom: 4px;
+            width: 10px;
+            height: 10px;
+            border-right: 1.5px solid #111;
+            border-bottom: 1.5px solid #111;
+            transform: rotate(45deg);
+        }
+
+        /* Research synthesis and concept selection */
+        .insight-grid {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 32px;
+            margin: 12px auto 0;
+            padding: 0 20px;
+        }
+        .insight-item {
+            min-height: 188px;
+            padding-top: 22px;
+            border-top: 1px solid rgba(0, 0, 0, 0.18);
+        }
+        .insight-index {
+            display: block;
+            margin-bottom: 36px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #999;
+        }
+        .insight-title {
+            margin-bottom: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.35;
+            font-weight: 600;
+            color: #111;
+        }
+        .insight-copy {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+        }
+        .evaluation-wrap {
+            width: 100%;
+            max-width: 1200px;
+            margin: 16px auto 0;
+            overflow-x: auto;
+            border-top: 1px solid #111;
+            border-bottom: 1px solid #111;
+        }
+        .evaluation-table {
+            width: 100%;
+            min-width: 880px;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #222;
+        }
+        .evaluation-table th,
+        .evaluation-table td {
+            padding: 18px 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.35;
+        }
+        .evaluation-table th {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            vertical-align: bottom;
+        }
+        .evaluation-table th:first-child,
+        .evaluation-table td:first-child {
+            width: 31%;
+            text-align: left;
+        }
+        .evaluation-table tr:last-child td {
+            border-bottom: 0;
+            font-weight: 600;
+        }
+        .evaluation-table .selected-column {
+            background: #f2f6f4;
+        }
+        .selected-label {
+            display: block;
+            margin-top: 7px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #587064;
+            text-transform: uppercase;
+        }
+        .score-note {
+            width: 100%;
+            max-width: 1200px;
+            margin: 12px auto 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 0.75rem;
+            color: #999;
+        }
+
         /* 图片排版 */
         .img-box { width: 100%; display: block; line-height: 0; }
         .img-box img, .img-box video { width: 100%; height: auto; display: block; object-fit: contain; }
@@ -270,6 +608,47 @@
         @media (max-width: 768px) {
             :root { --nav-padding: 20px; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 20px; }
+            .opportunity-illustration-section { margin-bottom: 70px; }
+            .opportunity-illustration { width: 100%; }
+            .research-journey {
+                aspect-ratio: auto;
+                min-height: 0;
+                overflow: visible;
+                background: transparent;
+            }
+            .research-media,
+            .research-journey.is-analysis .research-media {
+                position: relative;
+                inset: auto;
+                width: 100%;
+                aspect-ratio: 4 / 3;
+                background: #f3f3f3;
+            }
+            .research-journey.is-analysis .research-media img { padding: 14px; }
+            .research-caption {
+                left: 12px;
+                bottom: 12px;
+                max-width: calc(100% - 24px);
+                font-size: 0.68rem;
+            }
+            .research-overlay {
+                position: relative;
+                inset: auto;
+                padding: 34px 10px 0 18px;
+                background: #fff;
+            }
+            .research-timeline { height: auto; }
+            .research-steps { gap: 22px; }
+            .research-step { padding-left: 34px; }
+            .research-step-title { font-size: 0.88rem; }
+            .research-step-meta { font-size: 0.72rem; }
+            .research-outcome { margin-left: 34px; margin-top: 30px; font-size: 0.8rem; }
+            .research-outcome::before { top: -67px; height: 99px; }
+            .research-tail { min-height: 78px; }
+            .insight-grid { grid-template-columns: 1fr; gap: 34px; }
+            .insight-item { min-height: 0; }
+            .insight-index { margin-bottom: 22px; }
+            .evaluation-wrap { -webkit-overflow-scrolling: touch; }
             .emoji-feedback-grid { grid-template-columns: 1fr; gap: 20px; }
             .emoji-feedback-secondary { margin-top: 60px; }
             .content-wrapper { padding: 0 20px !important; }
@@ -293,59 +672,8 @@
             }
         }
 
-        /* --- 长图折叠/展开交互样式 --- */
-        .expand-container {
-            position: relative;
-            width: 100%;
-            /* 初始高度：只露出上半部分，你可以根据需要调整这个数值 */
-            height: 600px; 
-            overflow: hidden;
-            transition: height 1s ease; /* 展开时的丝滑过渡 */
-        }
-
-        /* 展开后的状态 (由 JS 添加) */
-        .expand-container.expanded {
-            height: auto; /* 高度自动，完全展示图片 */
-            overflow: visible;
-        }
-
-        /* 渐变遮罩层 */
-        .expand-mask {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 200px; /* 遮罩高度 */
-            /* 从透明到白色的渐变 */
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1) 80%);
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            padding-bottom: 40px;
-            cursor: pointer;
-            z-index: 10;
-            transition: opacity 0.5s;
-        }
-
-        /* 隐藏遮罩 (展开后) */
-        .expand-container.expanded .expand-mask {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* 跳动的箭头按钮 */
-        .expand-btn {
-            font-size: 2rem;
-            color: #111;
-            animation: bounce 2s infinite;
-            font-weight: 300;
-        }
-
-        /* 复用之前的 bounce 动画，如果没有定义，这里补一个 */
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
+        @media (prefers-reduced-motion: reduce) {
+            .research-step[aria-pressed="false"]::after { animation: none; opacity: 0; }
         }
 
     </style>
@@ -416,32 +744,32 @@
             </div>
         </div>
 
-        <!-- 4. Brief (文字) -->
+        <!-- 4. Opportunity -->
         <div class="section-block gap-small">
             <div class="text-container">
-                <h2 class="section-title" id="txt-h2-brief">Brief:</h2>
+                <h2 class="section-title" id="txt-h2-brief">The Opportunity</h2>
                 <p class="body-text" id="txt-p3-brief">
-                    37% of couples break up within 3 months of becoming geographically separated, highlighting the challenges of communication in long-distance relationships (LDRs). While the internet provides convenient channels for instant communication, such as text messages and video chats, these technologies primarily focus on explicit information transmission and overlook the emotionally rich communication needed in intimate relationships.
+                    Long-distance couples have no shortage of ways to exchange information, yet text messages and video calls still demand direct attention. The quieter cues through which intimacy is maintained—presence, mood, care, and shared routines—are much harder to carry across distance.
                 </p>
                 <p class="body-text" id="txt-p4-brief">
-                    Researchers in the field of human-computer interaction have explored the use of haptic sensations, wearable technologies, hybrid interactions, and ambient media to foster emotional communication for LDR couples. However, most designs and studies have focused on imitating communication modes within intimate relationships from a technological standpoint. In reality, the lives of long-distance couples are often accompanied by complex emotional changes and needs, which necessitate a user-centered approach in research and design processes.
+                    Rather than reproducing face-to-face communication, this project asks how an everyday music product might support a lighter form of companionship: one that can remain in the background, become explicit when desired, and fit around two different schedules.
                 </p>
             </div>
         </div>
 
-        <!-- 5. Brief (图片) -->
-        <div class="section-block">
-            <div class="img-box hover-target">
-                <img src="images/soundmotion/3.webp" alt="Context">
+        <!-- 5. Opportunity illustration -->
+        <div class="section-block opportunity-illustration-section">
+            <div class="opportunity-illustration">
+                <img src="images/soundmotion/opportunity-distance-sketch.png" alt="Two long-distance partners connected through music while living in separate spaces">
             </div>
         </div>
 
         <!-- 6. User Study (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
-                <h2 class="section-title" id="txt-h2-user">User study: Workshop & Role-playing game</h2>
+                <h2 class="section-title" id="txt-h2-user">Researching Music as a Channel for Intimacy</h2>
                 <p class="body-text" id="txt-p3-user">
-                    Exploring the use of music to facilitate implicit emotional communication between long-distance couples has emerged as a new design exploration space. Data collected through interviews and workshops conducted during the early stages of this design project indicate that music sharing can create daily topics for couples, provide a sense of presence through synchronized listening, and convey emotions and care through shared music. Therefore, this project aims to address the limitations in current research on long-distance intimate relationship technologies in the field of human-computer interaction, and explore how the combination of music sharing and explicit and implicit interactions can better help long-distance couples enhance their sense of intimacy.
+                    To understand how music-sharing changes across relationships, I first conducted a one-hour role-playing workshop with eight participants from four countries. It identified feedback, relationship context, and tangibility as key factors, and pointed toward romantic relationships as the most emotionally meaningful context. I then conducted five semi-structured interviews to explore how couples use music across distance. The material was transcribed, coded, and clustered through thematic analysis.
                 </p>
                 <p class="body-text">
                     <a class="research-link hover-target" id="txt-p4-user" href="files/soundmotion-final-report.pdf" target="_blank" rel="noopener noreferrer">The detailed research process is available here.</a>
@@ -449,68 +777,180 @@
             </div>
         </div>
 
-        <!-- 7. Workshop (图片区域) -->
-        <div class="section-block">
-            
-            <!-- 原有的并排两张图 (保持不变) -->
-            <div class="grid-2" style="margin-bottom: 10px;">
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/4.webp" alt="Detail 1">
+        <!-- 7. Research journey -->
+        <div class="section-block gap-small">
+            <figure class="research-journey" id="research-journey">
+                <div class="research-media" aria-live="polite">
+                    <img
+                        id="research-media-image"
+                        src="images/soundmotion/research-workshop.webp"
+                        alt="Participants mapping music-sharing experiences during the exploratory workshop"
+                    >
+                    <figcaption class="research-caption" id="research-caption">Role-playing workshop, Eindhoven</figcaption>
                 </div>
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/5.webp" alt="Detail 2">
+                <div class="research-overlay">
+                    <div class="research-timeline" aria-label="Research process">
+                        <div class="research-steps">
+                            <button class="research-step is-stage hover-target" type="button" data-research-state="0" aria-pressed="true">
+                                <span class="research-step-title" id="txt-research-step-0-title">Exploratory Workshop</span>
+                                <span class="research-step-meta" id="txt-research-step-0-meta">Role-playing study · 8 participants · 4 countries</span>
+                            </button>
+                            <button class="research-step is-finding hover-target" type="button" data-research-state="1" aria-pressed="false">
+                                <span class="research-step-title" id="txt-research-step-1-title">Three preliminary signals</span>
+                                <span class="research-step-meta" id="txt-research-step-1-meta">Feedback shaped engagement · Sharing varied by relationship · Tangibility made sharing deliberate</span>
+                            </button>
+                            <button class="research-step is-stage hover-target" type="button" data-research-state="2" aria-pressed="false">
+                                <span class="research-step-title" id="txt-research-step-2-title">Focused Interviews</span>
+                                <span class="research-step-meta" id="txt-research-step-2-meta">Semi-structured interviews · 5 participants</span>
+                            </button>
+                            <button class="research-step is-finding hover-target" type="button" data-research-state="3" aria-pressed="false">
+                                <span class="research-step-title" id="txt-research-step-3-title">Refined understanding</span>
+                                <span class="research-step-meta" id="txt-research-step-3-meta">Music conveyed mood and care · Shared listening created presence · Different schedules required agency</span>
+                            </button>
+                        </div>
+                        <div class="research-outcome" id="txt-research-outcome">Click a title above to switch views</div>
+                        <div class="research-tail" aria-hidden="true">
+                            <span class="research-tail-arrow"></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <!-- ✨ 新增：竖向长图 (带折叠遮罩) -->
-            <!-- 记得把你的长图命名为 5b_long.webp 放入文件夹 -->
-            <div class="expand-container" id="long-img-container">
-                
-                <div class="img-box hover-target">
-                    <img src="images/soundmotion/5b.webp" alt="Long Process Image">
-                </div>
-
-                <!-- 遮罩与按钮 -->
-                <div class="expand-mask hover-target" id="expand-trigger">
-                    <div class="expand-btn">↓</div>
-                </div>
-
-            </div>
-
+            </figure>
         </div>
 
+        <!-- 8. Key insights -->
+        <div class="section-block">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h3-insights">Unveiling Key Insights: Guiding the Design</h2>
+                <p class="body-text" id="txt-p-insights">
+                    The analysis distilled three principles for the experience: shared listening should create an ambient sense of presence; emotional feedback should be tangible and lightweight; and moving into explicit interaction should remain under each person's control.
+                </p>
+            </div>
+            <div class="insight-grid">
+                <article class="insight-item">
+                    <span class="insight-index">01</span>
+                    <h3 class="insight-title" id="txt-insight-1-title">Music as emotional shorthand</h3>
+                    <p class="insight-copy" id="txt-insight-1-copy">A song can communicate mood, care, and personal context without asking either partner to formulate a message.</p>
+                </article>
+                <article class="insight-item">
+                    <span class="insight-index">02</span>
+                    <h3 class="insight-title" id="txt-insight-2-title">Presence at the edge of attention</h3>
+                    <p class="insight-copy" id="txt-insight-2-copy">Synchronous listening feels intimate because partners can sense each other while still doing separate things.</p>
+                </article>
+                <article class="insight-item">
+                    <span class="insight-index">03</span>
+                    <h3 class="insight-title" id="txt-insight-3-title">Agency before engagement</h3>
+                    <p class="insight-copy" id="txt-insight-3-copy">Different schedules make availability sensitive; connection should be noticeable without becoming an obligation.</p>
+                </article>
+            </div>
+        </div>
 
-        <!-- 8. Brainstorm (文字) -->
+        <!-- 9. Brainstorm (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h3-brain">Brainstorm</h2>
                 <p class="body-text" id="txt-p5-brain">
-                    Once the design direction was established, I embarked on a brainstorming process to generate initial design concepts. I began by gathering a collection of images to create an inspiration board, with a focus on themes related to fostering connection, music, physical interaction, and emotional attachment. This collection served as a source of inspiration. Next, I extensively sketched various ideas to explore specific design solutions. At this stage, each concept encompassed unique product forms and interaction styles, while aligning with the design guidelines outlined in the previous chapters.
+                    Guided by these principles, I explored three directions: extending an existing music device with physical behaviors, creating a portable connector for phone-based sharing, and designing a fixed shared speaker that could live in each partner's space. The sketches focused on how form, motion, and touch could move naturally between peripheral awareness and explicit engagement—not on styling alone.
                 </p>
             </div>
         </div>
 
-        <!-- 9. Brainstorm (图片) -->
+        <!-- 10. Brainstorm (图片) -->
         <div class="section-block">
             <div class="img-box hover-target">
                 <img src="images/soundmotion/6.webp" alt="Context">
             </div>
         </div>
 
-        <!-- 10. Initial Concept (文字) -->
+        <!-- 11. Direction evaluation -->
+        <div class="section-block gap-small">
+            <div class="text-container">
+                <h2 class="section-title" id="txt-h3-selection-logic">Why a Shared Ambient Speaker</h2>
+                <p class="body-text" id="txt-p-selection-logic">
+                    Unlike a phone accessory, a paired desktop product could become a persistent point of connection and a shared listening ritual across both homes. Its stationary presence made subtle motion readable from the edge of attention, while reciprocal states and the familiar speaker archetype gave the Couple Channel a clear emotional and everyday purpose. I accepted the additional technical complexity because the central research question concerned the quality of tangible companionship—not portability.
+                </p>
+            </div>
+            <div class="evaluation-wrap">
+                <table class="evaluation-table">
+                    <thead>
+                        <tr>
+                            <th id="txt-eval-criterion">Evaluation criterion</th>
+                            <th id="txt-eval-concept-1">Enhanced music device</th>
+                            <th id="txt-eval-concept-2">Portable connector</th>
+                            <th class="selected-column">
+                                <span id="txt-eval-concept-3">Shared ambient speaker</span>
+                                <span class="selected-label" id="txt-eval-selected">Selected direction</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="txt-eval-row-0">Potential to foster intimacy</td>
+                            <td>3</td>
+                            <td>2</td>
+                            <td class="selected-column">5</td>
+                        </tr>
+                        <tr>
+                            <td id="txt-eval-row-1">Sustained ambient presence</td>
+                            <td>3</td>
+                            <td>2</td>
+                            <td class="selected-column">5</td>
+                        </tr>
+                        <tr>
+                            <td id="txt-eval-row-2">Shared-listening coherence</td>
+                            <td>4</td>
+                            <td>3</td>
+                            <td class="selected-column">5</td>
+                        </tr>
+                        <tr>
+                            <td id="txt-eval-row-3">Tangible expressiveness</td>
+                            <td>4</td>
+                            <td>3</td>
+                            <td class="selected-column">5</td>
+                        </tr>
+                        <tr>
+                            <td id="txt-eval-row-4">Low interruption & user agency</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td class="selected-column">4</td>
+                        </tr>
+                        <tr>
+                            <td id="txt-eval-row-5">Fit in everyday space</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td class="selected-column">5</td>
+                        </tr>
+                        <tr>
+                            <td id="txt-eval-row-6">Prototype feasibility</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td class="selected-column">3</td>
+                        </tr>
+                        <tr>
+                            <td id="txt-eval-total">Total score</td>
+                            <td>24</td>
+                            <td>23</td>
+                            <td class="selected-column">32</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="score-note" id="txt-eval-note">Scoring key: 1 = weak alignment, 5 = strong alignment.</div>
+        </div>
+
+        <!-- 12. Initial Concept (文字) -->
         <div class="section-block gap-small">
             <div class="text-container">
                 <h2 class="section-title" id="txt-h3-init">Initial Concept</h2>
                 <p class="body-text" id="txt-p3-init">
-                    The design concept was tentatively determined to involve the integration of physical devices with a streaming service, aimed at creating a bespoke music sharing channel for couples. The physical interaction would afford users a sense of their partner's presence, while also serving as a means of message notification and a switch for the Couple Channel. The establishment of the Couple Channel and access to music sources would be realized within the framework of Spotify.
+                    The selected direction became a pair of connected desktop speakers integrated with Spotify. Each device could work independently or enter the Couple Channel for synchronized listening. The product therefore had three roles: a speaker, a tangible switch for entering and leaving the shared channel, and an ambient interface for presence and emotional feedback.
                 </p>
                 <p class="body-text" id="txt-p4-init">
-                    Regarding the specific physical product design, swinging was chosen as the primary means of physical interaction. This motion, derived from the movement of a swinging bell, would signify the arrival of new messages. Furthermore, the swinging action would serve as an indicator of the partner's online status, akin to a vibrant pet playfully rolling on its owner's desk, striving to capture their attention. To address the challenge of potential disruption in communication due to divergent schedules, a switch was incorporated to allow users to actively express their status and exercise control over their willingness to engage in interaction.
+                    Swinging was developed as the central motion cue. Inspired by the oscillation of a bell, it became an interaction primitive rather than a literal form metaphor: a gentle swing could signal that a partner was online or had reached out. Because different schedules can make connection feel demanding, the hat also became a deliberate physical control, allowing each person to choose when to move between private listening and shared engagement.
                 </p>
             </div>
         </div>
 
-        <!-- 11. Initial Concept (图片) -->
+        <!-- 13. Initial Concept (图片) -->
         <div class="section-block">
             <div style="display: flex; gap: 10px; width: 100%; height: 550px; justify-content: space-between;">
                 <div style="height: 100%; flex: 0 0 auto;"><img src="images/soundmotion/8.webp" alt="Context Left" style="height: 100%; width: auto; display: block; object-fit: contain;"></div>
@@ -739,17 +1179,54 @@
                 credits: "Designed by Zhujun Pang, supervised by Joep Frens",
                 school: "Eindhoven University of Technology",
                 disclaimer: "*This is a speculative project and I am not affiliated with Spotify.",
-                h2_brief: "Brief:",
-                p3_brief: "37% of couples break up within 3 months of becoming geographically separated, highlighting the challenges of communication in long-distance relationships (LDRs). While the internet provides convenient channels for instant communication, such as text messages and video chats, these technologies primarily focus on explicit information transmission and overlook the emotionally rich communication needed in intimate relationships.",
-                p4_brief: "Researchers in the field of human-computer interaction have explored the use of haptic sensations, wearable technologies, hybrid interactions, and ambient media to foster emotional communication for LDR couples. However, most designs and studies have focused on imitating communication modes within intimate relationships from a technological standpoint. In reality, the lives of long-distance couples are often accompanied by complex emotional changes and needs, which necessitate a user-centered approach in research and design processes.",
-                h2_user: "User study: Workshop & Role-playing game",
-                p3_user: "Exploring the use of music to facilitate implicit emotional communication between long-distance couples has emerged as a new design exploration space. Data collected through interviews and workshops conducted during the early stages of this design project indicate that music sharing can create daily topics for couples, provide a sense of presence through synchronized listening, and convey emotions and care through shared music. Therefore, this project aims to address the limitations in current research on long-distance intimate relationship technologies in the field of human-computer interaction, and explore how the combination of music sharing and explicit and implicit interactions can better help long-distance couples enhance their sense of intimacy.",
+                h2_brief: "The Opportunity",
+                p3_brief: "Long-distance couples have no shortage of ways to exchange information, yet text messages and video calls still demand direct attention. The quieter cues through which intimacy is maintained—presence, mood, care, and shared routines—are much harder to carry across distance.",
+                p4_brief: "Rather than reproducing face-to-face communication, this project asks how an everyday music product might support a lighter form of companionship: one that can remain in the background, become explicit when desired, and fit around two different schedules.",
+                h2_user: "Researching Music as a Channel for Intimacy",
+                p3_user: "To understand how music-sharing changes across relationships, I first conducted a one-hour role-playing workshop with eight participants from four countries. It identified feedback, relationship context, and tangibility as key factors, and pointed toward romantic relationships as the most emotionally meaningful context. I then conducted five semi-structured interviews to explore how couples use music across distance. The material was transcribed, coded, and clustered through thematic analysis.",
                 p4_user: "The detailed research process is available here.",
+                researchStep0Title: "Exploratory Workshop",
+                researchStep0Meta: "Role-playing study · 8 participants · 4 countries",
+                researchStep1Title: "Three preliminary signals",
+                researchStep1Meta: "Feedback shaped engagement · Sharing varied by relationship · Tangibility made sharing deliberate",
+                researchStep2Title: "Focused Interviews",
+                researchStep2Meta: "Semi-structured interviews · 5 participants",
+                researchStep3Title: "Refined understanding",
+                researchStep3Meta: "Music conveyed mood and care · Shared listening created presence · Different schedules required agency",
+                researchOutcome: "Click a title above to switch views",
+                researchCaption0: "Role-playing workshop, Eindhoven",
+                researchCaption1: "Workshop observations mapped into preliminary signals",
+                researchCaption2: "Interview records organized by participant before thematic clustering",
+                researchCaption3: "Focused interview themes informing the final experience principles",
+                h3_insights: "Unveiling Key Insights: Guiding the Design",
+                pInsights: "The analysis distilled three principles for the experience: shared listening should create an ambient sense of presence; emotional feedback should be tangible and lightweight; and moving into explicit interaction should remain under each person's control.",
+                insight1Title: "Music as emotional shorthand",
+                insight1Copy: "A song can communicate mood, care, and personal context without asking either partner to formulate a message.",
+                insight2Title: "Presence at the edge of attention",
+                insight2Copy: "Synchronous listening feels intimate because partners can sense each other while still doing separate things.",
+                insight3Title: "Agency before engagement",
+                insight3Copy: "Different schedules make availability sensitive; connection should be noticeable without becoming an obligation.",
                 h3_brain: "Brainstorm",
-                p5_brain: "Once the design direction was established, I embarked on a brainstorming process to generate initial design concepts. I began by gathering a collection of images to create an inspiration board, with a focus on themes related to fostering connection, music, physical interaction, and emotional attachment. This collection served as a source of inspiration. Next, I extensively sketched various ideas to explore specific design solutions. At this stage, each concept encompassed unique product forms and interaction styles, while aligning with the design guidelines outlined in the previous chapters.",
+                p5_brain: "Guided by these principles, I explored three directions: extending an existing music device with physical behaviors, creating a portable connector for phone-based sharing, and designing a fixed shared speaker that could live in each partner's space. The sketches focused on how form, motion, and touch could move naturally between peripheral awareness and explicit engagement—not on styling alone.",
+                evalCriterion: "Evaluation criterion",
+                evalConcept1: "Enhanced music device",
+                evalConcept2: "Portable connector",
+                evalConcept3: "Shared ambient speaker",
+                evalSelected: "Selected direction",
+                evalRow0: "Potential to foster intimacy",
+                evalRow1: "Sustained ambient presence",
+                evalRow2: "Shared-listening coherence",
+                evalRow3: "Tangible expressiveness",
+                evalRow4: "Low interruption & user agency",
+                evalRow5: "Fit in everyday space",
+                evalRow6: "Prototype feasibility",
+                evalTotal: "Total score",
+                evalNote: "Scoring key: 1 = weak alignment, 5 = strong alignment.",
+                h3_selection_logic: "Why a Shared Ambient Speaker",
+                pSelectionLogic: "Unlike a phone accessory, a paired desktop product could become a persistent point of connection and a shared listening ritual across both homes. Its stationary presence made subtle motion readable from the edge of attention, while reciprocal states and the familiar speaker archetype gave the Couple Channel a clear emotional and everyday purpose. I accepted the additional technical complexity because the central research question concerned the quality of tangible companionship—not portability.",
                 h3_init: "Initial Concept",
-                p3_init: "The design concept was tentatively determined to involve the integration of physical devices with a streaming service, aimed at creating a bespoke music sharing channel for couples. The physical interaction would afford users a sense of their partner's presence, while also serving as a means of message notification and a switch for the Couple Channel. The establishment of the Couple Channel and access to music sources would be realized within the framework of Spotify.",
-                p4_init: "Regarding the specific physical product design, swinging was chosen as the primary means of physical interaction. This motion, derived from the movement of a swinging bell, would signify the arrival of new messages. Furthermore, the swinging action would serve as an indicator of the partner's online status, akin to a vibrant pet playfully rolling on its owner's desk, striving to capture their attention. To address the challenge of potential disruption in communication due to divergent schedules, a switch was incorporated to allow users to actively express their status and exercise control over their willingness to engage in interaction.",
+                p3_init: "The selected direction became a pair of connected desktop speakers integrated with Spotify. Each device could work independently or enter the Couple Channel for synchronized listening. The product therefore had three roles: a speaker, a tangible switch for entering and leaving the shared channel, and an ambient interface for presence and emotional feedback.",
+                p4_init: "Swinging was developed as the central motion cue. Inspired by the oscillation of a bell, it became an interaction primitive rather than a literal form metaphor: a gentle swing could signal that a partner was online or had reached out. Because different schedules can make connection feel demanding, the hat also became a deliberate physical control, allowing each person to choose when to move between private listening and shared engagement.",
                 h3_iter: "Interaction Iteration",
                 p5_iter: "Following a low-fi prototype test and quick evaluation, it became apparent that placing the screen at the bottom of the main body design might conflict with users' expectations, thereby increasing their cognitive load. Consequently, the final design solution opted to position the screen in a more intuitively visible location. Furthermore, drawing inspiration from cuteness and personification: the design aimed to strengthen the sense of companionship between partners through the tangible product and anthropomorphism.",
                 h3_final: "Final Design",
@@ -779,17 +1256,54 @@
                 credits: "设计：庞竺君，导师：Joep Frens",
                 school: "埃因霍温理工大学",
                 disclaimer: "*这是一个概念项目，与 Spotify 无关。",
-                h2_brief: "项目背景：",
-                p3_brief: "37%的情侣在异地后的3个月内分手，这凸显了异地恋（LDR）沟通的挑战。虽然互联网提供了短信和视频聊天等即时沟通渠道，但这些技术主要侧重于显性信息的传递，忽视了亲密关系中所需的情感丰富交流。",
-                p4_brief: "人机交互领域的研究人员探索了触觉、可穿戴技术、混合交互和环境媒体，以促进异地情侣的情感交流。然而，大多数设计和研究都侧重于从技术角度模仿亲密关系中的沟通模式。实际上，异地情侣的生活往往伴随着复杂的情感变化和需求，这就需要在研究和设计过程中采用以用户为中心的方法。",
-                h2_user: "用户研究：工作坊与角色扮演",
-                p3_user: "探索利用音乐促进异地情侣间的隐性情感交流已成为一个新的设计探索空间。通过项目早期的访谈和工作坊收集的数据表明，音乐分享可以为情侣创造日常话题，通过同步聆听提供在场感，并通过分享音乐传递情感和关怀。因此，本项目旨在解决人机交互领域当前异地亲密关系技术研究的局限性，并探索音乐分享与显性及隐性交互的结合如何更好地帮助异地情侣增强亲密感。",
+                h2_brief: "设计机会",
+                p3_brief: "异地情侣并不缺少交换信息的工具，但文字和视频通话仍然要求双方直接投入注意力。维系亲密关系的那些更安静的线索——在场、情绪、关心和共同日常——反而很难跨越距离被传递。",
+                p4_brief: "这个项目并不试图复刻面对面交流，而是探索日常音乐产品能否支持一种更轻量的陪伴：它可以自然存在于背景中，在双方愿意时转为明确互动，并适应两个人不同的生活节奏。",
+                h2_user: "研究音乐如何承载亲密关系",
+                p3_user: "为理解音乐分享如何随关系情境而变化，我先与来自四个国家的八名参与者开展了一小时角色扮演工作坊。研究初步识别出反馈机制、关系类型与实体媒介对分享行为的影响，并将浪漫关系作为更具情感价值的研究情境。随后，我对五名参与者进行半结构化访谈，进一步探索伴侣如何借助音乐跨越距离维持联系，并通过主题分析完成转录、编码与聚类。",
                 p4_user: "详细的研究过程可在此查看。",
+                researchStep0Title: "探索性工作坊",
+                researchStep0Meta: "角色扮演研究 · 8名参与者 · 来自4个国家",
+                researchStep1Title: "三个初步发现",
+                researchStep1Meta: "反馈影响参与度 · 分享行为随关系而变化 · 实体媒介让分享更有分量",
+                researchStep2Title: "聚焦式访谈",
+                researchStep2Meta: "半结构化访谈 · 5名参与者",
+                researchStep3Title: "进一步理解",
+                researchStep3Meta: "音乐传递情绪与关心 · 共同聆听营造在场感 · 不同作息需要保留自主权",
+                researchOutcome: "点击上方小标题进行切换",
+                researchCaption0: "角色扮演工作坊，埃因霍温",
+                researchCaption1: "将工作坊观察归纳为阶段性发现",
+                researchCaption2: "按参与者整理访谈记录，为后续主题聚类建立依据",
+                researchCaption3: "聚焦式访谈主题进一步支撑最终体验原则",
+                h3_insights: "提炼关键洞察：指导设计",
+                pInsights: "分析最终形成了三条体验原则：共同聆听应当营造环境式的在场感；情绪反馈需要有形、轻量；而是否进入更明确的互动，则应始终由双方各自决定。",
+                insight1Title: "音乐是一种情绪速记",
+                insight1Copy: "一首歌可以传达情绪、关心和个人语境，而不需要任何一方先组织一段完整的信息。",
+                insight2Title: "存在于注意力边缘的陪伴",
+                insight2Copy: "同步聆听之所以亲密，是因为双方可以在各自做事的同时，依然感知彼此。",
+                insight3Title: "先有自主权，再有互动",
+                insight3Copy: "不同作息让在线状态变得敏感；连接应该能被感知，但不应变成必须回应的义务。",
                 h3_brain: "头脑风暴",
-                p5_brain: "确定设计方向后，我开始了头脑风暴以产生初步设计概念。我首先收集了一系列图片创建灵感板，重点关注与建立连接、音乐、物理交互和情感依恋相关的主题。接下来，我绘制了大量草图以探索具体的设计方案。在此阶段，每个概念都包含独特的产品形态和交互方式，同时符合前几章概述的设计准则。",
+                p5_brain: "在这些原则的指导下，我探索了三个方向：为现有音乐设备增加实体行为、为手机端音乐分享设计便携连接器，以及设计一台能够长期存在于双方空间中的固定式共享音箱。草图关注的不只是造型，而是形态、运动和触摸如何自然地在周边感知与明确互动之间切换。",
+                evalCriterion: "评估维度",
+                evalConcept1: "增强型音乐设备",
+                evalConcept2: "便携式连接器",
+                evalConcept3: "环境式共享音箱",
+                evalSelected: "选定方向",
+                evalRow0: "营造亲密感的潜力",
+                evalRow1: "持续的环境在场感",
+                evalRow2: "共同聆听的完整性",
+                evalRow3: "实体表达力",
+                evalRow4: "低打扰与用户自主权",
+                evalRow5: "融入日常空间",
+                evalRow6: "原型实现可行性",
+                evalTotal: "总分",
+                evalNote: "评分标准：1 = 适配度较弱，5 = 适配度较强。",
+                h3_selection_logic: "为什么选择环境式共享音箱",
+                pSelectionLogic: "与手机配件不同，一对桌面产品可以成为双方家中持续存在的连接点，并围绕共同聆听形成共享仪式。固定的位置让轻微运动也能在注意力边缘被感知，双向状态与熟悉的音箱形态则让 Couple Channel 同时具有情感意义和清晰的日常用途。我接受了额外的技术复杂度，因为项目真正要研究的是实体陪伴的质量，而不是便携性。",
                 h3_init: "初步概念",
-                p3_init: "设计概念初步确定为将物理设备与流媒体服务相结合，旨在为情侣打造专属的音乐分享频道。物理交互将为用户提供伴侣在场的感觉，同时也作为消息通知和情侣频道开关的手段。情侣频道的建立和音乐源的获取将在 Spotify 的框架内实现。",
-                p4_init: "在具体的实体产品设计方面，选择了“摆动”作为主要的物理交互方式。这种源自摇铃的运动将标志着新消息的到来。此外，摆动动作还将作为伴侣在线状态的指示器，类似于一只充满活力的宠物在主人的桌子上顽皮地打滚，试图引起他们的注意。为了解决因日程安排不同而导致的沟通中断挑战，设计中加入了一个开关，允许用户主动表达状态并控制他们参与互动的意愿。",
+                p3_init: "最终方向是一对与 Spotify 集成的联网桌面音箱。每台设备既可以独立工作，也可以进入 Couple Channel 进行同步聆听。因此，产品同时承担三种角色：音箱、进入或退出共享频道的实体开关，以及表达在场状态和情绪反馈的环境式界面。",
+                p4_init: "摆动被发展为核心动态提示。灵感来自铃铛的往复运动，但它在这里是一种交互语言，而不是需要被照搬的造型隐喻：轻柔摆动可以表示伴侣上线或发来回应。考虑到不同作息可能让连接产生压力，帽盖也成为一个主动的实体控制，让每个人都可以决定何时在独立聆听与共同互动之间切换。",
                 h3_iter: "交互迭代",
                 p5_iter: "经过低保真原型测试和快速评估，我发现将屏幕放置在主体设计底部可能会与用户的预期冲突，从而增加认知负荷。因此，最终设计方案选择将屏幕放置在更直观可见的位置。此外，从可爱和拟人化中汲取灵感：设计旨在通过有形产品和拟人化特征加强伴侣间的陪伴感。",
                 h3_final: "最终设计",
@@ -814,6 +1328,79 @@
             }
         };
 
+        const researchStates = [
+            {
+                src: "images/soundmotion/research-workshop.webp",
+                mode: "photo",
+                captionKey: "researchCaption0",
+                alt: {
+                    en: "Participants mapping music-sharing experiences during the exploratory workshop",
+                    cn: "参与者在探索性工作坊中梳理音乐分享体验"
+                }
+            },
+            {
+                src: "images/soundmotion/research-workshop-analysis.webp",
+                mode: "analysis",
+                captionKey: "researchCaption1",
+                alt: {
+                    en: "Workshop observations connected to three preliminary research signals",
+                    cn: "由工作坊观察连接至三个阶段性研究发现的分析图"
+                }
+            },
+            {
+                src: "images/soundmotion/research-interview-data.webp",
+                mode: "analysis",
+                captionKey: "researchCaption2",
+                alt: {
+                    en: "Focused interview records organized by participant",
+                    cn: "按参与者整理的聚焦式访谈记录"
+                }
+            },
+            {
+                src: "images/soundmotion/research-interview-analysis.webp",
+                mode: "analysis",
+                captionKey: "researchCaption3",
+                alt: {
+                    en: "Interview themes refined into implications for presence, emotion, and agency",
+                    cn: "由访谈主题收敛出的在场感、情绪传递与自主权启示"
+                }
+            }
+        ];
+
+        const researchJourney = document.getElementById('research-journey');
+        const researchImage = document.getElementById('research-media-image');
+        const researchCaption = document.getElementById('research-caption');
+        const researchSteps = Array.from(document.querySelectorAll('[data-research-state]'));
+        let activeResearchIndex = 0;
+        let researchSwapTimer = null;
+
+        function updateResearchState(index, immediate = false) {
+            const state = researchStates[index];
+            if (!state) return;
+
+            activeResearchIndex = index;
+            researchSteps.forEach((step, stepIndex) => {
+                step.setAttribute('aria-pressed', String(stepIndex === index));
+            });
+
+            const swapMedia = () => {
+                researchJourney.classList.toggle('is-analysis', state.mode !== 'photo');
+                researchImage.src = state.src;
+                researchImage.alt = state.alt[currentLang];
+                researchCaption.innerText = translations[currentLang][state.captionKey];
+                requestAnimationFrame(() => researchJourney.classList.remove('is-switching'));
+            };
+
+            window.clearTimeout(researchSwapTimer);
+            if (immediate || researchImage.src.endsWith(state.src)) {
+                swapMedia();
+                return;
+            }
+
+            researchJourney.classList.add('is-switching');
+            researchSwapTimer = window.setTimeout(swapMedia, 160);
+        }
+
         function applyLanguage() {
             const t = translations[currentLang];
             document.getElementById('txt-title').innerText = t.title;
@@ -829,9 +1416,45 @@
             document.getElementById('txt-h2-user').innerText = t.h2_user;
             document.getElementById('txt-p3-user').innerText = t.p3_user;
             document.getElementById('txt-p4-user').innerText = t.p4_user;
+            document.getElementById('txt-research-step-0-title').innerText = t.researchStep0Title;
+            document.getElementById('txt-research-step-0-meta').innerText = t.researchStep0Meta;
+            document.getElementById('txt-research-step-1-title').innerText = t.researchStep1Title;
+            document.getElementById('txt-research-step-1-meta').innerText = t.researchStep1Meta;
+            document.getElementById('txt-research-step-2-title').innerText = t.researchStep2Title;
+            document.getElementById('txt-research-step-2-meta').innerText = t.researchStep2Meta;
+            document.getElementById('txt-research-step-3-title').innerText = t.researchStep3Title;
+            document.getElementById('txt-research-step-3-meta').innerText = t.researchStep3Meta;
+            document.getElementById('txt-research-outcome').innerText = t.researchOutcome;
+            updateResearchState(activeResearchIndex, true);
+
+            document.getElementById('txt-h3-insights').innerText = t.h3_insights;
+            document.getElementById('txt-p-insights').innerText = t.pInsights;
+            document.getElementById('txt-insight-1-title').innerText = t.insight1Title;
+            document.getElementById('txt-insight-1-copy').innerText = t.insight1Copy;
+            document.getElementById('txt-insight-2-title').innerText = t.insight2Title;
+            document.getElementById('txt-insight-2-copy').innerText = t.insight2Copy;
+            document.getElementById('txt-insight-3-title').innerText = t.insight3Title;
+            document.getElementById('txt-insight-3-copy').innerText = t.insight3Copy;
             
             document.getElementById('txt-h3-brain').innerText = t.h3_brain;
             document.getElementById('txt-p5-brain').innerText = t.p5_brain;
+
+            document.getElementById('txt-eval-criterion').innerText = t.evalCriterion;
+            document.getElementById('txt-eval-concept-1').innerText = t.evalConcept1;
+            document.getElementById('txt-eval-concept-2').innerText = t.evalConcept2;
+            document.getElementById('txt-eval-concept-3').innerText = t.evalConcept3;
+            document.getElementById('txt-eval-selected').innerText = t.evalSelected;
+            document.getElementById('txt-eval-row-0').innerText = t.evalRow0;
+            document.getElementById('txt-eval-row-1').innerText = t.evalRow1;
+            document.getElementById('txt-eval-row-2').innerText = t.evalRow2;
+            document.getElementById('txt-eval-row-3').innerText = t.evalRow3;
+            document.getElementById('txt-eval-row-4').innerText = t.evalRow4;
+            document.getElementById('txt-eval-row-5').innerText = t.evalRow5;
+            document.getElementById('txt-eval-row-6').innerText = t.evalRow6;
+            document.getElementById('txt-eval-total').innerText = t.evalTotal;
+            document.getElementById('txt-eval-note').innerText = t.evalNote;
+            document.getElementById('txt-h3-selection-logic').innerText = t.h3_selection_logic;
+            document.getElementById('txt-p-selection-logic').innerText = t.pSelectionLogic;
             
             document.getElementById('txt-h3-init').innerText = t.h3_init;
             document.getElementById('txt-p3-init').innerText = t.p3_init;
@@ -874,6 +1497,70 @@
             applyLanguage();
         });
         applyLanguage();
+
+        researchStates.forEach((state) => {
+            const image = new Image();
+            image.src = state.src;
+        });
+
+        const researchAutoplayDelay = 3000;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let researchAutoplayTimer = null;
+        let researchIsVisible = false;
+        let researchHasEntered = false;
+        let researchAutoplayEnabled = true;
+
+        function stopResearchAutoplay() {
+            window.clearInterval(researchAutoplayTimer);
+            researchAutoplayTimer = null;
+        }
+
+        function startResearchAutoplay() {
+            stopResearchAutoplay();
+            if (!researchIsVisible || !researchAutoplayEnabled || prefersReducedMotion.matches || document.hidden) return;
+            researchAutoplayTimer = window.setInterval(() => {
+                updateResearchState((activeResearchIndex + 1) % researchStates.length);
+            }, researchAutoplayDelay);
+        }
+
+        researchSteps.forEach((step) => {
+            step.addEventListener('click', () => {
+                updateResearchState(Number(step.dataset.researchState));
+                researchAutoplayEnabled = false;
+                stopResearchAutoplay();
+            });
+        });
+        researchJourney.addEventListener('pointerenter', stopResearchAutoplay);
+        researchJourney.addEventListener('pointerleave', startResearchAutoplay);
+        researchJourney.addEventListener('focusin', stopResearchAutoplay);
+        researchJourney.addEventListener('focusout', (event) => {
+            if (!researchJourney.contains(event.relatedTarget)) startResearchAutoplay();
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopResearchAutoplay();
+            else startResearchAutoplay();
+        });
+        prefersReducedMotion.addEventListener('change', startResearchAutoplay);
+
+        if ('IntersectionObserver' in window) {
+            const researchObserver = new IntersectionObserver((entries) => {
+                researchIsVisible = entries[0].isIntersecting;
+                if (researchIsVisible) {
+                    if (!researchHasEntered) {
+                        researchHasEntered = true;
+                        updateResearchState(0, true);
+                    }
+                    startResearchAutoplay();
+                } else {
+                    stopResearchAutoplay();
+                }
+            }, { threshold: 0.3 });
+            researchObserver.observe(researchJourney);
+        } else {
+            researchIsVisible = true;
+            researchHasEntered = true;
+            startResearchAutoplay();
+        }
 
         const navBar = document.querySelector('nav');
         window.addEventListener('scroll', () => {
@@ -963,29 +1650,6 @@
             t.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             t.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
-
-        /* --- 长图展开交互逻辑 --- */
-        const expandTrigger = document.getElementById('expand-trigger');
-        const expandContainer = document.getElementById('long-img-container');
-
-        if (expandTrigger && expandContainer) {
-            expandTrigger.addEventListener('click', () => {
-                // 1. 获取图片真实高度
-                const img = expandContainer.querySelector('img');
-                const realHeight = img.scrollHeight;
-                
-                // 2. 显式设置高度以触发 CSS transition 动画
-                expandContainer.style.height = realHeight + 'px';
-                
-                // 3. 添加类名以淡出遮罩
-                expandContainer.classList.add('expanded');
-                
-                // 4. 动画结束后，将高度设为 auto，以适应窗口缩放
-                setTimeout(() => {
-                    expandContainer.style.height = 'auto';
-                }, 1000); // 时间要和 CSS transition 匹配
-            });
-        }
 
     </script>
 </body>

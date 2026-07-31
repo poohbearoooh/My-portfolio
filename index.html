@@ -194,6 +194,25 @@
         }
         .project-card:hover .image-container img,
         .project-card:hover .image-container video { transform: scale(1.05); filter: grayscale(0%); }
+        .coming-soon-card { cursor: default; }
+        .coming-soon-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(12,12,12,0.48);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+        }
+        .coming-soon-card:hover .coming-soon-overlay { opacity: 1; }
         .philips-home-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #111; }
         .philips-home-preview video { min-width: 0; }
         .huawei-home-collage {
@@ -312,19 +331,20 @@
         <div class="project-column">
             <div class="column-heading"><span data-en="Professional" data-cn="工作项目">Professional</span><span class="column-count" data-total="5">05</span></div>
             <div class="project-list">
-                <a href="about.html#experience" class="project-card hover-target protected-experience-card" data-experience-target="about.html#experience" data-direct-case="huawei">
+                <div class="project-card hover-target coming-soon-card" aria-label="Huawei project coming soon">
                     <div class="image-container huawei-home-collage">
                         <div class="huawei-home-panel huawei-foldable"><img src="images/about/experience/huawei/home-foldable.webp" alt="Huawei foldable imaging product"></div>
                         <div class="huawei-home-panel huawei-camera"><img src="images/about/experience/huawei/home-camera.webp" alt="Compact camera in use"></div>
                         <div class="huawei-home-panel huawei-watch"><img src="images/about/experience/huawei/home-watch.webp" alt="Huawei wearable product"></div>
+                        <span class="coming-soon-overlay">Coming Soon</span>
                     </div>
-                    <div class="project-info"><span class="project-title-row"><span class="project-title">Huawei</span><span class="project-lock" data-en="Protected" data-cn="加密">Protected</span></span><span class="project-cat" data-en="Pocket Camera | AI Hardware | Wearable Health" data-cn="口袋影像｜AI硬件｜穿戴健康">Pocket Camera | AI Hardware | Wearable Health</span></div>
-                </a>
+                    <div class="project-info"><span class="project-title">Huawei</span><span class="project-cat" data-en="Pocket Camera | AI Hardware | Wearable Health" data-cn="口袋影像｜AI硬件｜穿戴健康">Pocket Camera | AI Hardware | Wearable Health</span></div>
+                </div>
 
-                <a href="about.html#experience" class="project-card hover-target protected-experience-card" data-experience-target="about.html#experience" data-direct-case="dji">
-                    <div class="image-container"><img src="images/about/experience/dji/card-action-camera.webp" alt="DJI Nano"></div>
-                    <div class="project-info"><span class="project-title-row"><span class="project-title">DJI</span><span class="project-lock" data-en="Protected" data-cn="加密">Protected</span></span><span class="project-cat" data-en="Action Cameras & Accessory Ecosystem" data-cn="运动相机及配件生态">Action Cameras & Accessory Ecosystem</span></div>
-                </a>
+                <div class="project-card hover-target coming-soon-card" aria-label="DJI project coming soon">
+                    <div class="image-container"><img src="images/about/experience/dji/card-action-camera.webp" alt="DJI Nano"><span class="coming-soon-overlay">Coming Soon</span></div>
+                    <div class="project-info"><span class="project-title">DJI</span><span class="project-cat" data-en="Industrial Design | Action Cameras & Accessories" data-cn="工业设计｜运动相机及配件">Industrial Design | Action Cameras & Accessories</span></div>
+                </div>
 
                 <a href="https://www.byd.com/jp/racco-special" target="_blank" rel="noopener noreferrer" class="project-card hover-target">
                     <div class="image-container"><img src="images/about/experience/byd/racco.webp" alt="BYD Racco"></div>
@@ -392,28 +412,6 @@
     </footer>
 
     <script>
-        /* Private presentation route. The plaintext key is never stored in source. */
-        (async () => {
-            const prefix = '#showcase=';
-            if (!window.location.hash.startsWith(prefix)) return;
-
-            const candidate = decodeURIComponent(window.location.hash.slice(prefix.length));
-            const encoded = new TextEncoder().encode(candidate);
-            const digestBuffer = await crypto.subtle.digest('SHA-256', encoded);
-            const digest = Array.from(new Uint8Array(digestBuffer), byte => byte.toString(16).padStart(2, '0')).join('');
-            const huaweiShowcaseDigest = '3a8be56f8379a27ff8a70d44de3d87c88b46b6d681784525e64aea4f6db9b459';
-
-            if (digest !== huaweiShowcaseDigest) {
-                history.replaceState(null, '', 'index.html#work');
-                return;
-            }
-
-            sessionStorage.setItem('experienceAccess', 'granted');
-            sessionStorage.setItem('experienceDirectCase', 'huawei');
-            sessionStorage.setItem('experienceReturn', 'index.html#work');
-            window.location.replace('about.html#experience');
-        })();
-
         /* --- 1. 语言切换与记忆系统 --- */
         const langBtn = document.getElementById('lang-btn');
         const homeIntro = document.getElementById('home-intro');
